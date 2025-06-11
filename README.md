@@ -1,36 +1,16 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# workout app
 
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Otwarta baza ćwiczeń** – Wszyscy użytkownicy mają dostęp do rozbudowanej bazy ćwiczeń wraz z opisami i instrukcjami.
+2. **Personalizacja treningów** – Użytkownicy mogą samodzielnie tworzyć i edytować własne plany treningowe, wybierając dowolne ćwiczenia z dostępnej bazy.
+3. **Podział treningów na płatne i bezpłatne** – Treningi dzielą się na darmowe i płatne, co umożliwia szeroki dostęp do planów oraz monetyzację treści przez trenerów.
+4. **Monetyzacja treści trenerskich** – Zweryfikowani trenerzy mogą publikować zarówno bezpłatne, jak i płatne plany treningowe, z których platforma pobiera prowizję, np. 10% od każdej transakcji.
+5. **System oceniania i polubień** – Pozycja treningu w rankingach zależy od liczby polubień, przy czym każdy użytkownik może polubić dany plan tylko raz (z możliwością cofnięcia polubienia). Polubienia płatnych treningów są dostępne wyłącznie dla osób, które zakupiły dany plan.
+6. **Rankingi i listy TOP** – Dwie osobne listy prezentujące 100 najpopularniejszych treningów: bezpłatnych i płatnych. Płatne treningi dodatkowo klasyfikowane są według liczby polubień i liczby zakupów.
+7. **Udostępnianie treningów** – Umożliwienie łatwego dzielenia się treningami poprzez generowanie unikalnych, bezpośrednich linków.
+8. **Komentarze i recenzje** – Każdy trening może otrzymać opinię lub komentarz, co pozwala na dodatkową interakcję i ocenę jakości planu.
+9. **Wyzwania społecznościowe** – Regularnie organizowane wyzwania (np. „Ukończ 7 treningów w 7 dni”), które motywują użytkowników do aktywności oraz umożliwiają zdobywanie nagród.
+10. **System odznak i gamifikacji** – Użytkownicy otrzymują odznaki, punkty oraz mogą brać udział w rankingach za regularność i osiągnięcia treningowe.
+11. **Zweryfikowane konta trenerskie** – Weryfikacja trenerów umożliwia użytkownikom wybór sprawdzonych specjalistów, co zwiększa zaufanie do oferowanych treści.
+12. **Integracja z mediami społecznościowymi** – Możliwość automatycznego udostępniania wyników, progresu oraz osiągnięć treningowych w popularnych serwisach społecznościowych, takich jak Instagram, Facebook, Twitter/X.
+13. **System powiadomień** – Automatyczne powiadomienia informujące o nowych treningach, wyzwaniach oraz aktywności ulubionych trenerów, wspierające zaangażowanie użytkowników.
+14. **Forum** - Sekcja, gdzie użytkownicy mogą zadawać pytania trenerom lub innym użytkownikom.
