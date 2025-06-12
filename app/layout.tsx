@@ -13,7 +13,11 @@ const RootLayout = ({
 }>) => {
   return (
     <html lang='en'>
-      <body>{children}</body>
+      <body className='min-h-screen flex justify-center items-center'>
+        <main className='w-96 max-w-full min-h-[667px] p-4 bg-white text-black rounded-3xl shadow-lg overflow-hidden flex flex-col'>
+          {children}
+        </main>
+      </body>
     </html>
   );
 };
