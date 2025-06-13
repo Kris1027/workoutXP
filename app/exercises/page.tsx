@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FaPlay, FaStar, FaFilter, FaSearch } from 'react-icons/fa';
+import { FaStar, FaFilter, FaSearch } from 'react-icons/fa';
 
 const ExercisesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -22,7 +22,8 @@ const ExercisesPage = () => {
       name: 'Squats',
       category: 'Legs',
       difficulty: 'Beginner',
-      image: 'https://images.unsplash.com/photo-1566241440091-ec10de8db2e1?w=400&h=300&fit=crop',
+      image:
+        'https://images.unsplash.com/photo-1649887974297-4be052375a67?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       rating: 4.9,
       description: 'Fundamental lower body movement targeting quads and glutes',
     },
