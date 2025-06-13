@@ -29,6 +29,7 @@ const NavigationBar = () => {
           return (
             <li key={link.name} className='flex-1'>
               <Link
+                aria-current={active ? 'page' : undefined}
                 href={link.href}
                 className={`flex flex-col items-center justify-center py-2 px-1 transition-colors duration-200 group ${
                   active ? 'text-violet-400' : 'text-gray-400 hover:text-white'
