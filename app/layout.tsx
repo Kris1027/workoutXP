@@ -15,7 +15,7 @@ const RootLayout = ({
   return (
     <html lang='en'>
       <body className='min-h-screen flex justify-center items-center'>
-        <div className='relative z-10 w-96 max-w-full min-h-[667px] bg-white text-black rounded-3xl overflow-hidden flex flex-col justify-between backdrop-blur-sm shadow-[0_8px_32px_0_rgba(255,255,255,0.25),0_20px_60px_0_rgba(139,69,255,0.3),0_0_0_1px_rgba(255,255,255,0.1)]'>
+        <div className='relative z-10 w-[390px] max-w-full min-h-[844px] bg-white text-black rounded-3xl overflow-hidden flex flex-col justify-between backdrop-blur-sm shadow-[0_8px_32px_0_rgba(255,255,255,0.25),0_20px_60px_0_rgba(139,69,255,0.3),0_0_0_1px_rgba(255,255,255,0.1)]'>
           <main>{children}</main>
           <NavigationBar />
         </div>

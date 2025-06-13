@@ -1,5 +1,5 @@
 const WorkoutsPage = () => {
-  return <div>WorkoutsPage</div>;
+  return <div className='p-4'>WorkoutsPage</div>;
 };
 
 export default WorkoutsPage;
