@@ -3,15 +3,15 @@
 import { Link } from 'next-view-transitions';
 import { usePathname } from 'next/navigation';
 
-import { HiOutlineHomeModern } from 'react-icons/hi2';
-import { MdOutlineEmojiPeople } from 'react-icons/md';
 import { FaPeopleRobbery } from 'react-icons/fa6';
 import { FiUser } from 'react-icons/fi';
+import { HiOutlineHomeModern } from 'react-icons/hi2';
+import { LuDumbbell } from 'react-icons/lu';
 
 const navLinks = [
   { name: 'Home', href: '/', icon: HiOutlineHomeModern },
-  { name: 'Exercises', href: '/exercises', icon: MdOutlineEmojiPeople },
-  { name: 'Workouts', href: '/workouts', icon: FaPeopleRobbery },
+  { name: 'Exercises', href: '/exercises', icon: FaPeopleRobbery },
+  { name: 'Workouts', href: '/workouts', icon: LuDumbbell },
   { name: 'Profile', href: '/profile', icon: FiUser },
 ];
 
