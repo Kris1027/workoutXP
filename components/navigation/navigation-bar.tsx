@@ -17,7 +17,7 @@ const navLinks = [
 
 const NavigationBar = () => {
   const pathname = usePathname();
-  const isActive = (href: string) => pathname === href;
+  const isActive = (href: string) => (href === '/' ? pathname === href : pathname.startsWith(href));
 
   return (
     <nav className='bg-gray-800'>
