@@ -17,7 +17,7 @@ const RootLayout = ({
     <html lang='en'>
       <body className='min-h-screen flex justify-center items-center'>
         <ViewTransitions>
-          <div className='main-container bg-white text-black rounded-3xl overflow-hidden flex flex-col justify-between backdrop-blur-sm shadow-[0_8px_32px_0_rgba(255,255,255,0.25),0_20px_60px_0_rgba(139,69,255,0.3),0_0_0_1px_rgba(255,255,255,0.1)]'>
+          <div className='main-container bg-white text-black dark:bg-black dark:text-white rounded-3xl overflow-hidden flex flex-col justify-between backdrop-blur-sm shadow-[0_8px_32px_0_rgba(255,255,255,0.25),0_20px_60px_0_rgba(139,69,255,0.3),0_0_0_1px_rgba(255,255,255,0.1)]'>
             <main>{children}</main>
             <NavigationBar />
           </div>
