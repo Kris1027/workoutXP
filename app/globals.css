@@ -3,6 +3,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --mainWidth: 390px;
+  --mainHeight: 844px;
+}
+
+.main-container {
+  width: var(--mainWidth);
+  height: var(--mainHeight);
 }
 
 @theme inline {

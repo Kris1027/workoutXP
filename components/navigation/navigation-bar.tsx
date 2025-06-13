@@ -3,14 +3,14 @@
 import { Link } from 'next-view-transitions';
 import { usePathname } from 'next/navigation';
 
-import { FaPeopleRobbery } from 'react-icons/fa6';
+import { BsListTask } from 'react-icons/bs';
 import { FiUser } from 'react-icons/fi';
 import { HiOutlineHomeModern } from 'react-icons/hi2';
 import { LuDumbbell } from 'react-icons/lu';
 
 const navLinks = [
   { name: 'Home', href: '/', icon: HiOutlineHomeModern },
-  { name: 'Exercises', href: '/exercises', icon: FaPeopleRobbery },
+  { name: 'Exercises', href: '/exercises', icon: BsListTask },
   { name: 'Workouts', href: '/workouts', icon: LuDumbbell },
   { name: 'Profile', href: '/profile', icon: FiUser },
 ];
@@ -20,7 +20,7 @@ const NavigationBar = () => {
   const isActive = (href: string) => (href === '/' ? pathname === href : pathname.startsWith(href));
 
   return (
-    <nav className='bg-gray-800'>
+    <nav aria-label='Main Navigation' className='bg-gray-800'>
       <ul className='flex justify-around items-center p-1'>
         {navLinks.map((link) => {
           const IconComponent = link.icon;
