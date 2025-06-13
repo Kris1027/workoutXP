@@ -21,7 +21,15 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  /* Remove overflow: scroll from here */
   /* Center content inside if needed */
+}
+
+.main-content-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  /* Prevent nav overlap on scroll */
+  min-height: 0;
 }
 
 @media (max-width: 767px) {
@@ -63,7 +71,7 @@ body {
   justify-content: center;
   padding-top: 32px;
   padding-bottom: 32px;
-  /* overflow: hidden; */ /* Remove to allow scrolling if content overflows */
+  overflow: hidden;
 }
 
 /* Animated dots background using a pseudo-element */
