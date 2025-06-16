@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { FaStar, FaFilter, FaSearch } from 'react-icons/fa';
 
 const ExercisesPage = () => {
@@ -80,13 +80,15 @@ const ExercisesPage = () => {
     }
   };
 
-  const filteredExercises = exercises.filter((exercise) => {
-    const matchesSearch =
-      exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      exercise.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || exercise.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const filteredExercises = useMemo(() => {
+    return exercises.filter((exercise) => {
+      const matchesSearch =
+        exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        exercise.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === 'All' || exercise.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [exercises, searchTerm, selectedCategory]);
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 px-4 py-6'>
