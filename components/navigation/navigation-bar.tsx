@@ -20,7 +20,7 @@ const NavigationBar = () => {
   const isActive = (href: string) => (href === '/' ? pathname === href : pathname.startsWith(href));
 
   return (
-    <nav aria-label='Main Navigation' className='bg-gray-800'>
+    <nav aria-label='Main Navigation' className='bg-gray-800 w-full sticky bottom-0 z-10'>
       <ul className='flex justify-around items-center p-1'>
         {navLinks.map((link) => {
           const IconComponent = link.icon;

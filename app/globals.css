@@ -4,13 +4,42 @@
   --background: #ffffff;
   --foreground: #171717;
   --bodyBackground: #1a0040;
-  --mainWidth: 390px;
-  --mainHeight: 844px;
+  --minWidth: 380px;
+  --minHeight: 800px;
+  --maxWidth: 1280px;
+  --maxHeight: 100%;
 }
 
 .main-container {
-  width: var(--mainWidth);
-  height: var(--mainHeight);
+  min-width: var(--minWidth);
+  min-height: var(--minHeight);
+  max-width: var(--maxWidth);
+  max-height: var(--maxHeight);
+  width: 100%;
+  height: 100%;
+  margin: 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  /* Center content inside if needed */
+}
+
+.main-content-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  /* Prevent nav overlap on scroll */
+  min-height: 0;
+}
+
+@media (max-width: 767px) {
+  .main-container {
+    margin: 4px;
+    min-width: 100vw;
+    min-height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+  }
 }
 
 @theme inline {
@@ -32,6 +61,15 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   position: relative;
+  min-height: 100vh;
+  min-width: 100vw;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 32px;
+  padding-bottom: 32px;
   overflow: hidden;
 }
 
