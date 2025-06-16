@@ -1,5 +1,5 @@
 import { getExercises } from '@/lib/exercises-db-actions';
-import { FaStar } from 'react-icons/fa';
+import { getDifficultyColor } from '@/utils/get-difficulty-color';
 
 const ExercisesPage = async () => {
   const exercises = await getExercises();
@@ -35,12 +35,6 @@ const ExercisesPage = async () => {
                   <h3 className='text-lg font-bold text-gray-900 dark:text-white'>
                     {exercise.name}
                   </h3>
-                  <div className='flex items-center gap-1'>
-                    <FaStar className='text-yellow-400' />
-                    <span className='text-sm font-medium text-gray-600 dark:text-gray-400'>
-                      4.5
-                    </span>
-                  </div>
                 </div>
 
                 <p className='text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2'>
@@ -49,7 +43,11 @@ const ExercisesPage = async () => {
               </div>
               <div className='flex justify-between items-center'>
                 <div className='flex flex-wrap gap-2'>
-                  <span className='px-2 py-1 rounded-full text-xs font-medium'>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(
+                      exercise.difficulty
+                    )}`}
+                  >
                     {exercise.difficulty}
                   </span>
                   <span className='px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full text-xs font-medium'>
