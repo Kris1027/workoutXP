@@ -77,4 +77,10 @@ export async function main() {
   console.log('Seeded exercises successfully');
 }
 
-main();
+main()
+  .catch((error) => {
+    console.error('Error seeding exercises:', error);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
