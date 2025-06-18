@@ -1,8 +1,9 @@
+import type { ExerciseProps } from '@/types/data-types';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const exerciseData = [
+const exerciseData: ExerciseProps[] = [
   {
     name: 'Incline Chest Fly',
     category: 'Chest',

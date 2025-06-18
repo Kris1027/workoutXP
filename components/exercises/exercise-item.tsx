@@ -1,9 +1,9 @@
+import type { ExerciseProps } from '@/types/data-types';
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
-import { Prisma } from '@prisma/client';
 import Image from 'next/image';
 
 type ExerciseListProps = {
-  exercise: Prisma.ExerciseCreateInput;
+  exercise: ExerciseProps;
 };
 
 const ExerciseItem: React.FC<ExerciseListProps> = ({ exercise }) => {
