@@ -17,9 +17,10 @@ const ExerciseItem: React.FC<ExerciseListProps> = ({ exercise }) => {
         <Image
           src={exercise.ImageUrl}
           alt={exercise.name}
+          priority
           fill
           className='object-cover'
-          sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+          sizes='(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw'
         />
       </div>
 
