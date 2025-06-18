@@ -1,5 +1,6 @@
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
 import { Prisma } from '@prisma/client';
+import Image from 'next/image';
 
 type ExerciseListProps = {
   exercise: Prisma.ExerciseCreateInput;
@@ -11,9 +12,15 @@ const ExerciseItem: React.FC<ExerciseListProps> = ({ exercise }) => {
       key={exercise.id}
       className='bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 flex flex-col'
     >
-      {/* Image at the top, full width */}
-      <div className='w-full h-40 sm:h-48'>
-        <img src={exercise.ImageUrl} alt={exercise.name} className='w-full h-full object-cover' />
+      {/* Image at the top, full width with 9:10 aspect ratio */}
+      <div className='w-full aspect-[9/10] relative'>
+        <Image
+          src={exercise.ImageUrl}
+          alt={exercise.name}
+          fill
+          className='object-cover'
+          sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+        />
       </div>
 
       {/* Content below image */}
