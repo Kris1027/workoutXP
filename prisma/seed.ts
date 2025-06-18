@@ -1,8 +1,8 @@
-import { Prisma, PrismaClient } from '../app/generated/prisma';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const exerciseData: Prisma.ExerciseCreateInput[] = [
+const exerciseData = [
   {
     name: 'Incline Chest Fly',
     category: 'Chest',
