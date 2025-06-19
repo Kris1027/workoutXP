@@ -8,12 +8,22 @@ datasource db {
 }
 
 model Exercise {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String
   category    String
   difficulty  String
   ImageUrl    String
   description String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  workouts    Workout[] @relation("WorkoutExercises")
+}
+
+model Workout {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  description String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  exercises   Exercise[] @relation("WorkoutExercises")
 }
