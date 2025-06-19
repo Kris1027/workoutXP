@@ -13,7 +13,7 @@ export type WorkoutProps = {
   id?: string;
   name: string;
   description: string;
-  exercises?: ExerciseProps[];
+  exercises: ExerciseProps[];
   createdAt?: Date;
   updatedAt?: Date;
 };

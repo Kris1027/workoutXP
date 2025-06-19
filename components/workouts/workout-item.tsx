@@ -1,5 +1,4 @@
 import { WorkoutProps } from '@/types/data-types';
-import Image from 'next/image';
 
 type WorkoutItemProps = {
   workout: WorkoutProps;
