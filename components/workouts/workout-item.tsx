@@ -1,5 +1,6 @@
 import { WorkoutProps } from '@/types/data-types';
 import Image from 'next/image';
+import Link from 'next/link';
 
 type WorkoutItemProps = {
   workout: WorkoutProps;
@@ -7,7 +8,8 @@ type WorkoutItemProps = {
 
 const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
   return (
-    <div
+    <Link
+      href={`/workouts/${workout.id}`}
       key={workout.id}
       className='bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 flex flex-col'
     >
@@ -35,7 +37,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
           </p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
