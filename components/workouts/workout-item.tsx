@@ -1,30 +1,27 @@
 import { WorkoutProps } from '@/types/data-types';
+import Image from 'next/image';
 
 type WorkoutItemProps = {
   workout: WorkoutProps;
 };
 
 const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
-  console.log(workout);
-
-  // fix db migration issue
-
   return (
     <div
       key={workout.id}
       className='bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 flex flex-col'
     >
       {/* Image at the top, full width with 9:10 aspect ratio */}
-      {/* <div className='w-full aspect-[9/10] relative'>
+      <div className='w-full aspect-[9/10] relative'>
         <Image
-          src={workout.ImageUrl}
+          src={workout.imageUrl}
           alt={workout.name}
           priority
           fill
           className='object-cover'
           sizes='(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw'
         />
-      </div> */}
+      </div>
 
       {/* Content below image */}
       <div className='flex-1 p-4 flex flex-col justify-between'>

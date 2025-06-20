@@ -15,7 +15,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
       {/* Image at the top, full width with 9:10 aspect ratio */}
       <div className='w-full aspect-[9/10] relative'>
         <Image
-          src={exercise.ImageUrl}
+          src={exercise.imageUrl}
           alt={exercise.name}
           priority
           fill

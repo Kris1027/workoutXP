@@ -12,7 +12,7 @@ model Exercise {
   name        String
   category    String
   difficulty  String
-  ImageUrl    String
+  imageUrl    String
   description String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -22,7 +22,7 @@ model Exercise {
 model Workout {
   id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String
-  ImageUrl    String
+  imageUrl    String
   description String
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
