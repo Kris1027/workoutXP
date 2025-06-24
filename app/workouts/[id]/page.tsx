@@ -7,7 +7,7 @@ interface WorkoutDetailsPageProps {
 }
 
 const WorkoutDetailsPage = async ({ params }: WorkoutDetailsPageProps) => {
-  const { id } = await params;
+  const { id } = params;
 
   const detailedWorkout = await prisma.workout.findUnique({
     where: { id: id },
