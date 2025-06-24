@@ -27,3 +27,12 @@ export const createWorkout = async (formData: FormData) => {
 
   revalidatePath('/workouts');
 };
+
+export const fetchWorkouts = async () => {
+  return prisma.workout.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: {
+      exercises: true,
+    },
+  });
+};

@@ -1,16 +1,11 @@
-import { createWorkout } from '@/actions/workouts-action';
+import { createWorkout, fetchWorkouts } from '@/actions/workouts-action';
 import WorkoutCreationForm from '@/components/workouts/workout-create-form';
 import prisma from '@/lib/prisma';
 
 const WorkoutsPage = async () => {
-  // Fetch both workouts and exercises
+  // Fetch workouts and exercises
   const [workouts, exercises] = await Promise.all([
-    prisma.workout.findMany({
-      orderBy: { createdAt: 'desc' },
-      include: {
-        exercises: true,
-      },
-    }),
+    fetchWorkouts(),
     prisma.exercise.findMany({
       orderBy: { createdAt: 'desc' },
     }),
