@@ -3,6 +3,24 @@
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 
+export const fetchWorkouts = async () => {
+  return prisma.workout.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: {
+      exercises: true,
+    },
+  });
+};
+
+export const fetchWorkoutById = async (id: string) => {
+  return prisma.workout.findUnique({
+    where: { id: id },
+    include: {
+      exercises: true,
+    },
+  });
+};
+
 export const createWorkout = async (formData: FormData) => {
   const name = formData.get('name') as string;
   const description = formData.get('description') as string;
@@ -26,13 +44,4 @@ export const createWorkout = async (formData: FormData) => {
   });
 
   revalidatePath('/workouts');
-};
-
-export const fetchWorkouts = async () => {
-  return prisma.workout.findMany({
-    orderBy: { createdAt: 'desc' },
-    include: {
-      exercises: true,
-    },
-  });
 };
