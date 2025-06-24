@@ -5,6 +5,7 @@ import Form from 'next/form';
 import { FaSearch, FaPlus, FaMinus, FaDumbbell } from 'react-icons/fa';
 import WorkoutList from '@/components/workouts/workout-list';
 import { ExerciseProps, WorkoutProps } from '@/types/data-types';
+import { getDifficultyColor } from '@/utils/get-difficulty-color';
 
 interface WorkoutCreationFormProps {
   exercises: ExerciseProps[];
@@ -185,13 +186,9 @@ const WorkoutCreationForm = ({
                         {exercise.category}
                       </span>
                       <span
-                        className={`text-xs px-2 py-1 rounded-full ${
-                          exercise.difficulty === 'Easy'
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
-                            : exercise.difficulty === 'Medium'
-                            ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'
-                            : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
-                        }`}
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(
+                          exercise.difficulty
+                        )}`}
                       >
                         {exercise.difficulty}
                       </span>
