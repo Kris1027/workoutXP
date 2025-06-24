@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { WorkoutProps } from '@/types/data-types';
+import type { WorkoutProps } from '@/types/data-types';
 import { revalidatePath } from 'next/cache';
 
 export const fetchWorkouts = async (): Promise<WorkoutProps[]> => {
