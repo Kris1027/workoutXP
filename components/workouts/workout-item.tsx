@@ -10,7 +10,6 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
   return (
     <Link
       href={`/workouts/${workout.id}`}
-      key={workout.id}
       className='bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 flex flex-col'
     >
       {/* Image at the top, full width with 9:10 aspect ratio */}
