@@ -2,11 +2,11 @@ import type { ExerciseProps } from '@/types/data-types';
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
 import Image from 'next/image';
 
-type ExerciseListProps = {
+type ExerciseItemProps = {
   exercise: ExerciseProps;
 };
 
-const ExerciseItem: React.FC<ExerciseListProps> = ({ exercise }) => {
+const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
   return (
     <div
       key={exercise.id}
@@ -15,7 +15,7 @@ const ExerciseItem: React.FC<ExerciseListProps> = ({ exercise }) => {
       {/* Image at the top, full width with 9:10 aspect ratio */}
       <div className='w-full aspect-[9/10] relative'>
         <Image
-          src={exercise.ImageUrl}
+          src={exercise.imageUrl}
           alt={exercise.name}
           priority
           fill

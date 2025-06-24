@@ -17,7 +17,8 @@ const navLinks = [
 
 const NavigationBar = () => {
   const pathname = usePathname();
-  const isActive = (href: string) => (href === '/' ? pathname === href : pathname.startsWith(href));
+  const isActive = (href: string) =>
+    href === '/' ? pathname === href : pathname?.startsWith(href);
 
   return (
     <nav aria-label='Main Navigation' className='bg-gray-800 w-full sticky bottom-0 z-10'>
