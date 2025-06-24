@@ -11,7 +11,7 @@ const ExerciseList: React.FC<ExerciseListProps> = ({ exercises }) => {
     <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 px-4 py-6'>
       {/* Header */}
       <div className='mb-6'>
-        <h1 className='text-3xl font-bold text-gray-900 dark:text-white mb-2'>Workout Exercises</h1>
+        <h1 className='text-3xl font-bold text-gray-900 dark:text-white mb-2'>Exercises</h1>
         <p className='text-gray-600 dark:text-gray-400'>Discover unique exercises</p>
       </div>
 

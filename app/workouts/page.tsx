@@ -1,15 +1,10 @@
+import { fetchExercises } from '@/actions/exercises-action';
 import { createWorkout, fetchWorkouts } from '@/actions/workouts-action';
 import WorkoutCreationForm from '@/components/workouts/workout-create-form';
-import prisma from '@/lib/prisma';
 
 const WorkoutsPage = async () => {
   // Fetch workouts and exercises
-  const [workouts, exercises] = await Promise.all([
-    fetchWorkouts(),
-    prisma.exercise.findMany({
-      orderBy: { createdAt: 'desc' },
-    }),
-  ]);
+  const [workouts, exercises] = await Promise.all([fetchWorkouts(), fetchExercises()]);
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800'>

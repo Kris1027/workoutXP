@@ -1,10 +1,8 @@
+import { fetchExercises } from '@/actions/exercises-action';
 import ExerciseList from '@/components/exercises/exercise-list';
-import prisma from '@/lib/prisma';
 
 const ExercisesPage = async () => {
-  const exercises = await prisma.exercise.findMany({
-    orderBy: { createdAt: 'desc' },
-  });
+  const exercises = await fetchExercises();
 
   return <ExerciseList exercises={exercises} />;
 };
