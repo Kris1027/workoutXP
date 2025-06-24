@@ -1,16 +1,11 @@
+import { fetchWorkoutById } from '@/actions/workouts-action';
 import ExerciseItem from '@/components/exercises/exercise-item';
-import prisma from '@/lib/prisma';
 import { FaFilter } from 'react-icons/fa';
 
 const WorkoutDetailsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
 
-  const detailedWorkout = await prisma.workout.findUnique({
-    where: { id: id },
-    include: {
-      exercises: true,
-    },
-  });
+  const detailedWorkout = await fetchWorkoutById(id);
 
   const exercises = detailedWorkout?.exercises || [];
 

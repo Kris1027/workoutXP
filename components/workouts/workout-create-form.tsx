@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-import Form from 'next/form';
-import { FaSearch, FaPlus, FaMinus, FaDumbbell } from 'react-icons/fa';
 import WorkoutList from '@/components/workouts/workout-list';
-import { ExerciseProps, WorkoutProps } from '@/types/data-types';
+import type { ExerciseProps, WorkoutProps } from '@/types/data-types';
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
+import Form from 'next/form';
+import { useState } from 'react';
+import { FaDumbbell, FaMinus, FaPlus, FaSearch } from 'react-icons/fa';
 
 interface WorkoutCreationFormProps {
   exercises: ExerciseProps[];
