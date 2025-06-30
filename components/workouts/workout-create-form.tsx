@@ -228,12 +228,6 @@ const WorkoutCreationForm = ({
           </Form>
         </div>
       )}
-
-      {/* Existing Workouts */}
-      <div>
-        <h2 className='text-2xl font-bold text-gray-900 dark:text-white mb-6'>Your Workouts</h2>
-        <WorkoutList workouts={existingWorkouts} />
-      </div>
     </div>
   );
 };
