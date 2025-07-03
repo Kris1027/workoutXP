@@ -1,6 +1,6 @@
 import { fetchExercises } from '@/actions/exercises-action';
 import { fetchWorkouts } from '@/actions/workouts-action';
-import WorkoutCreateFormTanstack from '@/components/workouts/workout-create-form-tanstack';
+import WorkoutCreateForm from '@/components/workouts/workout-create-form';
 import WorkoutList from '@/components/workouts/workout-list';
 
 const WorkoutsPage = async () => {
@@ -8,7 +8,7 @@ const WorkoutsPage = async () => {
 
   return (
     <div>
-      <WorkoutCreateFormTanstack exercises={exercises} />
+      <WorkoutCreateForm exercises={exercises} />
       <WorkoutList workouts={workouts} />
     </div>
   );
