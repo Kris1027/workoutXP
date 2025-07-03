@@ -19,7 +19,7 @@ const WorkoutCreateFormTanstack: React.FC<WorkoutCreateFormTanstackProps> = ({ e
       exercises: [] as ExerciseProps[],
     } as WorkoutProps,
     validators: {
-      onChange: createWorkoutSchema,
+      onSubmit: createWorkoutSchema,
     },
     onSubmit: ({ value }) => {
       console.log(value);
@@ -90,24 +90,21 @@ const WorkoutCreateFormTanstack: React.FC<WorkoutCreateFormTanstackProps> = ({ e
               <label>Select Exercises:</label>
               <ul>
                 {exercises.map((exercise) => (
-                  <li key={exercise.id}>
+                  <li key={exercise.id} className='flex'>
                     <input
                       type='checkbox'
-                      id={`exercise-${exercise.id}`}
                       checked={field.state.value.some((ex) => ex.id === exercise.id)}
                       onChange={(e) => {
                         if (e.target.checked) {
-                          // Add exercise
                           field.handleChange([...field.state.value, exercise]);
                         } else {
-                          // Remove exercise
-                          field.handleChange(
-                            field.state.value.filter((ex) => ex.id !== exercise.id)
-                          );
+                          field.handleChange([
+                            ...field.state.value.filter((ex) => ex.id != exercise.id),
+                          ]);
                         }
                       }}
                     />
-                    <label htmlFor={`exercise-${exercise.id}`}>{exercise.name}</label>
+                    <p>{exercise.name}</p>
                   </li>
                 ))}
               </ul>
@@ -118,8 +115,6 @@ const WorkoutCreateFormTanstack: React.FC<WorkoutCreateFormTanstackProps> = ({ e
                     .join(', ')}
                 </p>
               )}
-              {/* Show selected count */}
-              <p>Selected: {field.state.value.length} exercise(s)</p>
             </div>
           )}
         />
