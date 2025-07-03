@@ -37,9 +37,8 @@ const WorkoutCreateForm: React.FC<WorkoutCreateFormTanstackProps> = ({ exercises
         <h1>Tanstack form</h1>
 
         {/* name */}
-        <form.Field
-          name='name'
-          children={(field) => (
+        <form.Field name='name'>
+          {(field) => (
             <div>
               <label htmlFor='name'>Workout name:</label>
               <input
@@ -57,12 +56,11 @@ const WorkoutCreateForm: React.FC<WorkoutCreateFormTanstackProps> = ({ exercises
               )}
             </div>
           )}
-        />
+        </form.Field>
 
         {/* description */}
-        <form.Field
-          name='description'
-          children={(field) => (
+        <form.Field name='description'>
+          {(field) => (
             <div>
               <label htmlFor='descriotion'>Workout description:</label>
               <input
@@ -80,12 +78,11 @@ const WorkoutCreateForm: React.FC<WorkoutCreateFormTanstackProps> = ({ exercises
               )}
             </div>
           )}
-        />
+        </form.Field>
 
         {/* exercises */}
-        <form.Field
-          name='exercises'
-          children={(field) => (
+        <form.Field name='exercises'>
+          {(field) => (
             <div>
               <label>Select Exercises:</label>
               <ul>
@@ -117,7 +114,7 @@ const WorkoutCreateForm: React.FC<WorkoutCreateFormTanstackProps> = ({ exercises
               )}
             </div>
           )}
-        />
+        </form.Field>
 
         <button type='submit' className='py-2 px-10 bg-amber-700 cursor-pointer'>
           Create Workout
