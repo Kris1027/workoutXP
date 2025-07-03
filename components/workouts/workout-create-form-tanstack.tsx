@@ -3,19 +3,20 @@
 import { createWorkoutSchema } from '@/schemas/data-schemas';
 import type { ExerciseProps, WorkoutProps } from '@/types/data-types';
 import { useForm } from '@tanstack/react-form';
+import Image from 'next/image';
 
 interface WorkoutCreateFormTanstackProps {
   exercises: ExerciseProps[];
 }
 
-const WorkoutCreateFormTanstack: React.FC<WorkoutCreateFormTanstackProps> = () => {
+const WorkoutCreateFormTanstack: React.FC<WorkoutCreateFormTanstackProps> = ({ exercises }) => {
   const form = useForm({
     defaultValues: {
       name: '',
       imageUrl:
         'https://fra.cloud.appwrite.io/v1/storage/buckets/exercise-images-storage/files/682ba1580028ac3bbc20/view?project=gym-app&mode=admin',
       description: '',
-      exercises: [],
+      exercises: [] as ExerciseProps[],
     } as WorkoutProps,
     validators: {
       onChange: createWorkoutSchema,
@@ -77,6 +78,48 @@ const WorkoutCreateFormTanstack: React.FC<WorkoutCreateFormTanstackProps> = () =
                     .join(', ')}
                 </p>
               )}
+            </div>
+          )}
+        />
+
+        {/* exercises */}
+        <form.Field
+          name='exercises'
+          children={(field) => (
+            <div>
+              <label>Select Exercises:</label>
+              <ul>
+                {exercises.map((exercise) => (
+                  <li key={exercise.id}>
+                    <input
+                      type='checkbox'
+                      id={`exercise-${exercise.id}`}
+                      checked={field.state.value.some((ex) => ex.id === exercise.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          // Add exercise
+                          field.handleChange([...field.state.value, exercise]);
+                        } else {
+                          // Remove exercise
+                          field.handleChange(
+                            field.state.value.filter((ex) => ex.id !== exercise.id)
+                          );
+                        }
+                      }}
+                    />
+                    <label htmlFor={`exercise-${exercise.id}`}>{exercise.name}</label>
+                  </li>
+                ))}
+              </ul>
+              {!field.state.meta.isValid && (
+                <p className='text-red-500 italic'>
+                  {field.state.meta.errors
+                    .map((error) => (typeof error === 'string' ? error : error?.message))
+                    .join(', ')}
+                </p>
+              )}
+              {/* Show selected count */}
+              <p>Selected: {field.state.value.length} exercise(s)</p>
             </div>
           )}
         />
