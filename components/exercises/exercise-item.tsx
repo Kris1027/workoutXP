@@ -1,12 +1,28 @@
+'use client';
+
+import { deleteExercise } from '@/actions/exercises-action';
 import type { ExerciseProps } from '@/types/data-types';
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
 import Image from 'next/image';
+import { useTransition } from 'react';
 
 type ExerciseItemProps = {
   exercise: ExerciseProps;
 };
 
 const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
+  const [isPending, startTransition] = useTransition();
+
+  const handleDelete = async (id: string) => {
+    startTransition(async () => {
+      try {
+        await deleteExercise(id);
+      } catch (error) {
+        console.error('Failed to delete exercise:', error);
+      }
+    });
+  };
+
   return (
     <div
       key={exercise.id}
@@ -50,6 +66,14 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
           </div>
         </div>
       </div>
+      <button
+        onClick={() => {
+          if (exercise.id) handleDelete(exercise.id);
+        }}
+        disabled={isPending}
+      >
+        {isPending ? 'Deleting...' : 'Delete'}
+      </button>
     </div>
   );
 };
