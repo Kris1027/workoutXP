@@ -1,19 +1,32 @@
+'use client';
+
+import { deleteWorkout } from '@/actions/workouts-action';
 import type { WorkoutProps } from '@/types/data-types';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTransition } from 'react';
 
 type WorkoutItemProps = {
   workout: WorkoutProps;
 };
 
 const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
+  const [isPending, startTransition] = useTransition();
+
+  const handleDelete = async (id: string) => {
+    startTransition(async () => {
+      try {
+        await deleteWorkout(id);
+      } catch (error) {
+        console.error('Failed to delete exercise:', error);
+      }
+    });
+  };
+
   return (
-    <Link
-      href={`/workouts/${workout.id}`}
-      className='bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 flex flex-col'
-    >
+    <div className='bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 flex flex-col'>
       {/* Image at the top, full width with 9:10 aspect ratio */}
-      <div className='w-full aspect-[9/10] relative'>
+      <Link href={`/workouts/${workout.id}`} className='w-full aspect-[9/10] relative'>
         <Image
           src={workout.imageUrl}
           alt={workout.name}
@@ -22,7 +35,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
           className='object-cover'
           sizes='(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw'
         />
-      </div>
+      </Link>
 
       {/* Content below image */}
       <div className='flex-1 p-4 flex flex-col justify-between'>
@@ -36,7 +49,15 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
           </p>
         </div>
       </div>
-    </Link>
+      <button
+        onClick={() => {
+          if (workout.id) handleDelete(workout.id);
+        }}
+        disabled={isPending}
+      >
+        {isPending ? 'Deleting...' : 'Delete'}
+      </button>
+    </div>
   );
 };
 

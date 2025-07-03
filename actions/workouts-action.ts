@@ -42,3 +42,18 @@ export const createWorkout = async (workoutData: WorkoutProps): Promise<void> =>
 
   revalidatePath('/workouts');
 };
+
+export const deleteWorkout = async (workoutId: string): Promise<void> => {
+  try {
+    await prisma.workout.delete({
+      where: {
+        id: workoutId,
+      },
+    });
+
+    revalidatePath('/workouts');
+  } catch (error) {
+    console.error('Error deleting workout:', error);
+    throw new Error('Failed to delete exercise');
+  }
+};
