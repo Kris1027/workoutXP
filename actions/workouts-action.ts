@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 
 export const fetchWorkouts = async (): Promise<WorkoutProps[]> => {
   try {
-    return prisma.workout.findMany({
+    return await prisma.workout.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
         exercises: true,
@@ -20,7 +20,7 @@ export const fetchWorkouts = async (): Promise<WorkoutProps[]> => {
 
 export const fetchWorkoutById = async (id: string): Promise<WorkoutProps | null> => {
   try {
-    return prisma.workout.findUnique({
+    return await prisma.workout.findUnique({
       where: { id: id },
       include: {
         exercises: true,
@@ -67,6 +67,6 @@ export const deleteWorkout = async (workoutId: string): Promise<void> => {
     revalidatePath('/workouts');
   } catch (error) {
     console.error('Error deleting workout:', error);
-    throw new Error('Failed to delete exercise');
+    throw new Error(error instanceof Error ? error.message : 'Unexpected error');
   }
 };

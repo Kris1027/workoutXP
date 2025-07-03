@@ -18,7 +18,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout }) => {
       try {
         await deleteWorkout(id);
       } catch (error) {
-        console.error('Failed to delete exercise:', error);
+        console.error('Failed to delete workout:', error);
       }
     });
   };

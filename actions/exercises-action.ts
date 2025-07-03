@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 
 export const fetchExercises = async (): Promise<ExerciseProps[]> => {
   try {
-    return prisma.exercise.findMany({
+    return await prisma.exercise.findMany({
       orderBy: { createdAt: 'desc' },
     });
   } catch (error) {

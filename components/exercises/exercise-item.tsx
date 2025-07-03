@@ -92,7 +92,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
                 </span>
               </div>
             </div>
-          </div>{' '}
+          </div>
         </>
       )}
       <div className='flex justify-around items-center'>
