@@ -28,8 +28,14 @@ const ExerciseCreateForm: React.FC<ExerciseCreateFormProps> = ({
       onChange: createExerciseSchema,
     },
     onSubmit: async ({ value }) => {
-      isEditedExercise ? await updateExercise(value) : await createExercise(value);
-      handleEditComplete?.();
+      if (isEditedExercise) {
+        await updateExercise(value);
+      } else {
+        await createExercise(value);
+      }
+      if (handleEditComplete) {
+        handleEditComplete();
+      }
     },
   });
 
