@@ -1,5 +1,6 @@
 'use client';
 
+import { createWorkoutSchema } from '@/schemas/data-schemas';
 import type { ExerciseProps, WorkoutProps } from '@/types/data-types';
 import { useForm } from '@tanstack/react-form';
 
@@ -16,56 +17,73 @@ const WorkoutCreateFormTanstack: React.FC<WorkoutCreateFormTanstackProps> = () =
       description: '',
       exercises: [],
     } as WorkoutProps,
-    onSubmit: async ({ value }) => {
-      console.log('Form submitted:', value);
+    validators: {
+      onChange: createWorkoutSchema,
+    },
+    onSubmit: ({ value }) => {
+      console.log(value);
     },
   });
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800'>
+    <div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           form.handleSubmit();
-          form.reset();
         }}
-        className='space-y-4'
       >
-        <h2>Create a New Workout</h2>
+        <h1>Tanstack form</h1>
 
-        <form.Field name='name'>
-          {(field) => (
-            <div className='space-x-4'>
-              <label htmlFor='name'>Name:</label>
+        {/* name */}
+        <form.Field
+          name='name'
+          children={(field) => (
+            <div>
+              <label htmlFor='name'>Workout name:</label>
               <input
                 type='text'
                 id='name'
-                name='name'
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
-                className='px-4 py-2 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 active:outline-none active:ring-2 active:ring-indigo-700 border-none shadow-none'
               />
+              {!field.state.meta.isValid && (
+                <p className='text-red-500 italic'>
+                  {field.state.meta.errors
+                    .map((error) => (typeof error === 'string' ? error : error?.message))
+                    .join(', ')}
+                </p>
+              )}
             </div>
           )}
-        </form.Field>
+        />
 
-        <form.Field name='description'>
-          {(field) => (
-            <div className='space-x-4'>
-              <label htmlFor='description'>Description:</label>
+        {/* description */}
+        <form.Field
+          name='description'
+          children={(field) => (
+            <div>
+              <label htmlFor='descriotion'>Workout description:</label>
               <input
                 type='text'
                 id='description'
-                name='description'
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
-                className='px-4 py-2 bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 active:outline-none active:ring-2 active:ring-indigo-700 border-none shadow-none'
               />
+              {!field.state.meta.isValid && (
+                <p className='text-red-500 italic'>
+                  {field.state.meta.errors
+                    .map((error) => (typeof error === 'string' ? error : error?.message))
+                    .join(', ')}
+                </p>
+              )}
             </div>
           )}
-        </form.Field>
+        />
 
-        <button type='submit'>Create Workout</button>
+        <button type='submit' className='py-2 px-10 bg-amber-700 cursor-pointer'>
+          Create Workout
+        </button>
       </form>
     </div>
   );
