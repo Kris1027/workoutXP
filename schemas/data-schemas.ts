@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const createExerciseSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(1, 'Exercise name is required'),
   category: z.string().min(1, 'Category is required'),
   difficulty: z.string().min(1, 'Difficulty is required'),

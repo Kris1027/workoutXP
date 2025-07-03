@@ -40,3 +40,27 @@ export const deleteExercise = async (exerciseId: string): Promise<void> => {
     throw new Error('Failed to delete exercise');
   }
 };
+
+export const updateExercise = async (exerciseData: ExerciseProps): Promise<void> => {
+  const { name, category, difficulty, imageUrl, description, id } = exerciseData;
+
+  try {
+    await prisma.exercise.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name,
+        category,
+        difficulty,
+        imageUrl,
+        description,
+      },
+    });
+
+    revalidatePath('/exercises');
+  } catch (error) {
+    console.error('Error updating exercise:', error);
+    throw new Error('Failed to update exercise');
+  }
+};
