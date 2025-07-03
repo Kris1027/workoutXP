@@ -62,7 +62,7 @@ const WorkoutCreateForm: React.FC<WorkoutCreateFormTanstackProps> = ({ exercises
         <form.Field name='description'>
           {(field) => (
             <div>
-              <label htmlFor='descriotion'>Workout description:</label>
+              <label htmlFor='description'>Workout description:</label>
               <input
                 type='text'
                 id='description'
