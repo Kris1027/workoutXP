@@ -22,13 +22,11 @@ export const fetchWorkoutById = async (id: string): Promise<WorkoutProps | null>
   });
 };
 
-export const createWorkout = async (formData: FormData): Promise<void> => {
-  const name = formData.get('name') as string;
-  const description = formData.get('description') as string;
-  const imageUrl = formData.get('imageUrl') as string;
+export const createWorkout = async (workoutData: WorkoutProps): Promise<void> => {
+  const { name, description, imageUrl, exercises } = workoutData;
 
   // Get selected exercise IDs
-  const selectedExerciseIds = formData.getAll('exercises') as string[];
+  const selectedExerciseIds = exercises.map((exercise) => exercise.id);
 
   // Create workout with selected exercises
   await prisma.workout.create({

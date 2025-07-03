@@ -1,5 +1,6 @@
 'use client';
 
+import { createWorkout } from '@/actions/workouts-action';
 import { createWorkoutSchema } from '@/schemas/data-schemas';
 import type { ExerciseProps, WorkoutProps } from '@/types/data-types';
 import { useForm } from '@tanstack/react-form';
@@ -20,8 +21,8 @@ const WorkoutCreateForm: React.FC<WorkoutCreateFormTanstackProps> = ({ exercises
     validators: {
       onSubmit: createWorkoutSchema,
     },
-    onSubmit: ({ value }) => {
-      console.log(value);
+    onSubmit: async ({ value }) => {
+      await createWorkout(value);
     },
   });
 
