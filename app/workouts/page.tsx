@@ -9,7 +9,7 @@ const WorkoutsPage = async () => {
   return (
     <div>
       <WorkoutCreateForm exercises={exercises} />
-      <WorkoutList workouts={workouts} />
+      <WorkoutList workouts={workouts} exercises={exercises} />
     </div>
   );
 };

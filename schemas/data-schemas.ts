@@ -10,6 +10,7 @@ export const createExerciseSchema = z.object({
 });
 
 export const createWorkoutSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(1, 'Workout name is required'),
   imageUrl: z.string().min(1, 'Image is required'),
   description: z.string().min(1, 'Workout description is required'),

@@ -70,3 +70,32 @@ export const deleteWorkout = async (workoutId: string): Promise<void> => {
     throw new Error(error instanceof Error ? error.message : 'Unexpected error');
   }
 };
+
+export const updateWorkout = async (workoutData: WorkoutProps): Promise<void> => {
+  const { name, description, imageUrl, exercises, id } = workoutData;
+
+  if (!id) throw new Error('Missing ID for workout update');
+
+  const selectedExerciseIds = exercises.map((exercise) => exercise.id);
+
+  try {
+    await prisma.workout.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name,
+        description,
+        imageUrl,
+        exercises: {
+          set: selectedExerciseIds.map((id) => ({ id })),
+        },
+      },
+    });
+
+    revalidatePath('/workouts');
+  } catch (error) {
+    console.error('Error updating workout:', error);
+    throw new Error(error instanceof Error ? error.message : 'Unexpected error');
+  }
+};

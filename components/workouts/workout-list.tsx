@@ -1,12 +1,13 @@
-import type { WorkoutProps } from '@/types/data-types';
+import type { ExerciseProps, WorkoutProps } from '@/types/data-types';
 import WorkoutItem from './workout-item';
 import { FaFilter } from 'react-icons/fa';
 
 type WorkoutListProps = {
   workouts: WorkoutProps[];
+  exercises: ExerciseProps[];
 };
 
-const WorkoutList: React.FC<WorkoutListProps> = ({ workouts }) => {
+const WorkoutList: React.FC<WorkoutListProps> = ({ workouts, exercises }) => {
   return (
     <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 px-4 py-6'>
       {/* Header */}
@@ -18,7 +19,7 @@ const WorkoutList: React.FC<WorkoutListProps> = ({ workouts }) => {
       {/* Exercise Grid */}
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
         {workouts.map((workout) => (
-          <WorkoutItem key={workout.id} workout={workout} />
+          <WorkoutItem key={workout.id} workout={workout} allExercises={exercises} />
         ))}
       </div>
 
