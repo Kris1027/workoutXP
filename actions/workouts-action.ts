@@ -61,7 +61,7 @@ const deleteFileFromUploadThing = async (fileKey: string | string[]) => {
   try {
     await utapi.deleteFiles(fileKey);
   } catch (error) {
-    throw new Error('Failed to delete file(s) from UploadThing');
+    throw new Error('Failed to delete file from UploadThing');
   }
 };
 
@@ -69,22 +69,23 @@ export const deleteWorkout = async (workoutId: string): Promise<void> => {
   if (!workoutId) throw new Error('Missing ID for workout deletion');
 
   try {
-    // Fetch the workout to get the image URL
     const workout = await prisma.workout.findUnique({
       where: { id: workoutId },
     });
 
     if (!workout) throw new Error('Workout not found');
 
-    // Extract the file key from the image URL (if applicable)
-    if (workout.imageUrl) {
-      const fileKey = workout.imageUrl.split('/').pop(); // Adjust this logic based on your URL structure
+    try {
+      const url = new URL(workout.imageUrl);
+      const fileKey = url.pathname.split('/').pop();
       if (fileKey) {
         await deleteFileFromUploadThing(fileKey);
       }
+    } catch (error) {
+      console.error('Invalid image URL:', workout.imageUrl, error);
+      throw new Error(error instanceof Error ? error.message : 'Unexpected error');
     }
 
-    // Delete the workout from the database
     await prisma.workout.delete({
       where: {
         id: workoutId,
