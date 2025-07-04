@@ -29,7 +29,7 @@ const WorkoutCreateForm: React.FC<WorkoutCreateFormTanstackProps> = ({
       exercises: editedWorkoutExercises || ([] as ExerciseProps[]),
     } as WorkoutProps,
     validators: {
-      onChange: createWorkoutSchema,
+      onSubmit: createWorkoutSchema,
     },
     onSubmit: async ({ value }) => {
       if (isEditedWorkout) {
