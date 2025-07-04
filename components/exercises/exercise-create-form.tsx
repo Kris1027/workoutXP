@@ -5,6 +5,7 @@ import { createExerciseSchema } from '@/schemas/data-schemas';
 import type { ExerciseProps } from '@/types/data-types';
 import { useForm } from '@tanstack/react-form';
 import { UploadButton } from '@/utils/uploadthing';
+import Image from 'next/image';
 
 interface ExerciseCreateFormProps {
   isEditedExercise?: ExerciseProps | null;
@@ -30,8 +31,10 @@ const ExerciseCreateForm: React.FC<ExerciseCreateFormProps> = ({
     onSubmit: async ({ value }) => {
       if (isEditedExercise) {
         await updateExercise(value);
+        form.reset();
       } else {
         await createExercise(value);
+        form.reset();
       }
       if (handleEditComplete) {
         handleEditComplete();
@@ -66,7 +69,13 @@ const ExerciseCreateForm: React.FC<ExerciseCreateFormProps> = ({
             />
             {field.state.value && (
               <div className='mt-2'>
-                <img src={field.state.value} alt='Exercise' style={{ maxWidth: 200 }} />
+                <Image
+                  src={field.state.value}
+                  alt='Exercise'
+                  width={100}
+                  height={100}
+                  className='object-cover object-center'
+                />
               </div>
             )}
             {!field.state.meta.isValid && (

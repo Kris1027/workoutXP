@@ -5,6 +5,7 @@ import { createWorkoutSchema } from '@/schemas/data-schemas';
 import type { ExerciseProps, WorkoutProps } from '@/types/data-types';
 import { UploadButton } from '@/utils/uploadthing';
 import { useForm } from '@tanstack/react-form';
+import Image from 'next/image';
 
 interface WorkoutCreateFormTanstackProps {
   exercises: ExerciseProps[];
@@ -28,13 +29,15 @@ const WorkoutCreateForm: React.FC<WorkoutCreateFormTanstackProps> = ({
       exercises: editedWorkoutExercises || ([] as ExerciseProps[]),
     } as WorkoutProps,
     validators: {
-      onSubmit: createWorkoutSchema,
+      onChange: createWorkoutSchema,
     },
     onSubmit: async ({ value }) => {
       if (isEditedWorkout) {
         await updateWorkout(value);
+        form.reset();
       } else {
         await createWorkout(value);
+        form.reset();
       }
       if (handleEditComplete) {
         handleEditComplete();
@@ -69,7 +72,13 @@ const WorkoutCreateForm: React.FC<WorkoutCreateFormTanstackProps> = ({
               />
               {field.state.value && (
                 <div className='mt-2'>
-                  <img src={field.state.value} alt='Exercise' style={{ maxWidth: 200 }} />
+                  <Image
+                    src={field.state.value}
+                    alt='Workout'
+                    width={100}
+                    height={100}
+                    className='object-cover object-center'
+                  />
                 </div>
               )}
               {!field.state.meta.isValid && (
