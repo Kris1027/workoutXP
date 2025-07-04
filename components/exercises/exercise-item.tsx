@@ -61,10 +61,9 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
             <Image
               src={exercise.imageUrl}
               alt={exercise.name}
-              priority
-              fill
-              className='object-cover'
-              sizes='(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw'
+              width={1000}
+              height={1000}
+              className='min-h-72 object-cover object-center'
             />
           </div>
           {/* Content below image */}
