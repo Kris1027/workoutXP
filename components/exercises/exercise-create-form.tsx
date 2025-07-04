@@ -22,7 +22,7 @@ const ExerciseCreateForm: React.FC<ExerciseCreateFormProps> = ({
       name: isEditedExercise?.name || '',
       category: isEditedExercise?.category || '',
       difficulty: isEditedExercise?.difficulty || '',
-      imageUrl: '',
+      imageUrl: isEditedExercise?.imageUrl || '',
       description: isEditedExercise?.description || '',
     } as ExerciseProps,
     validators: {
