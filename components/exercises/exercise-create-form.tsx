@@ -4,6 +4,7 @@ import { createExercise, updateExercise } from '@/actions/exercises-action';
 import { createExerciseSchema } from '@/schemas/data-schemas';
 import type { ExerciseProps } from '@/types/data-types';
 import { useForm } from '@tanstack/react-form';
+import { UploadButton } from '@/utils/uploadthing';
 
 interface ExerciseCreateFormProps {
   isEditedExercise?: ExerciseProps | null;
@@ -20,12 +21,11 @@ const ExerciseCreateForm: React.FC<ExerciseCreateFormProps> = ({
       name: isEditedExercise?.name || '',
       category: isEditedExercise?.category || '',
       difficulty: isEditedExercise?.difficulty || '',
-      imageUrl:
-        'https://fra.cloud.appwrite.io/v1/storage/buckets/exercise-images-storage/files/682ba1580028ac3bbc20/view?project=gym-app&mode=admin',
+      imageUrl: '',
       description: isEditedExercise?.description || '',
     } as ExerciseProps,
     validators: {
-      onChange: createExerciseSchema,
+      onSubmit: createExerciseSchema,
     },
     onSubmit: async ({ value }) => {
       if (isEditedExercise) {
@@ -48,6 +48,37 @@ const ExerciseCreateForm: React.FC<ExerciseCreateFormProps> = ({
       className='p-4'
     >
       <h1>{isEditedExercise ? 'Update Exercise' : 'Create New Exercise'}</h1>
+
+      {/* image */}
+      <form.Field name='imageUrl'>
+        {(field) => (
+          <div>
+            <UploadButton
+              endpoint='imageUploader'
+              onClientUploadComplete={(res) => {
+                if (res && res.length > 0) {
+                  field.handleChange(res[0].ufsUrl);
+                }
+              }}
+              onUploadError={(error: Error) => {
+                console.error(`Error! ${error.message}`); // let's replace this with toast later
+              }}
+            />
+            {field.state.value && (
+              <div className='mt-2'>
+                <img src={field.state.value} alt='Exercise' style={{ maxWidth: 200 }} />
+              </div>
+            )}
+            {!field.state.meta.isValid && (
+              <p className='text-red-500 italic'>
+                {field.state.meta.errors
+                  .map((error) => (typeof error === 'string' ? error : error?.message))
+                  .join(', ')}
+              </p>
+            )}
+          </div>
+        )}
+      </form.Field>
 
       {/* name */}
       <form.Field name='name'>
