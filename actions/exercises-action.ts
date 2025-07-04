@@ -85,6 +85,26 @@ export const updateExercise = async (exerciseData: ExerciseProps): Promise<void>
   if (!id) throw new Error('Missing ID for exercise update');
 
   try {
+    // Delete the old image from storage if the imageUrl is being updated
+    if (imageUrl) {
+      const existingExercise = await prisma.exercise.findUnique({
+        where: { id },
+      });
+
+      if (existingExercise?.imageUrl && existingExercise.imageUrl !== imageUrl) {
+        try {
+          const url = new URL(existingExercise.imageUrl);
+          const fileKey = url.pathname.split('/').pop();
+          if (fileKey) {
+            await deleteFileFromUploadThing(fileKey);
+          }
+        } catch (error) {
+          console.error('Invalid old image URL:', existingExercise.imageUrl, error);
+          throw new Error(error instanceof Error ? error.message : 'Unexpected error');
+        }
+      }
+    }
+
     await prisma.exercise.update({
       where: {
         id: id,
