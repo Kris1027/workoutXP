@@ -5,7 +5,12 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: process.env.UPLOADTHING_HOSTNAME || '',
+        hostname: (() => {
+          if (!process.env.UPLOADTHING_HOSTNAME) {
+            throw new Error('Environment variable for host is not set');
+          }
+          return process.env.UPLOADTHING_HOSTNAME;
+        })(),
         port: '',
       },
     ],
