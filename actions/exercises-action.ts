@@ -1,6 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { utapi } from '@/server/uploadthings';
 import type { ExerciseProps } from '@/types/data-types';
 import { revalidatePath } from 'next/cache';
 
@@ -36,10 +37,34 @@ export const createExercise = async (exerciseData: ExerciseProps): Promise<void>
   }
 };
 
+const deleteFileFromUploadThing = async (fileKey: string | string[]) => {
+  try {
+    await utapi.deleteFiles(fileKey);
+  } catch (error) {
+    throw new Error('Failed to delete file(s) from UploadThing');
+  }
+};
+
 export const deleteExercise = async (exerciseId: string): Promise<void> => {
   if (!exerciseId) throw new Error('Missing ID for exercise deletion');
 
   try {
+    // Fetch the exercise to get the image URL
+    const exercise = await prisma.exercise.findUnique({
+      where: { id: exerciseId },
+    });
+
+    if (!exercise) throw new Error('Exercise not found');
+
+    // Extract the file key from the image URL (if applicable)
+    if (exercise.imageUrl) {
+      const fileKey = exercise.imageUrl.split('/').pop(); // Adjust this logic based on your URL structure
+      if (fileKey) {
+        await deleteFileFromUploadThing(fileKey);
+      }
+    }
+
+    // Delete the exercise from the database
     await prisma.exercise.delete({
       where: {
         id: exerciseId,
