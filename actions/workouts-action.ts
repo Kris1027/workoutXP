@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma';
 import type { WorkoutProps } from '@/types/data-types';
 import { revalidatePath } from 'next/cache';
+import { utapi } from '@/server/uploadthings';
 
 export const fetchWorkouts = async (): Promise<WorkoutProps[]> => {
   try {
@@ -56,8 +57,34 @@ export const createWorkout = async (workoutData: WorkoutProps): Promise<void> =>
   }
 };
 
-export const deleteWorkout = async (workoutId: string): Promise<void> => {
+const deleteFileFromUploadThing = async (fileKey: string | string[]) => {
   try {
+    await utapi.deleteFiles(fileKey);
+  } catch (error) {
+    throw new Error('Failed to delete file(s) from UploadThing');
+  }
+};
+
+export const deleteWorkout = async (workoutId: string): Promise<void> => {
+  if (!workoutId) throw new Error('Missing ID for workout deletion');
+
+  try {
+    // Fetch the workout to get the image URL
+    const workout = await prisma.workout.findUnique({
+      where: { id: workoutId },
+    });
+
+    if (!workout) throw new Error('Workout not found');
+
+    // Extract the file key from the image URL (if applicable)
+    if (workout.imageUrl) {
+      const fileKey = workout.imageUrl.split('/').pop(); // Adjust this logic based on your URL structure
+      if (fileKey) {
+        await deleteFileFromUploadThing(fileKey);
+      }
+    }
+
+    // Delete the workout from the database
     await prisma.workout.delete({
       where: {
         id: workoutId,
