@@ -7,12 +7,14 @@ import { BsListTask } from 'react-icons/bs';
 import { FiUser } from 'react-icons/fi';
 import { HiOutlineHomeModern } from 'react-icons/hi2';
 import { LuDumbbell } from 'react-icons/lu';
+import { ModeToggle } from './mode-toggle';
 
 const navLinks = [
   { name: 'Home', href: '/', icon: HiOutlineHomeModern },
   { name: 'Exercises', href: '/exercises', icon: BsListTask },
   { name: 'Workouts', href: '/workouts', icon: LuDumbbell },
   { name: 'Profile', href: '/profile', icon: FiUser },
+  { name: 'Theme', href: '#', icon: ModeToggle, isComponent: true }, // Added ModeToggle as a link
 ];
 
 const NavigationBar = () => {
@@ -21,35 +23,45 @@ const NavigationBar = () => {
     href === '/' ? pathname === href : pathname?.startsWith(href);
 
   return (
-    <nav aria-label='Main Navigation' className='bg-gray-800 w-full sticky bottom-0 z-10'>
-      <ul className='flex justify-around items-center p-1'>
+    <nav
+      aria-label='Main Navigation'
+      className='bg-gray-800 w-full sticky bottom-0 z-10 flex justify-between'
+    >
+      <ul className='flex justify-around items-center p-1 flex-1'>
         {navLinks.map((link) => {
           const IconComponent = link.icon;
           const active = isActive(link.href);
 
           return (
             <li key={link.name} className='flex-1'>
-              <Link
-                aria-current={active ? 'page' : undefined}
-                href={link.href}
-                className={`flex flex-col items-center justify-center py-2 px-1 transition-colors duration-200 group ${
-                  active ? 'text-violet-400' : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                <IconComponent
-                  size={24}
-                  className={`transition-colors duration-200 ${
-                    active ? 'text-violet-400' : 'text-gray-400 group-hover:text-white'
-                  }`}
-                />
-                <span
-                  className={`text-xs mt-1 font-medium transition-colors duration-200 ${
-                    active ? 'text-violet-400' : 'text-gray-400 group-hover:text-white'
+              {link.isComponent ? (
+                <div className='flex flex-col items-center justify-center py-2 px-1'>
+                  <IconComponent />
+                  <span className='text-xs mt-1 font-medium text-gray-400'>{link.name}</span>
+                </div>
+              ) : (
+                <Link
+                  aria-current={active ? 'page' : undefined}
+                  href={link.href}
+                  className={`flex flex-col items-center justify-center py-2 px-1 transition-colors duration-200 group ${
+                    active ? 'text-violet-400' : 'text-gray-400 hover:text-white'
                   }`}
                 >
-                  {link.name}
-                </span>
-              </Link>
+                  <IconComponent
+                    size={24}
+                    className={`transition-colors duration-200 ${
+                      active ? 'text-violet-400' : 'text-gray-400 group-hover:text-white'
+                    }`}
+                  />
+                  <span
+                    className={`text-xs mt-1 font-medium transition-colors duration-200 ${
+                      active ? 'text-violet-400' : 'text-gray-400 group-hover:text-white'
+                    }`}
+                  >
+                    {link.name}
+                  </span>
+                </Link>
+              )}
             </li>
           );
         })}
