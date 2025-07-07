@@ -63,10 +63,9 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises }) => {
             <Image
               src={workout.imageUrl}
               alt={workout.name}
-              priority
-              fill
-              className='object-cover'
-              sizes='(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw'
+              width={1000}
+              height={1000}
+              className='min-h-72 object-cover object-center'
             />
           </Link>
 

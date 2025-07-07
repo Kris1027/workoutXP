@@ -2,7 +2,18 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['fra.cloud.appwrite.io'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: (() => {
+          if (!process.env.UPLOADTHING_HOSTNAME) {
+            throw new Error('Environment variable for host is not set');
+          }
+          return process.env.UPLOADTHING_HOSTNAME;
+        })(),
+        port: '',
+      },
+    ],
   },
 };
 
