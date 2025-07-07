@@ -5,12 +5,7 @@ import ExerciseList from '@/components/exercises/exercise-list';
 const ExercisesPage = async () => {
   const exercises = await fetchExercises();
 
-  return (
-    <div>
-      <ExerciseCreateForm />
-      <ExerciseList exercises={exercises} />
-    </div>
-  );
+  return <ExerciseList exercises={exercises} />;
 };
 
 export default ExercisesPage;

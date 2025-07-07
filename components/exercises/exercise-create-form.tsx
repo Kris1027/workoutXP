@@ -6,6 +6,12 @@ import type { ExerciseProps } from '@/types/data-types';
 import { useForm } from '@tanstack/react-form';
 import { UploadButton } from '@/utils/uploadthing';
 import Image from 'next/image';
+import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
+import { Button } from '../ui/button';
+import { Label } from '../ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '../ui/dialog';
 
 interface ExerciseCreateFormProps {
   isEditedExercise?: ExerciseProps | null;
@@ -43,144 +49,155 @@ const ExerciseCreateForm: React.FC<ExerciseCreateFormProps> = ({
   });
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        form.handleSubmit();
-      }}
-      className='p-4'
-    >
-      <h1>{isEditedExercise ? 'Update Exercise' : 'Create New Exercise'}</h1>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Create New Exercise</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+          className='p-4 flex flex-col justify-center gap-2'
+        >
+          <DialogTitle>{isEditedExercise ? 'Update Exercise' : 'Create New Exercise'}</DialogTitle>
 
-      {/* image */}
-      <form.Field name='imageUrl'>
-        {(field) => (
-          <div>
-            <UploadButton
-              endpoint='imageUploader'
-              onClientUploadComplete={(res) => {
-                if (res && res.length > 0) {
-                  field.handleChange(res[0].ufsUrl);
-                }
-              }}
-              onUploadError={(error: Error) => {
-                console.error(`Error! ${error.message}`); // let's replace this with toast later
-              }}
-            />
-            {field.state.value && (
-              <div className='mt-2'>
-                <Image
-                  src={field.state.value}
-                  alt='Exercise'
-                  width={100}
-                  height={100}
-                  className='object-cover object-center'
+          {/* image */}
+          <form.Field name='imageUrl'>
+            {(field) => (
+              <div className='space-y-2'>
+                <UploadButton
+                  endpoint='imageUploader'
+                  onClientUploadComplete={(res) => {
+                    if (res && res.length > 0) {
+                      field.handleChange(res[0].ufsUrl);
+                    }
+                  }}
+                  onUploadError={(error: Error) => {
+                    console.error(`Error! ${error.message}`); // let's replace this with toast later
+                  }}
                 />
+                {field.state.value && (
+                  <div className='mt-2'>
+                    <Image
+                      src={field.state.value}
+                      alt='Exercise'
+                      width={100}
+                      height={100}
+                      className='object-cover object-center'
+                    />
+                  </div>
+                )}
+                {!field.state.meta.isValid && (
+                  <p className='text-red-500 italic'>
+                    {field.state.meta.errors
+                      .map((error) => (typeof error === 'string' ? error : error?.message))
+                      .join(', ')}
+                  </p>
+                )}
               </div>
             )}
-            {!field.state.meta.isValid && (
-              <p className='text-red-500 italic'>
-                {field.state.meta.errors
-                  .map((error) => (typeof error === 'string' ? error : error?.message))
-                  .join(', ')}
-              </p>
-            )}
-          </div>
-        )}
-      </form.Field>
+          </form.Field>
 
-      {/* name */}
-      <form.Field name='name'>
-        {(field) => (
-          <div>
-            <label htmlFor='name'>Exercise Name:</label>
-            <input
-              type='text'
-              id='name'
-              value={field.state.value}
-              onChange={(e) => field.handleChange(e.target.value)}
-            />
-            {!field.state.meta.isValid && (
-              <p className='text-red-500 italic'>
-                {field.state.meta.errors
-                  .map((error) => (typeof error === 'string' ? error : error?.message))
-                  .join(', ')}
-              </p>
+          {/* name */}
+          <form.Field name='name'>
+            {(field) => (
+              <div className='space-y-2'>
+                <Label htmlFor='name'>Exercise Name:</Label>
+                <Input
+                  type='text'
+                  id='name'
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+                {!field.state.meta.isValid && (
+                  <p className='text-red-500 italic'>
+                    {field.state.meta.errors
+                      .map((error) => (typeof error === 'string' ? error : error?.message))
+                      .join(', ')}
+                  </p>
+                )}
+              </div>
             )}
-          </div>
-        )}
-      </form.Field>
+          </form.Field>
 
-      {/* category */}
-      <form.Field name='category'>
-        {(field) => (
-          <div>
-            <label htmlFor='category'>Category:</label>
-            <input
-              type='text'
-              id='category'
-              value={field.state.value}
-              onChange={(e) => field.handleChange(e.target.value)}
-            />
-            {!field.state.meta.isValid && (
-              <p className='text-red-500 italic'>
-                {field.state.meta.errors
-                  .map((error) => (typeof error === 'string' ? error : error?.message))
-                  .join(', ')}
-              </p>
+          {/* category */}
+          <form.Field name='category'>
+            {(field) => (
+              <div className='space-y-2'>
+                <Label htmlFor='category'>Category:</Label>
+                <Input
+                  type='text'
+                  id='category'
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+                {!field.state.meta.isValid && (
+                  <p className='text-red-500 italic'>
+                    {field.state.meta.errors
+                      .map((error) => (typeof error === 'string' ? error : error?.message))
+                      .join(', ')}
+                  </p>
+                )}
+              </div>
             )}
-          </div>
-        )}
-      </form.Field>
+          </form.Field>
 
-      {/* difficulty */}
-      <form.Field name='difficulty'>
-        {(field) => (
-          <div>
-            <label htmlFor='difficulty'>Difficulty:</label>
-            <input
-              type='text'
-              id='difficulty'
-              value={field.state.value}
-              onChange={(e) => field.handleChange(e.target.value)}
-            />
-            {!field.state.meta.isValid && (
-              <p className='text-red-500 italic'>
-                {field.state.meta.errors
-                  .map((error) => (typeof error === 'string' ? error : error?.message))
-                  .join(', ')}
-              </p>
+          {/* difficulty */}
+          <form.Field name='difficulty'>
+            {(field) => (
+              <div className='space-y-2'>
+                <Label htmlFor='difficulty'>Difficulty:</Label>
+                <Select
+                  value={field.state.value}
+                  onValueChange={(value) => field.handleChange(value)}
+                >
+                  <SelectTrigger id='difficulty'>
+                    <SelectValue placeholder='Select difficulty' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='Beginner'>Beginner</SelectItem>
+                    <SelectItem value='Intermediate'>Intermediate</SelectItem>
+                    <SelectItem value='Advanced'>Advanced</SelectItem>
+                  </SelectContent>
+                </Select>
+                {!field.state.meta.isValid && (
+                  <p className='text-red-500 italic'>
+                    {field.state.meta.errors
+                      .map((error) => (typeof error === 'string' ? error : error?.message))
+                      .join(', ')}
+                  </p>
+                )}
+              </div>
             )}
-          </div>
-        )}
-      </form.Field>
+          </form.Field>
 
-      {/* description */}
-      <form.Field name='description'>
-        {(field) => (
-          <div>
-            <label htmlFor='description'>Exercise description:</label>
-            <input
-              type='text'
-              id='description'
-              value={field.state.value}
-              onChange={(e) => field.handleChange(e.target.value)}
-            />
-            {!field.state.meta.isValid && (
-              <p className='text-red-500 italic'>
-                {field.state.meta.errors
-                  .map((error) => (typeof error === 'string' ? error : error?.message))
-                  .join(', ')}
-              </p>
+          {/* description */}
+          <form.Field name='description'>
+            {(field) => (
+              <div className='space-y-2'>
+                <Label htmlFor='description'>Exercise description:</Label>
+                <Textarea
+                  id='description'
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+                {!field.state.meta.isValid && (
+                  <p className='text-red-500 italic'>
+                    {field.state.meta.errors
+                      .map((error) => (typeof error === 'string' ? error : error?.message))
+                      .join(', ')}
+                  </p>
+                )}
+              </div>
             )}
-          </div>
-        )}
-      </form.Field>
+          </form.Field>
 
-      <button type='submit' className='py-2 px-10 bg-amber-700 cursor-pointer'>
-        {isEditedExercise ? 'Update Exercise' : 'Create Exercise'}
-      </button>
-    </form>
+          <Button type='submit'>{isEditedExercise ? 'Update Exercise' : 'Create Exercise'}</Button>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };
 
