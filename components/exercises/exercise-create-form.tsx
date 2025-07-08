@@ -11,7 +11,7 @@ import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../ui/dialog';
 
 interface ExerciseCreateFormProps {
   isEditedExercise?: ExerciseProps | null;
@@ -51,7 +51,7 @@ const ExerciseCreateForm: React.FC<ExerciseCreateFormProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Create New Exercise</Button>
+        <Button>{isEditedExercise ? 'Edit Exercise' : 'Create New Exercise'}</Button>
       </DialogTrigger>
       <DialogContent>
         <form
@@ -62,6 +62,11 @@ const ExerciseCreateForm: React.FC<ExerciseCreateFormProps> = ({
           className='p-4 flex flex-col justify-center gap-2'
         >
           <DialogTitle>{isEditedExercise ? 'Update Exercise' : 'Create New Exercise'}</DialogTitle>
+          <DialogDescription>
+            {isEditedExercise
+              ? 'Edit the fields to update your exercise.'
+              : 'Complete the fields to create a new exercise.'}
+          </DialogDescription>
 
           {/* image */}
           <form.Field name='imageUrl'>
