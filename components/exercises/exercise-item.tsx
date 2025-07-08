@@ -35,7 +35,9 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
         toast.success('Exercise deleted successfully!');
       } catch (error) {
         console.error('Failed to delete exercise:', error);
-        toast.error('Failed to delete exercise. Please try again.');
+        toast.error(
+          error instanceof Error ? error.message : 'Failed to delete exercise. Please try again.'
+        );
       }
     });
   };
