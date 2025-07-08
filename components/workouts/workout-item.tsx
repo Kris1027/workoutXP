@@ -18,6 +18,8 @@ import Link from 'next/link';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 import WorkoutForm from './workout-form';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
 
 type WorkoutItemProps = {
   workout: WorkoutProps;
@@ -40,45 +42,34 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises }) => {
   };
 
   return (
-    <div
-      key={workout.id}
-      className='bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 flex flex-col'
-    >
-      <Link href={`/workouts/${workout.id}`} className='w-full aspect-[9/10] relative'>
-        <Image
-          src={workout.imageUrl}
-          alt={workout.name}
-          width={1000}
-          height={1000}
-          className='min-h-72 object-cover object-center'
-        />
-      </Link>
+    <Card key={workout.id}>
+      <CardHeader className='space-y-2'>
+        <Link href={`/workouts/${workout.id}`}>
+          <Image
+            src={workout.imageUrl}
+            alt={workout.name}
+            width={0}
+            height={400}
+            sizes='100vw'
+            className='object-cover rounded-md w-full h-[400px]'
+            priority
+          />
+        </Link>
+        <CardTitle>{workout.name}</CardTitle>
+      </CardHeader>
 
-      {/* Content below image */}
-      <div className='flex-1 p-4 flex flex-col justify-between'>
-        <div>
-          <div className='flex justify-between items-start mb-2'>
-            <h3 className='text-lg font-bold text-gray-900 dark:text-white'>{workout.name}</h3>
-          </div>
+      <CardContent className='space-y-2'>
+        <CardDescription>{workout.description}</CardDescription>
+      </CardContent>
 
-          <p className='text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2'>
-            {workout.description}
-          </p>
-        </div>
-      </div>
-
-      {/* Action buttons */}
-      <div className='flex justify-around items-center p-4 border-t border-gray-100 dark:border-gray-700'>
+      <CardFooter className='flex justify-between items-center'>
         <WorkoutForm exercises={allExercises} isEditedWorkout={workout} />
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <button
-              disabled={isPending}
-              className='px-4 py-2 text-red-600 hover:text-red-800 disabled:opacity-50'
-            >
+            <Button disabled={isPending} variant='destructive' className='cursor-pointer'>
               {isPending ? 'Deleting...' : 'Delete'}
-            </button>
+            </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -89,20 +80,20 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises }) => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel className='cursor-pointer'>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
                   if (workout.id) handleDelete(workout.id);
                 }}
-                className='bg-red-600 hover:bg-red-700 focus:ring-red-600 text-white'
+                className='cursor-pointer'
               >
                 Delete
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 };
 
