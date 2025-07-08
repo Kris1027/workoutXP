@@ -54,7 +54,9 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>{isEditedExercise ? 'Edit Exercise' : 'Create New Exercise'}</Button>
+        <Button className='cursor-pointer'>
+          {isEditedExercise ? 'Edit Exercise' : 'Create New Exercise'}
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <form

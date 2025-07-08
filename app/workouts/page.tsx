@@ -1,6 +1,5 @@
 import { fetchExercises } from '@/actions/exercises-action';
 import { fetchWorkouts } from '@/actions/workouts-action';
-import WorkoutForm from '@/components/workouts/workout-form';
 import WorkoutList from '@/components/workouts/workout-list';
 
 const WorkoutsPage = async () => {
