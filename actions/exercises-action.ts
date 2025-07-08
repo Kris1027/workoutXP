@@ -50,7 +50,7 @@ export const deleteExercise = async (exerciseId: string): Promise<void> => {
 
   try {
     // Check if any workout is using this exercise
-    const workoutsUsingExercise = await prisma.workout.findFirst({
+    const workoutsUsingExercise = await prisma.workout.count({
       where: {
         exercises: {
           some: { id: exerciseId },
