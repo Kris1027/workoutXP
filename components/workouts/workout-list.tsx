@@ -1,6 +1,7 @@
 import type { ExerciseProps, WorkoutProps } from '@/types/data-types';
 import WorkoutItem from './workout-item';
 import { FaFilter } from 'react-icons/fa';
+import WorkoutForm from './workout-form';
 
 type WorkoutListProps = {
   workouts: WorkoutProps[];
@@ -13,7 +14,9 @@ const WorkoutList: React.FC<WorkoutListProps> = ({ workouts, exercises }) => {
       {/* Header */}
       <div className='mb-6'>
         <h1 className='text-3xl font-bold text-gray-900 dark:text-white mb-2'>Workouts</h1>
-        <p className='text-gray-600 dark:text-gray-400'>Discover unique workouts or create yours</p>
+        <p className='text-gray-600 dark:text-gray-400'>
+          Discover unique workouts <WorkoutForm exercises={exercises} />
+        </p>
       </div>
 
       {/* Exercise Grid */}
@@ -29,7 +32,7 @@ const WorkoutList: React.FC<WorkoutListProps> = ({ workouts, exercises }) => {
             <FaFilter className='text-5xl mx-auto' />
           </div>
           <p className='text-gray-500 dark:text-gray-400'>
-            No exercises found matching your criteria
+            No workouts found matching your criteria
           </p>
         </div>
       )}

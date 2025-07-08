@@ -6,12 +6,7 @@ import WorkoutList from '@/components/workouts/workout-list';
 const WorkoutsPage = async () => {
   const [workouts, exercises] = await Promise.all([fetchWorkouts(), fetchExercises()]);
 
-  return (
-    <div>
-      <WorkoutForm exercises={exercises} />
-      <WorkoutList workouts={workouts} exercises={exercises} />
-    </div>
-  );
+  return <WorkoutList workouts={workouts} exercises={exercises} />;
 };
 
 export default WorkoutsPage;

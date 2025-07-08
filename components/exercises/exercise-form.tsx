@@ -83,6 +83,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
                     }
                   }}
                   onUploadError={(error: Error) => {
+                    console.error('Upload failed:', error);
                     toast.error(`Error! ${error.message}`);
                   }}
                 />
