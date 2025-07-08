@@ -7,6 +7,17 @@ import Image from 'next/image';
 import { useTransition } from 'react';
 import ExerciseCreateForm from './exercise-create-form';
 import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 type ExerciseItemProps = {
   exercise: ExerciseProps;
@@ -73,15 +84,37 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
       {/* Action buttons */}
       <div className='flex justify-around items-center p-4 border-t border-gray-100 dark:border-gray-700'>
         <ExerciseCreateForm isEditedExercise={exercise} />
-        <button
-          onClick={() => {
-            if (exercise.id) handleDelete(exercise.id);
-          }}
-          disabled={isPending}
-          className='px-4 py-2 text-red-600 hover:text-red-800 disabled:opacity-50'
-        >
-          {isPending ? 'Deleting...' : 'Delete'}
-        </button>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <button
+              disabled={isPending}
+              className='px-4 py-2 text-red-600 hover:text-red-800 disabled:opacity-50'
+            >
+              {isPending ? 'Deleting...' : 'Delete'}
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the exercise "
+                {exercise.name}" and remove it from your collection.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  if (exercise.id) handleDelete(exercise.id);
+                }}
+                className='bg-red-600 hover:bg-red-700 focus:ring-red-600'
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
