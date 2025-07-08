@@ -12,16 +12,15 @@ import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { toast } from 'sonner';
+import { useState } from 'react';
 
 interface ExerciseCreateFormProps {
   isEditedExercise?: ExerciseProps | null;
-  handleEditComplete?: () => void;
 }
 
-const ExerciseCreateForm: React.FC<ExerciseCreateFormProps> = ({
-  isEditedExercise,
-  handleEditComplete,
-}) => {
+const ExerciseCreateForm: React.FC<ExerciseCreateFormProps> = ({ isEditedExercise }) => {
+  const [open, setOpen] = useState(false);
   const form = useForm({
     defaultValues: {
       id: isEditedExercise?.id || '',
@@ -35,21 +34,25 @@ const ExerciseCreateForm: React.FC<ExerciseCreateFormProps> = ({
       onSubmit: createExerciseSchema,
     },
     onSubmit: async ({ value }) => {
-      if (isEditedExercise) {
-        await updateExercise(value);
-        form.reset();
-      } else {
-        await createExercise(value);
-        form.reset();
-      }
-      if (handleEditComplete) {
-        handleEditComplete();
+      try {
+        if (isEditedExercise) {
+          await updateExercise(value);
+          toast.success('Exercise updated successfully!');
+        } else {
+          await createExercise(value);
+          toast.success('Exercise created successfully!');
+          form.reset();
+        }
+        setOpen(false);
+      } catch (error) {
+        toast.error('Something went wrong. Please try again.');
+        console.error('Error submitting form:', error);
       }
     },
   });
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>{isEditedExercise ? 'Edit Exercise' : 'Create New Exercise'}</Button>
       </DialogTrigger>
@@ -80,7 +83,7 @@ const ExerciseCreateForm: React.FC<ExerciseCreateFormProps> = ({
                     }
                   }}
                   onUploadError={(error: Error) => {
-                    console.error(`Error! ${error.message}`); // let's replace this with toast later
+                    toast.error(`Error! ${error.message}`);
                   }}
                 />
                 {field.state.value && (

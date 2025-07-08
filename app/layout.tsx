@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { ViewTransitions } from 'next-view-transitions';
 import './globals.css';
 import { ThemeProvider } from '@/utils/theme-provider';
+import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
   title: 'workoutXP',
@@ -30,6 +31,7 @@ const RootLayout = ({
                 <main>{children}</main>
               </div>
             </div>
+            <Toaster />
           </ThemeProvider>
         </ViewTransitions>
       </body>

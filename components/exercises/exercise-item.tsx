@@ -4,9 +4,9 @@ import { deleteExercise } from '@/actions/exercises-action';
 import type { ExerciseProps } from '@/types/data-types';
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
 import Image from 'next/image';
-import { useState, useTransition } from 'react';
+import { useTransition } from 'react';
 import ExerciseCreateForm from './exercise-create-form';
-import { Button } from '../ui/button';
+import { toast } from 'sonner';
 
 type ExerciseItemProps = {
   exercise: ExerciseProps;
@@ -15,17 +15,14 @@ type ExerciseItemProps = {
 const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
   const [isPending, startTransition] = useTransition();
 
-  const handleEditComplete = () => {
-    // This will be called when the edit is complete and the modal closes
-    console.log('Edit completed');
-  };
-
   const handleDelete = async (id: string) => {
     startTransition(async () => {
       try {
         await deleteExercise(id);
+        toast.success('Exercise deleted successfully!');
       } catch (error) {
         console.error('Failed to delete exercise:', error);
+        toast.error('Failed to delete exercise. Please try again.');
       }
     });
   };
@@ -75,16 +72,16 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
 
       {/* Action buttons */}
       <div className='flex justify-around items-center p-4 border-t border-gray-100 dark:border-gray-700'>
-        <ExerciseCreateForm isEditedExercise={exercise} handleEditComplete={handleEditComplete} />
-        <Button
+        <ExerciseCreateForm isEditedExercise={exercise} />
+        <button
           onClick={() => {
             if (exercise.id) handleDelete(exercise.id);
           }}
           disabled={isPending}
-          variant='destructive'
+          className='px-4 py-2 text-red-600 hover:text-red-800 disabled:opacity-50'
         >
           {isPending ? 'Deleting...' : 'Delete'}
-        </Button>
+        </button>
       </div>
     </div>
   );
