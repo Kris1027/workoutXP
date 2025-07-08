@@ -98,8 +98,8 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the exercise "
-                {exercise.name}" and remove it from your collection.
+                This action cannot be undone. This will permanently delete the exercise{' '}
+                {exercise.name} and remove it from your collection.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
