@@ -75,7 +75,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises }) => {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the exercise{' '}
+                This action cannot be undone. This will permanently delete the workout{' '}
                 {workout.name} and remove it from your collection.
               </AlertDialogDescription>
             </AlertDialogHeader>
@@ -86,6 +86,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises }) => {
                   if (workout.id) handleDelete(workout.id);
                 }}
                 className='cursor-pointer'
+                disabled={isPending}
               >
                 Delete
               </AlertDialogAction>

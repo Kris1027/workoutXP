@@ -91,6 +91,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
                   if (exercise.id) handleDelete(exercise.id);
                 }}
                 className='cursor-pointer'
+                disabled={isPending}
               >
                 Delete
               </AlertDialogAction>
