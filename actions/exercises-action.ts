@@ -49,6 +49,19 @@ export const deleteExercise = async (exerciseId: string): Promise<void> => {
   if (!exerciseId) throw new Error('Missing ID for exercise deletion');
 
   try {
+    // Check if any workout is using this exercise
+    const workoutsUsingExercise = await prisma.workout.findFirst({
+      where: {
+        exercises: {
+          some: { id: exerciseId },
+        },
+      },
+    });
+
+    if (workoutsUsingExercise) {
+      throw new Error('Cannot delete exercise: it is used in at least one workout.');
+    }
+
     const exercise = await prisma.exercise.findUnique({
       where: { id: exerciseId },
     });
