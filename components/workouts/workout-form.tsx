@@ -7,17 +7,15 @@ import { UploadButton } from '@/utils/uploadthing';
 import { useForm } from '@tanstack/react-form';
 import Image from 'next/image';
 
-interface WorkoutCreateFormTanstackProps {
+interface WorkoutFormProps {
   exercises: ExerciseProps[];
   editedWorkoutExercises?: ExerciseProps[];
   isEditedWorkout?: WorkoutProps | null;
-  handleEditComplete?: () => void;
 }
 
-const WorkoutCreateForm: React.FC<WorkoutCreateFormTanstackProps> = ({
+const WorkoutForm: React.FC<WorkoutFormProps> = ({
   exercises,
   isEditedWorkout,
-  handleEditComplete,
   editedWorkoutExercises,
 }) => {
   const form = useForm({
@@ -38,9 +36,6 @@ const WorkoutCreateForm: React.FC<WorkoutCreateFormTanstackProps> = ({
       } else {
         await createWorkout(value);
         form.reset();
-      }
-      if (handleEditComplete) {
-        handleEditComplete();
       }
     },
   });
@@ -181,4 +176,4 @@ const WorkoutCreateForm: React.FC<WorkoutCreateFormTanstackProps> = ({
   );
 };
 
-export default WorkoutCreateForm;
+export default WorkoutForm;

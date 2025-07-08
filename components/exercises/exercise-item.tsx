@@ -1,12 +1,6 @@
 'use client';
 
 import { deleteExercise } from '@/actions/exercises-action';
-import type { ExerciseProps } from '@/types/data-types';
-import { getDifficultyColor } from '@/utils/get-difficulty-color';
-import Image from 'next/image';
-import { useTransition } from 'react';
-import ExerciseCreateForm from './exercise-create-form';
-import { toast } from 'sonner';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,6 +12,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import type { ExerciseProps } from '@/types/data-types';
+import { getDifficultyColor } from '@/utils/get-difficulty-color';
+import Image from 'next/image';
+import { useTransition } from 'react';
+import { toast } from 'sonner';
+import ExerciseForm from './exercise-form';
 
 type ExerciseItemProps = {
   exercise: ExerciseProps;
@@ -83,7 +83,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
 
       {/* Action buttons */}
       <div className='flex justify-around items-center p-4 border-t border-gray-100 dark:border-gray-700'>
-        <ExerciseCreateForm isEditedExercise={exercise} />
+        <ExerciseForm isEditedExercise={exercise} />
 
         <AlertDialog>
           <AlertDialogTrigger asChild>

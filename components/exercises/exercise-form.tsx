@@ -15,11 +15,11 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } 
 import { toast } from 'sonner';
 import { useState } from 'react';
 
-interface ExerciseCreateFormProps {
+interface ExerciseFormProps {
   isEditedExercise?: ExerciseProps | null;
 }
 
-const ExerciseCreateForm: React.FC<ExerciseCreateFormProps> = ({ isEditedExercise }) => {
+const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
   const [open, setOpen] = useState(false);
   const form = useForm({
     defaultValues: {
@@ -209,4 +209,4 @@ const ExerciseCreateForm: React.FC<ExerciseCreateFormProps> = ({ isEditedExercis
   );
 };
 
-export default ExerciseCreateForm;
+export default ExerciseForm;

@@ -5,7 +5,7 @@ import type { ExerciseProps, WorkoutProps } from '@/types/data-types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
-import WorkoutCreateForm from './workout-create-form';
+import WorkoutCreateForm from './workout-form';
 
 type WorkoutItemProps = {
   workout: WorkoutProps;
@@ -29,11 +29,6 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises }) => {
     });
   };
 
-  const handleEditComplete = () => {
-    setIsEditing(false);
-    setIsEditedWorkout(null);
-  };
-
   const handleDelete = async (id: string) => {
     startTransition(async () => {
       try {
@@ -54,7 +49,6 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises }) => {
           exercises={allExercises}
           editedWorkoutExercises={workout.exercises}
           isEditedWorkout={isEditedWorkout}
-          handleEditComplete={handleEditComplete}
         />
       ) : (
         <>

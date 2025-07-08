@@ -1,6 +1,6 @@
 import { fetchExercises } from '@/actions/exercises-action';
 import { fetchWorkouts } from '@/actions/workouts-action';
-import WorkoutCreateForm from '@/components/workouts/workout-create-form';
+import WorkoutForm from '@/components/workouts/workout-form';
 import WorkoutList from '@/components/workouts/workout-list';
 
 const WorkoutsPage = async () => {
@@ -8,7 +8,7 @@ const WorkoutsPage = async () => {
 
   return (
     <div>
-      <WorkoutCreateForm exercises={exercises} />
+      <WorkoutForm exercises={exercises} />
       <WorkoutList workouts={workouts} exercises={exercises} />
     </div>
   );

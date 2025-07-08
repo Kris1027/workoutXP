@@ -1,7 +1,7 @@
 import type { ExerciseProps } from '@/types/data-types';
 import { FaFilter } from 'react-icons/fa';
+import ExerciseForm from './exercise-form';
 import ExerciseItem from './exercise-item';
-import ExerciseCreateForm from './exercise-create-form';
 
 type ExerciseListProps = {
   exercises: ExerciseProps[];
@@ -14,7 +14,7 @@ const ExerciseList: React.FC<ExerciseListProps> = ({ exercises }) => {
       <div className='mb-6'>
         <h1 className='text-3xl font-bold text-gray-900 dark:text-white mb-2'>Exercises</h1>
         <p className='text-gray-600 dark:text-gray-400'>
-          Discover unique exercises or <ExerciseCreateForm />
+          Discover unique exercises or <ExerciseForm />
         </p>
       </div>
 
