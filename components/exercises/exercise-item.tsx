@@ -108,7 +108,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
                 onClick={() => {
                   if (exercise.id) handleDelete(exercise.id);
                 }}
-                className='bg-red-600 hover:bg-red-700 focus:ring-red-600'
+                className='bg-red-600 hover:bg-red-700 focus:ring-red-600 text-white'
               >
                 Delete
               </AlertDialogAction>
