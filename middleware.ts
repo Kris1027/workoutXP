@@ -11,7 +11,7 @@ const middleware = async (req: NextRequest) => {
   const isProtected = protectedRoutes.some((route) => pathname.startsWith(route));
 
   if (isProtected && !session) {
-    return NextResponse.redirect(new URL('/api/auth/signin', req.url));
+    return NextResponse.redirect(new URL('/', req.url));
   }
 
   return NextResponse.next();
