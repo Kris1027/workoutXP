@@ -1,5 +1,7 @@
+import SignIn from '@/components/auth/sign-in';
+
 const HomePage = () => {
-  return <div className='p-4'>HomePage</div>;
+  return <SignIn />;
 };
 
 export default HomePage;
