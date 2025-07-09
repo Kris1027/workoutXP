@@ -1,6 +1,6 @@
 'use server';
 
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { utapi } from '@/server/uploadthings';
 import type { ExerciseProps } from '@/types/data-types';
 import { revalidatePath } from 'next/cache';
