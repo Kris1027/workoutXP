@@ -1,5 +1,9 @@
 import { auth } from '@/auth';
+import SignIn from '@/components/auth/sign-in';
+import SignOut from '@/components/auth/sign-out';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Link } from 'next-view-transitions';
 import Image from 'next/image';
 
 const ProfilePage = async () => {
@@ -22,20 +26,17 @@ const ProfilePage = async () => {
         <CardContent>
           <CardTitle>User signed in with name: {session.user.name}</CardTitle>
           <CardDescription>User signed in with email: {session.user.email}</CardDescription>
+          {session.user.isAdmin && (
+            <Link href='/admin'>
+              <Button>Admin Dashboard</Button>
+            </Link>
+          )}
+          <SignOut />
         </CardContent>
       </Card>
     );
   } else {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>No user signed in</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <CardDescription>Please sign in to view your profile.</CardDescription>
-        </CardContent>
-      </Card>
-    );
+    return <SignIn />;
   }
 };
 

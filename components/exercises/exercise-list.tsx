@@ -1,27 +1,34 @@
 import type { ExerciseProps } from '@/types/data-types';
+import { Session } from 'next-auth';
 import { FaFilter } from 'react-icons/fa';
 import ExerciseForm from './exercise-form';
 import ExerciseItem from './exercise-item';
 
 type ExerciseListProps = {
   exercises: ExerciseProps[];
+  session?: Session | null;
 };
 
-const ExerciseList: React.FC<ExerciseListProps> = ({ exercises }) => {
+const ExerciseList: React.FC<ExerciseListProps> = ({ exercises, session }) => {
   return (
     <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 px-4 py-6'>
       {/* Header */}
       <div className='mb-6'>
         <h1 className='text-3xl font-bold text-gray-900 dark:text-white mb-2'>Exercises</h1>
         <p className='text-gray-600 dark:text-gray-400'>
-          Discover unique exercises or <ExerciseForm />
+          Discover unique exercises{' '}
+          {session?.user.isAdmin && (
+            <>
+              <span>or </span> <ExerciseForm />
+            </>
+          )}
         </p>
       </div>
 
       {/* Exercise Grid */}
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
         {exercises.map((exercise) => (
-          <ExerciseItem key={exercise.id} exercise={exercise} />
+          <ExerciseItem key={exercise.id} exercise={exercise} session={session} />
         ))}
       </div>
 
