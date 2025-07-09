@@ -1,3 +1,15 @@
+export type UserProps = {
+  id: string;
+  name?: string | null;
+  email: string;
+  emailVerified?: Date | null;
+  image?: string | null;
+  isAdmin?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  workouts?: WorkoutProps[];
+};
+
 export type ExerciseProps = {
   id?: string;
   name: string;
@@ -15,6 +27,7 @@ export type WorkoutProps = {
   imageUrl: string;
   description: string;
   exercises: ExerciseProps[];
+  userId?: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
