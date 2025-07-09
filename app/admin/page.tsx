@@ -17,5 +17,5 @@ const AdminDashboardPage = async () => {
     </div>
   );
 };
-AdminDashboardPage;
+
 export default AdminDashboardPage;
