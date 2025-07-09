@@ -10,10 +10,10 @@ const SignIn = () => {
       <CardHeader>
         <CardTitle>Sign in with Github</CardTitle>
         <CardDescription>Please sign in to continue using WorkoutXP</CardDescription>
-        <CardContent>
-          <Button onClick={() => login()}>Sign in with GitHub</Button>
-        </CardContent>
       </CardHeader>
+      <CardContent>
+        <Button onClick={() => login()}>Sign in with GitHub</Button>
+      </CardContent>
     </Card>
   );
 };

@@ -25,6 +25,17 @@ const ProfilePage = async () => {
         </CardContent>
       </Card>
     );
+  } else {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>No user signed in</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <CardDescription>Please sign in to view your profile.</CardDescription>
+        </CardContent>
+      </Card>
+    );
   }
 };
 
