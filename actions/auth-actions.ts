@@ -1,5 +1,3 @@
-// lib/auth-actions.ts (add these to your existing file)
-
 'use server';
 
 import { signIn, signOut } from '@/auth';

@@ -25,7 +25,7 @@ const WorkoutList: React.FC<WorkoutListProps> = ({
         <h1 className='text-3xl font-bold text-gray-900 dark:text-white mb-2'>Workouts</h1>
         <p className='text-gray-600 dark:text-gray-400'>
           Discover unique workouts{' '}
-          {currentUserId !== null && (
+          {currentUserId && (
             <>
               <span>or </span> <WorkoutForm exercises={exercises} />
             </>

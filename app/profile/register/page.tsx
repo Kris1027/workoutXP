@@ -1,11 +1,16 @@
 'use client';
 
 import { registerUser } from '@/actions/auth-actions';
+import { toast } from 'sonner';
 
 export default function RegisterPage() {
   async function handleRegister(formData: FormData) {
-    await registerUser(formData);
-    // Optionally handle errors here if you want to show them in the UI
+    try {
+      await registerUser(formData);
+    } catch (error) {
+      console.error('Registration failed:', error);
+      toast('Registration failed. Please try again.');
+    }
   }
 
   return (
