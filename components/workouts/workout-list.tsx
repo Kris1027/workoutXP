@@ -7,9 +7,10 @@ type WorkoutListProps = {
   workouts: WorkoutProps[];
   exercises: ExerciseProps[];
   users?: UserProps[];
+  currentUserId?: string;
 };
 
-const WorkoutList: React.FC<WorkoutListProps> = ({ workouts, exercises, users }) => {
+const WorkoutList: React.FC<WorkoutListProps> = ({ workouts, exercises, users, currentUserId }) => {
   return (
     <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 px-4 py-6'>
       {/* Header */}
@@ -23,7 +24,13 @@ const WorkoutList: React.FC<WorkoutListProps> = ({ workouts, exercises, users })
       {/* Exercise Grid */}
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
         {workouts.map((workout) => (
-          <WorkoutItem key={workout.id} workout={workout} allExercises={exercises} users={users} />
+          <WorkoutItem
+            key={workout.id}
+            workout={workout}
+            allExercises={exercises}
+            users={users}
+            currentUserId={currentUserId}
+          />
         ))}
       </div>
 

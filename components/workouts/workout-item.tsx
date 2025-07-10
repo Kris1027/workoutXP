@@ -25,9 +25,15 @@ type WorkoutItemProps = {
   workout: WorkoutProps;
   allExercises: ExerciseProps[];
   users?: UserProps[];
+  currentUserId?: string;
 };
 
-const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises, users }) => {
+const WorkoutItem: React.FC<WorkoutItemProps> = ({
+  workout,
+  allExercises,
+  users,
+  currentUserId,
+}) => {
   const [isPending, startTransition] = useTransition();
 
   const user = users?.find((user) => user.id === workout.userId);
@@ -70,38 +76,40 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises, users 
         </CardDescription>
       </CardContent>
 
-      <CardFooter className='flex justify-between items-center'>
-        <WorkoutForm exercises={allExercises} isEditedWorkout={workout} />
+      {currentUserId === workout.userId && (
+        <CardFooter className='flex justify-between items-center'>
+          <WorkoutForm exercises={allExercises} isEditedWorkout={workout} />
 
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button disabled={isPending} variant='destructive' className='cursor-pointer'>
-              {isPending ? 'Deleting...' : 'Delete'}
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the workout{' '}
-                {workout.name} and remove it from your collection.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className='cursor-pointer'>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  if (workout.id) handleDelete(workout.id);
-                }}
-                className='cursor-pointer'
-                disabled={isPending}
-              >
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </CardFooter>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button disabled={isPending} variant='destructive' className='cursor-pointer'>
+                {isPending ? 'Deleting...' : 'Delete'}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the workout{' '}
+                  {workout.name} and remove it from your collection.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className='cursor-pointer'>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    if (workout.id) handleDelete(workout.id);
+                  }}
+                  className='cursor-pointer'
+                  disabled={isPending}
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </CardFooter>
+      )}
     </Card>
   );
 };
