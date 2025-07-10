@@ -1,9 +1,10 @@
 'use server';
 
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import type { WorkoutProps } from '@/types/data-types';
 import { revalidatePath } from 'next/cache';
 import { utapi } from '@/server/uploadthings';
+import { auth } from '@/auth';
 
 export const fetchWorkouts = async (): Promise<WorkoutProps[]> => {
   try {
@@ -33,10 +34,17 @@ export const fetchWorkoutById = async (id: string): Promise<WorkoutProps | null>
   }
 };
 
-export const createWorkout = async (workoutData: WorkoutProps): Promise<void> => {
+export const createWorkout = async (workoutData: Omit<WorkoutProps, 'userId'>): Promise<void> => {
   const { name, description, imageUrl, exercises } = workoutData;
 
-  const selectedExerciseIds = exercises.map((exercise) => exercise.id);
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    throw new Error('User not authenticated');
+  }
+
+  const selectedExerciseIds = exercises.map((exercise) => ({ id: exercise.id }));
 
   try {
     await prisma.workout.create({
@@ -44,8 +52,9 @@ export const createWorkout = async (workoutData: WorkoutProps): Promise<void> =>
         name,
         description,
         imageUrl,
+        userId,
         exercises: {
-          connect: selectedExerciseIds.map((id) => ({ id })),
+          connect: selectedExerciseIds,
         },
       },
     });

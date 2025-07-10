@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import type { ExerciseProps } from '@/types/data-types';
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
+import type { Session } from 'next-auth';
 import Image from 'next/image';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
@@ -23,9 +24,10 @@ import ExerciseForm from './exercise-form';
 
 type ExerciseItemProps = {
   exercise: ExerciseProps;
+  session?: Session | null;
 };
 
-const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
+const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, session }) => {
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = async (id: string) => {
@@ -69,38 +71,40 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
         <CardDescription>{exercise.description}</CardDescription>
       </CardContent>
 
-      <CardFooter className='flex justify-between items-center'>
-        <ExerciseForm isEditedExercise={exercise} />
+      {session?.user.isAdmin && (
+        <CardFooter className='flex justify-between items-center'>
+          <ExerciseForm isEditedExercise={exercise} />
 
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button disabled={isPending} variant='destructive' className='cursor-pointer'>
-              {isPending ? 'Deleting...' : 'Delete'}
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the exercise{' '}
-                {exercise.name} and remove it from your collection.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className='cursor-pointer'>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  if (exercise.id) handleDelete(exercise.id);
-                }}
-                className='cursor-pointer'
-                disabled={isPending}
-              >
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </CardFooter>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button disabled={isPending} variant='destructive' className='cursor-pointer'>
+                {isPending ? 'Deleting...' : 'Delete'}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the exercise{' '}
+                  {exercise.name} and remove it from your collection.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className='cursor-pointer'>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    if (exercise.id) handleDelete(exercise.id);
+                  }}
+                  className='cursor-pointer'
+                  disabled={isPending}
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </CardFooter>
+      )}
     </Card>
   );
 };
