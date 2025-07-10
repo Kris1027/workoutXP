@@ -18,9 +18,10 @@ import { Checkbox } from '../ui/checkbox';
 interface WorkoutFormProps {
   exercises: ExerciseProps[];
   isEditedWorkout?: WorkoutProps | null;
+  currentUserId?: string;
 }
 
-const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout }) => {
+const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, currentUserId }) => {
   const [open, setOpen] = useState(false);
   const form = useForm({
     defaultValues: {
@@ -29,6 +30,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout })
       imageUrl: isEditedWorkout?.imageUrl || '',
       description: isEditedWorkout?.description || '',
       exercises: isEditedWorkout?.exercises || ([] as ExerciseProps[]),
+      userId: isEditedWorkout?.userId || currentUserId,
     } as WorkoutProps,
     validators: {
       onSubmit: createWorkoutSchema,

@@ -78,7 +78,11 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({
 
       {currentUserId === workout.userId && (
         <CardFooter className='flex justify-between items-center'>
-          <WorkoutForm exercises={allExercises} isEditedWorkout={workout} />
+          <WorkoutForm
+            exercises={allExercises}
+            isEditedWorkout={workout}
+            currentUserId={currentUserId}
+          />
 
           <AlertDialog>
             <AlertDialogTrigger asChild>

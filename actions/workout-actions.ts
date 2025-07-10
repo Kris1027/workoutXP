@@ -109,9 +109,14 @@ export const deleteWorkout = async (workoutId: string): Promise<void> => {
 };
 
 export const updateWorkout = async (workoutData: WorkoutProps): Promise<void> => {
-  const { name, description, imageUrl, exercises, id } = workoutData;
+  const { name, description, imageUrl, exercises, id, userId } = workoutData;
+
+  const session = await auth();
+  const currentUserId = session?.user?.id;
 
   if (!id) throw new Error('Missing ID for workout update');
+  if (!userId) throw new Error('User not authenticated');
+  if (currentUserId !== userId) throw new Error('User not authorized to update this workout');
 
   const selectedExerciseIds = exercises.map((exercise) => exercise.id);
 
