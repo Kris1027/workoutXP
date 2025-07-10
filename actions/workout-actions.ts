@@ -77,12 +77,18 @@ const deleteFileFromUploadThing = async (fileKey: string | string[]) => {
 export const deleteWorkout = async (workoutId: string): Promise<void> => {
   if (!workoutId) throw new Error('Missing ID for workout deletion');
 
+  const session = await auth();
+  const currentUserId = session?.user?.id;
+  const isAdmin = session?.user?.isAdmin;
+
   try {
     const workout = await prisma.workout.findUnique({
       where: { id: workoutId },
     });
 
     if (!workout) throw new Error('Workout not found');
+    if (workout.userId !== currentUserId && !isAdmin)
+      throw new Error('User not authorized to delete this workout');
 
     try {
       const url = new URL(workout.imageUrl);
@@ -113,10 +119,12 @@ export const updateWorkout = async (workoutData: WorkoutProps): Promise<void> =>
 
   const session = await auth();
   const currentUserId = session?.user?.id;
+  const isAdmin = session?.user?.isAdmin;
 
   if (!id) throw new Error('Missing ID for workout update');
   if (!userId) throw new Error('User not authenticated');
-  if (currentUserId !== userId) throw new Error('User not authorized to update this workout');
+  if (currentUserId !== userId && !isAdmin)
+    throw new Error('User not authorized to update this workout');
 
   const selectedExerciseIds = exercises.map((exercise) => exercise.id);
 

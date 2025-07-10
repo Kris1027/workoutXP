@@ -7,6 +7,7 @@ import WorkoutList from '@/components/workouts/workout-list';
 const WorkoutsPage = async () => {
   const session = await auth();
   const currentUserId = session?.user?.id;
+  const isAdmin = session?.user?.isAdmin;
   const [workouts, exercises, users] = await Promise.all([
     fetchWorkouts(),
     fetchExercises(),
@@ -19,6 +20,7 @@ const WorkoutsPage = async () => {
       exercises={exercises}
       users={users}
       currentUserId={currentUserId}
+      isAdmin={isAdmin}
     />
   );
 };

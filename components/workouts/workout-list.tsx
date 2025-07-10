@@ -8,9 +8,16 @@ type WorkoutListProps = {
   exercises: ExerciseProps[];
   users?: UserProps[];
   currentUserId?: string;
+  isAdmin?: boolean;
 };
 
-const WorkoutList: React.FC<WorkoutListProps> = ({ workouts, exercises, users, currentUserId }) => {
+const WorkoutList: React.FC<WorkoutListProps> = ({
+  workouts,
+  exercises,
+  users,
+  currentUserId,
+  isAdmin,
+}) => {
   return (
     <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 px-4 py-6'>
       {/* Header */}
@@ -18,7 +25,7 @@ const WorkoutList: React.FC<WorkoutListProps> = ({ workouts, exercises, users, c
         <h1 className='text-3xl font-bold text-gray-900 dark:text-white mb-2'>Workouts</h1>
         <p className='text-gray-600 dark:text-gray-400'>
           Discover unique workouts{' '}
-          {currentUserId && (
+          {currentUserId !== null && (
             <>
               <span>or </span> <WorkoutForm exercises={exercises} />
             </>
@@ -35,6 +42,7 @@ const WorkoutList: React.FC<WorkoutListProps> = ({ workouts, exercises, users, c
             allExercises={exercises}
             users={users}
             currentUserId={currentUserId}
+            isAdmin={isAdmin}
           />
         ))}
       </div>

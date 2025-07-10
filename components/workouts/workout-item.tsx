@@ -26,6 +26,7 @@ type WorkoutItemProps = {
   allExercises: ExerciseProps[];
   users?: UserProps[];
   currentUserId?: string;
+  isAdmin?: boolean;
 };
 
 const WorkoutItem: React.FC<WorkoutItemProps> = ({
@@ -33,6 +34,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({
   allExercises,
   users,
   currentUserId,
+  isAdmin,
 }) => {
   const [isPending, startTransition] = useTransition();
 
@@ -51,6 +53,9 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({
       }
     });
   };
+
+  // Show controls if user is owner or admin
+  const canEditOrDelete = currentUserId === workout.userId || isAdmin;
 
   return (
     <Card key={workout.id}>
@@ -76,7 +81,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({
         </CardDescription>
       </CardContent>
 
-      {currentUserId === workout.userId && (
+      {canEditOrDelete && (
         <CardFooter className='flex justify-between items-center'>
           <WorkoutForm
             exercises={allExercises}

@@ -1,10 +1,10 @@
 import { auth } from '@/auth';
-import SignIn from '@/components/auth/sign-in';
 import SignOut from '@/components/auth/sign-out';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'next-view-transitions';
 import Image from 'next/image';
+import RegisterPage from './register/page';
 
 const ProfilePage = async () => {
   const session = await auth();
@@ -36,7 +36,15 @@ const ProfilePage = async () => {
       </Card>
     );
   } else {
-    return <SignIn />;
+    return (
+      <div className='max-w-md mx-auto mt-10 p-6 border rounded-md shadow'>
+        <RegisterPage />
+        <div className='mt-4 text-center'>
+          <span>Already have an account? </span>
+          <Link href='profile/login'>Login</Link>
+        </div>
+      </div>
+    );
   }
 };
 
