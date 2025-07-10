@@ -1,4 +1,4 @@
-import type { ExerciseProps, WorkoutProps } from '@/types/data-types';
+import type { ExerciseProps, UserProps, WorkoutProps } from '@/types/data-types';
 import WorkoutItem from './workout-item';
 import { FaFilter } from 'react-icons/fa';
 import WorkoutForm from './workout-form';
@@ -6,23 +6,44 @@ import WorkoutForm from './workout-form';
 type WorkoutListProps = {
   workouts: WorkoutProps[];
   exercises: ExerciseProps[];
+  users?: UserProps[];
+  currentUserId?: string;
+  isAdmin?: boolean;
 };
 
-const WorkoutList: React.FC<WorkoutListProps> = ({ workouts, exercises }) => {
+const WorkoutList: React.FC<WorkoutListProps> = ({
+  workouts,
+  exercises,
+  users,
+  currentUserId,
+  isAdmin,
+}) => {
   return (
     <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 px-4 py-6'>
       {/* Header */}
       <div className='mb-6'>
         <h1 className='text-3xl font-bold text-gray-900 dark:text-white mb-2'>Workouts</h1>
         <p className='text-gray-600 dark:text-gray-400'>
-          Discover unique workouts <WorkoutForm exercises={exercises} />
+          Discover unique workouts{' '}
+          {currentUserId && (
+            <>
+              <span>or </span> <WorkoutForm exercises={exercises} />
+            </>
+          )}
         </p>
       </div>
 
       {/* Exercise Grid */}
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
         {workouts.map((workout) => (
-          <WorkoutItem key={workout.id} workout={workout} allExercises={exercises} />
+          <WorkoutItem
+            key={workout.id}
+            workout={workout}
+            allExercises={exercises}
+            users={users}
+            currentUserId={currentUserId}
+            isAdmin={isAdmin}
+          />
         ))}
       </div>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { createWorkout, updateWorkout } from '@/actions/workouts-action';
+import { createWorkout, updateWorkout } from '@/actions/workout-actions';
 import { createWorkoutSchema } from '@/schemas/data-schemas';
 import type { ExerciseProps, WorkoutProps } from '@/types/data-types';
 import { UploadButton } from '@/utils/uploadthing';
@@ -18,9 +18,10 @@ import { Checkbox } from '../ui/checkbox';
 interface WorkoutFormProps {
   exercises: ExerciseProps[];
   isEditedWorkout?: WorkoutProps | null;
+  currentUserId?: string;
 }
 
-const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout }) => {
+const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, currentUserId }) => {
   const [open, setOpen] = useState(false);
   const form = useForm({
     defaultValues: {
@@ -29,6 +30,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout })
       imageUrl: isEditedWorkout?.imageUrl || '',
       description: isEditedWorkout?.description || '',
       exercises: isEditedWorkout?.exercises || ([] as ExerciseProps[]),
+      userId: isEditedWorkout?.userId || currentUserId,
     } as WorkoutProps,
     validators: {
       onSubmit: createWorkoutSchema,

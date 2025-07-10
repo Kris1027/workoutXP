@@ -1,6 +1,6 @@
 'use client';
 
-import { createExercise, updateExercise } from '@/actions/exercises-action';
+import { createExercise, updateExercise } from '@/actions/exercise-actions';
 import { createExerciseSchema } from '@/schemas/data-schemas';
 import type { ExerciseProps } from '@/types/data-types';
 import { useForm } from '@tanstack/react-form';
