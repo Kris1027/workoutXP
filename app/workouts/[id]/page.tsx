@@ -1,4 +1,4 @@
-import { fetchWorkoutById } from '@/actions/workouts-action';
+import { fetchWorkoutById } from '@/actions/workout-actions';
 import ExerciseItem from '@/components/exercises/exercise-item';
 import { FaFilter } from 'react-icons/fa';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteExercise } from '@/actions/exercises-action';
+import { deleteExercise } from '@/actions/exercise-actions';
 import {
   AlertDialog,
   AlertDialogAction,

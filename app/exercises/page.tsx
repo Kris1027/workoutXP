@@ -1,4 +1,4 @@
-import { fetchExercises } from '@/actions/exercises-action';
+import { fetchExercises } from '@/actions/exercise-actions';
 import { auth } from '@/auth';
 import ExerciseList from '@/components/exercises/exercise-list';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { createWorkout, updateWorkout } from '@/actions/workouts-action';
+import { createWorkout, updateWorkout } from '@/actions/workout-actions';
 import { createWorkoutSchema } from '@/schemas/data-schemas';
 import type { ExerciseProps, WorkoutProps } from '@/types/data-types';
 import { UploadButton } from '@/utils/uploadthing';

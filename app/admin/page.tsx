@@ -1,5 +1,5 @@
-import { fetchExercises } from '@/actions/exercises-action';
-import { fetchWorkouts } from '@/actions/workouts-action';
+import { fetchExercises } from '@/actions/exercise-actions';
+import { fetchWorkouts } from '@/actions/workout-actions';
 import { auth } from '@/auth';
 import ExerciseList from '@/components/exercises/exercise-list';
 import WorkoutList from '@/components/workouts/workout-list';
