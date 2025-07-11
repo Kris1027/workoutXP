@@ -1,8 +1,7 @@
+import { logoUrl } from '@/constants/constants';
 import Image from 'next/image';
 
 const HomePage = async () => {
-  const logoUrl = process.env.LOGO_URL || '';
-
   return (
     <div className='flex items-center justify-center p-4'>
       <div className='relative w-full max-w-md md:max-w-lg lg:max-w-xl'>

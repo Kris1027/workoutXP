@@ -6,7 +6,7 @@ import { signInSchema } from '@/schemas/data-schemas';
 import { saltAndHashPassword } from '@/utils/salt-and-hash-password';
 import { AuthError } from 'next-auth';
 
-export const login = async () => {
+export const githubLogin = async () => {
   await signIn('github', { redirectTo: '/profile' });
 };
 
