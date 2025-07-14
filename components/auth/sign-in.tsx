@@ -5,34 +5,27 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { logoUrl } from '@/constants/constants';
 import { signInSchema } from '@/schemas/data-schemas';
-import { useForm } from '@tanstack/react-form';
-import Image from 'next/image';
-import { FaGithub } from 'react-icons/fa';
 import { toast } from 'sonner';
+import { useForm } from '@tanstack/react-form';
+import { useRouter } from 'next/navigation';
+import { FaGithub } from 'react-icons/fa';
 
 const SignIn = () => {
+  const router = useRouter();
   const form = useForm({
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'admin@admin.pl',
+      password: 'zaq12wsx',
     },
-    validators: {
-      onChange: signInSchema,
-      onSubmit: signInSchema,
-    },
-    onSubmit: async (value) => {
-      const formData = new FormData();
-      formData.append('email', value.value.email);
-      formData.append('password', value.value.password);
-      const result = await loginWithCredentials(formData);
-
-      if (result?.error) {
-        toast.error(result.error);
-        return;
+    onSubmit: async ({ value }) => {
+      try {
+        await loginWithCredentials(value);
+        toast.success('Successfully signed in!');
+        router.push('/');
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : 'Login failed. Please try again.');
       }
-      toast.success('Successfully signed in!');
     },
   });
 
@@ -52,7 +45,12 @@ const SignIn = () => {
           }}
           className='space-y-4'
         >
-          <form.Field name='email'>
+          <form.Field
+            name='email'
+            validators={{
+              onChange: signInSchema.shape.email,
+            }}
+          >
             {(field) => (
               <div className='space-y-2'>
                 <Label htmlFor='email'>Email</Label>
@@ -61,20 +59,24 @@ const SignIn = () => {
                   id='email'
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
+                  onBlur={field.handleBlur}
                   placeholder='Enter your email'
                 />
-                {!field.state.meta.isValid && (
+                {field.state.meta.errors.length > 0 && (
                   <p className='text-red-500 text-sm italic'>
-                    {field.state.meta.errors
-                      .map((error) => (typeof error === 'string' ? error : error?.message))
-                      .join(', ')}
+                    {field.state.meta.errors.join(', ')}
                   </p>
                 )}
               </div>
             )}
           </form.Field>
 
-          <form.Field name='password'>
+          <form.Field
+            name='password'
+            validators={{
+              onChange: signInSchema.shape.password,
+            }}
+          >
             {(field) => (
               <div className='space-y-2'>
                 <Label htmlFor='password'>Password</Label>
@@ -83,21 +85,20 @@ const SignIn = () => {
                   id='password'
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
+                  onBlur={field.handleBlur}
                   placeholder='Enter your password'
                 />
-                {!field.state.meta.isValid && (
+                {field.state.meta.errors.length > 0 && (
                   <p className='text-red-500 text-sm italic'>
-                    {field.state.meta.errors
-                      .map((error) => (typeof error === 'string' ? error : error?.message))
-                      .join(', ')}
+                    {field.state.meta.errors.join(', ')}
                   </p>
                 )}
               </div>
             )}
           </form.Field>
 
-          <Button type='submit' className='w-full'>
-            Sign in
+          <Button type='submit' className='w-full' disabled={form.state.isSubmitting}>
+            {form.state.isSubmitting ? 'Signing in...' : 'Sign in'}
           </Button>
         </form>
 

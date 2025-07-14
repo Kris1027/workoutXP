@@ -3,8 +3,10 @@
 import { signIn, signOut } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { signInSchema } from '@/schemas/data-schemas';
+import { SignInProps } from '@/types/data-types';
 import { saltAndHashPassword } from '@/utils/salt-and-hash-password';
 import { AuthError } from 'next-auth';
+import { redirect } from 'next/navigation';
 
 export const githubLogin = async () => {
   await signIn('github', { redirectTo: '/profile' });
@@ -14,39 +16,40 @@ export const logout = async () => {
   await signOut({ redirectTo: '/' });
 };
 
-export const loginWithCredentials = async (formData: FormData) => {
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-
-  const result = signInSchema.safeParse({ email, password });
+export const loginWithCredentials = async (credentials: SignInProps) => {
+  const result = signInSchema.safeParse(credentials);
 
   if (!result.success) {
-    return {
-      error: 'Invalid email or password format',
-      fieldErrors: result.error.flatten().fieldErrors,
-    };
+    const flattened = result.error.flatten().fieldErrors;
+    throw new Error('Validation failed: ' + JSON.stringify(flattened));
   }
 
   try {
     await signIn('credentials', {
-      email,
-      password,
-      redirectTo: '/profile',
+      email: credentials.email,
+      password: credentials.password,
+      redirect: false,
     });
+    return { success: true };
   } catch (error) {
+    console.error('Login attempt failed:', {
+      email: credentials.email,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+
+    // Handle AuthError specifically
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
-          return {
-            error: 'Invalid email or password',
-          };
+          throw new Error('Invalid email or password');
+        case 'CallbackRouteError':
+          throw new Error('Invalid email or password');
         default:
-          return {
-            error: 'Something went wrong. Please try again.',
-          };
+          throw new Error('Login failed. Please try again.');
       }
     }
-    throw error;
+
+    throw new Error('Login failed. Please try again.');
   }
 };
 
@@ -107,11 +110,20 @@ export const registerUser = async (
     });
 
     // Automatically sign in the user after registration
-    await signIn('credentials', {
-      email,
-      password,
-      redirectTo: '/',
-    });
+    try {
+      await signIn('credentials', {
+        email,
+        password,
+        redirectTo: '/',
+      });
+    } catch (signInError) {
+      // If sign in fails after registration, still consider registration successful
+      if (signInError instanceof Error && signInError.message.includes('NEXT_REDIRECT')) {
+        redirect('/');
+      }
+      console.error('Auto sign-in after registration failed:', signInError);
+      // Don't throw here, registration was successful
+    }
   } catch (error) {
     console.error('Registration error:', error);
     return {
