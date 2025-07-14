@@ -9,6 +9,7 @@ import { HiOutlineHomeModern } from 'react-icons/hi2';
 import { LuDumbbell } from 'react-icons/lu';
 import { ModeToggle } from './mode-toggle';
 import { UserProps } from '@/types/data-types';
+import Image from 'next/image';
 
 type NavigationBarProps = {
   currentUser?: UserProps | null;
@@ -56,9 +57,11 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
                     active ? 'text-violet-400' : 'text-gray-400 hover:text-white'
                   }`}
                 >
-                  <img
+                  <Image
                     src={link.image}
                     alt={link.name}
+                    width={28}
+                    height={28}
                     className={`rounded-full w-7 h-7 object-cover border-2 ${
                       active ? 'border-violet-400' : 'border-gray-400 group-hover:border-white'
                     }`}

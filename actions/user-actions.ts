@@ -26,6 +26,10 @@ export const fetchUserById = async (id: string): Promise<UserProps | null> => {
     return userWithoutPassword;
   } catch (error) {
     console.error('Error fetching user by ID:', error);
-    throw new Error(error instanceof Error ? error.message : 'Unexpected error');
+    if (error instanceof Error) {
+      throw error;
+    } else {
+      throw new Error(`Unexpected error: ${String(error)}`);
+    }
   }
 };
