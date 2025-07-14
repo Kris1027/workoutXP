@@ -1,6 +1,7 @@
 'use server';
 
 import { signIn, signOut } from '@/auth';
+import { userDefaultImage } from '@/constants/constants';
 import { prisma } from '@/lib/prisma';
 import { signInSchema, signUpSchema } from '@/schemas/data-schemas';
 import { SignInProps, SignUpProps } from '@/types/data-types';
@@ -76,6 +77,7 @@ export const registerUser = async (credentials: SignUpProps) => {
       data: {
         name,
         email,
+        image: userDefaultImage,
         password: hashedPassword,
         isAdmin: false,
       },
