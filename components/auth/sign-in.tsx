@@ -9,20 +9,25 @@ import { signInSchema } from '@/schemas/data-schemas';
 import { useForm } from '@tanstack/react-form';
 import { toast } from 'sonner';
 
-const SignInComponent = () => {
+const SignIn = () => {
   const form = useForm({
     defaultValues: {
       email: '',
       password: '',
     },
     validators: {
-      onSubmit: signInSchema,
+      onChange: signInSchema,
     },
     onSubmit: async (value) => {
       const formData = new FormData();
       formData.append('email', value.value.email);
       formData.append('password', value.value.password);
-      await loginWithCredentials(formData);
+      const result = await loginWithCredentials(formData);
+
+      if (result?.error) {
+        toast.error(result.error);
+        return;
+      }
       toast.success('Successfully signed in!');
     },
   });
@@ -89,4 +94,4 @@ const SignInComponent = () => {
   );
 };
 
-export default SignInComponent;
+export default SignIn;
