@@ -3,7 +3,7 @@
 import { signIn, signOut } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { signInSchema } from '@/schemas/data-schemas';
-import { SignInProps } from '@/types/data-types';
+import { SignInProps, SignUpProps } from '@/types/data-types';
 import { saltAndHashPassword } from '@/utils/salt-and-hash-password';
 import { AuthError } from 'next-auth';
 import { redirect } from 'next/navigation';
@@ -54,12 +54,9 @@ export const loginWithCredentials = async (credentials: SignInProps) => {
 };
 
 export const registerUser = async (
-  formData: FormData
+  credentials: SignUpProps
 ): Promise<{ error: string; fieldErrors?: any } | void> => {
-  const name = formData.get('name') as string;
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-  const confirmPassword = formData.get('confirmPassword') as string;
+  const { name, email, password, confirmPassword } = credentials;
 
   // Basic validation
   if (!name || !email || !password || !confirmPassword) {
