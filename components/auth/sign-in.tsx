@@ -102,7 +102,7 @@ const SignIn = ({ onSwitchToSignUp }: SignInComponentProps) => {
           </form.Field>
 
           <Button type='submit' className='w-full' disabled={form.state.isSubmitting}>
-            {form.state.isSubmitting ? 'Signing in...' : 'Sign in'}
+            {form.state.isSubmitting ? 'One moment...' : 'Log in'}
           </Button>
 
           {/* Register link */}

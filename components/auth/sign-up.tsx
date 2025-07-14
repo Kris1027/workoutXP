@@ -151,7 +151,7 @@ const SignUp = ({ onSwitchToSignIn }: SignUpComponentProps) => {
           </form.Field>
 
           <Button type='submit' className='w-full' disabled={form.state.isSubmitting}>
-            {form.state.isSubmitting ? 'Signing up...' : 'Sign up'}
+            {form.state.isSubmitting ? 'Creating your account...' : 'Create account'}
           </Button>
 
           {/* Register link */}
