@@ -1,9 +1,9 @@
-import NavigationBar from '@/components/navigation/navigation-bar';
+import Navigation from '@/components/navigation/navigation';
+import { Toaster } from '@/components/ui/sonner';
+import { ThemeProvider } from '@/utils/theme-provider';
 import type { Metadata } from 'next';
 import { ViewTransitions } from 'next-view-transitions';
 import './globals.css';
-import { ThemeProvider } from '@/utils/theme-provider';
-import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
   title: 'workoutXP',
@@ -25,7 +25,7 @@ const RootLayout = ({
             enableSystem
             disableTransitionOnChange
           >
-            <NavigationBar />
+            <Navigation />
             <main>{children}</main>
             <Toaster />
           </ThemeProvider>

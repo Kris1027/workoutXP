@@ -13,3 +13,19 @@ export const fetchAllUsers = async (): Promise<UserProps[]> => {
     throw new Error(error instanceof Error ? error.message : 'Unexpected error');
   }
 };
+
+export const fetchUserById = async (id: string): Promise<UserProps | null> => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) return null;
+
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
+  } catch (error) {
+    console.error('Error fetching user by ID:', error);
+    throw new Error(error instanceof Error ? error.message : 'Unexpected error');
+  }
+};

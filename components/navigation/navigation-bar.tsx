@@ -8,6 +8,11 @@ import { FiUser } from 'react-icons/fi';
 import { HiOutlineHomeModern } from 'react-icons/hi2';
 import { LuDumbbell } from 'react-icons/lu';
 import { ModeToggle } from './mode-toggle';
+import { UserProps } from '@/types/data-types';
+
+type NavigationBarProps = {
+  currentUser?: UserProps | null;
+};
 
 const navLinks = [
   { name: 'Home', href: '/', icon: HiOutlineHomeModern },
@@ -17,10 +22,12 @@ const navLinks = [
   { name: 'Theme', href: '#', icon: ModeToggle, isComponent: true }, // Added ModeToggle as a link
 ];
 
-const NavigationBar = () => {
+const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
   const pathname = usePathname();
   const isActive = (href: string) =>
     href === '/' ? pathname === href : pathname?.startsWith(href);
+
+  console.log('Current User:', currentUser);
 
   return (
     <nav
