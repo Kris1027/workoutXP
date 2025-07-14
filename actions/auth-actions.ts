@@ -2,120 +2,99 @@
 
 import { signIn, signOut } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import { signInSchema } from '@/schemas/data-schemas';
+import { signInSchema, signUpSchema } from '@/schemas/data-schemas';
+import { SignInProps, SignUpProps } from '@/types/data-types';
 import { saltAndHashPassword } from '@/utils/salt-and-hash-password';
 import { AuthError } from 'next-auth';
 
-export const login = async () => {
+export const githubLogin = async () => {
   await signIn('github', { redirectTo: '/profile' });
 };
 
 export const logout = async () => {
-  await signOut({ redirectTo: '/' });
+  await signOut({ redirect: false });
 };
 
-export const loginWithCredentials = async (formData: FormData) => {
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-
-  const result = signInSchema.safeParse({ email, password });
+export const loginWithCredentials = async (credentials: SignInProps) => {
+  const result = signInSchema.safeParse(credentials);
 
   if (!result.success) {
-    return {
-      error: 'Invalid email or password format',
-      fieldErrors: result.error.flatten().fieldErrors,
-    };
+    const flattened = result.error.flatten().fieldErrors;
+    throw new Error('Validation failed: ' + JSON.stringify(flattened));
   }
 
   try {
     await signIn('credentials', {
-      email,
-      password,
-      redirectTo: '/profile',
+      email: credentials.email,
+      password: credentials.password,
+      redirect: false,
     });
   } catch (error) {
+    console.error('Login attempt failed:', {
+      email: credentials.email,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+
+    // Handle AuthError specifically
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
-          return {
-            error: 'Invalid email or password',
-          };
+          throw new Error('Invalid email or password');
+        case 'CallbackRouteError':
+          throw new Error('Invalid email or password');
         default:
-          return {
-            error: 'Something went wrong. Please try again.',
-          };
+          throw new Error('Login failed. Please try again.');
       }
     }
-    throw error;
+
+    throw new Error('Login failed. Please try again.');
   }
 };
 
-export const registerUser = async (
-  formData: FormData
-): Promise<{ error: string; fieldErrors?: any } | void> => {
-  const name = formData.get('name') as string;
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-  const confirmPassword = formData.get('confirmPassword') as string;
+export const registerUser = async (credentials: SignUpProps) => {
+  const { name, email, password } = credentials;
 
-  // Basic validation
-  if (!name || !email || !password || !confirmPassword) {
-    return {
-      error: 'All fields are required',
-    };
-  }
-
-  if (password !== confirmPassword) {
-    return {
-      error: 'Passwords do not match',
-    };
-  }
-
-  // Validate email and password format
-  const result = signInSchema.safeParse({ email, password });
+  const result = signUpSchema.safeParse(credentials);
 
   if (!result.success) {
-    return {
-      error: 'Invalid email or password format',
-      fieldErrors: result.error.flatten().fieldErrors,
-    };
+    const flattened = result.error.flatten().fieldErrors;
+    throw new Error('Validation failed: ' + JSON.stringify(flattened));
   }
 
   try {
-    // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
 
     if (existingUser) {
-      return {
-        error: 'User with this email already exists',
-      };
+      throw new Error('User with this email already exists');
     }
 
-    // Hash the password
     const hashedPassword = await saltAndHashPassword(password);
 
-    // Create new user
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
-        isAdmin: false, // Default to non-admin
+        isAdmin: false,
       },
     });
 
-    // Automatically sign in the user after registration
-    await signIn('credentials', {
-      email,
-      password,
-      redirectTo: '/',
-    });
+    try {
+      await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+    } catch (signInError) {
+      console.error('Auto sign-in after registration failed:', signInError);
+    }
   } catch (error) {
     console.error('Registration error:', error);
-    return {
-      error: 'Something went wrong during registration. Please try again.',
-    };
+    if (error instanceof Error && error.message === 'User with this email already exists') {
+      throw error;
+    }
+    throw new Error('Something went wrong during registration. Please try again.');
   }
 };

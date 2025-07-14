@@ -18,40 +18,26 @@ export const createWorkoutSchema = z.object({
 });
 
 export const signInSchema = z.object({
-  email: z
-    .string({ required_error: 'Email is required' })
-    .min(1, 'Email is required')
-    .email('Invalid email'),
+  email: z.string().min(1, 'Email is required').email('Invalid email'),
   password: z
-    .string({ required_error: 'Password is required' })
-    .min(1, 'Password is required')
+    .string()
     .min(8, 'Password must be more than 8 characters')
     .max(32, 'Password must be less than 32 characters'),
 });
 
-export const registerSchema = z
+export const signUpSchema = z
   .object({
     name: z
-      .string({ required_error: 'Name is required' })
+      .string()
       .min(2, 'Name must be at least 2 characters')
       .max(50, 'Name must be less than 50 characters')
       .trim(),
-    email: z
-      .string({ required_error: 'Email is required' })
-      .min(1, 'Email is required')
-      .email('Invalid email')
-      .toLowerCase(),
+    email: z.string().min(1, 'Email is required').email('Invalid email').toLowerCase(),
     password: z
-      .string({ required_error: 'Password is required' })
+      .string()
       .min(8, 'Password must be at least 8 characters')
-      .max(32, 'Password must be less than 32 characters')
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        'Password must contain at least one uppercase letter, one lowercase letter, and one number'
-      ),
-    confirmPassword: z
-      .string({ required_error: 'Please confirm your password' })
-      .min(1, 'Please confirm your password'),
+      .max(32, 'Password must be less than 32 characters'),
+    confirmPassword: z.string().min(1, 'Please confirm your password'),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',

@@ -1,3 +1,6 @@
+import { signInSchema, signUpSchema } from '@/schemas/data-schemas';
+import { z } from 'zod';
+
 export type UserProps = {
   id: string;
   name?: string | null;
@@ -31,3 +34,7 @@ export type WorkoutProps = {
   createdAt?: Date;
   updatedAt?: Date;
 };
+
+export type SignInProps = z.infer<typeof signInSchema>;
+
+export type SignUpProps = z.infer<typeof signUpSchema>;
