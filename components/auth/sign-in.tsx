@@ -105,7 +105,7 @@ const SignIn = ({ onSwitchToSignUp }: SignInComponentProps) => {
 
           {/* Register link */}
           <div className='text-center text-sm text-muted-foreground'>
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <button
               type='button'
               className='text-primary underline hover:text-primary/80 cursor-pointer'

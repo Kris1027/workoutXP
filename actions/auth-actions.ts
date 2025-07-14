@@ -2,11 +2,10 @@
 
 import { signIn, signOut } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import { signInSchema } from '@/schemas/data-schemas';
+import { signInSchema, signUpSchema } from '@/schemas/data-schemas';
 import { SignInProps, SignUpProps } from '@/types/data-types';
 import { saltAndHashPassword } from '@/utils/salt-and-hash-password';
 import { AuthError } from 'next-auth';
-import { redirect } from 'next/navigation';
 
 export const githubLogin = async () => {
   await signIn('github', { redirectTo: '/profile' });
@@ -53,78 +52,50 @@ export const loginWithCredentials = async (credentials: SignInProps) => {
   }
 };
 
-export const registerUser = async (
-  credentials: SignUpProps
-): Promise<{ error: string; fieldErrors?: any } | void> => {
-  const { name, email, password, confirmPassword } = credentials;
+export const registerUser = async (credentials: SignUpProps) => {
+  const { name, email, password } = credentials;
 
-  // Basic validation
-  if (!name || !email || !password || !confirmPassword) {
-    return {
-      error: 'All fields are required',
-    };
-  }
-
-  if (password !== confirmPassword) {
-    return {
-      error: 'Passwords do not match',
-    };
-  }
-
-  // Validate email and password format
-  const result = signInSchema.safeParse({ email, password });
+  const result = signUpSchema.safeParse(credentials);
 
   if (!result.success) {
-    return {
-      error: 'Invalid email or password format',
-      fieldErrors: result.error.flatten().fieldErrors,
-    };
+    const flattened = result.error.flatten().fieldErrors;
+    throw new Error('Validation failed: ' + JSON.stringify(flattened));
   }
 
   try {
-    // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
 
     if (existingUser) {
-      return {
-        error: 'User with this email already exists',
-      };
+      throw new Error('User with this email already exists');
     }
 
-    // Hash the password
     const hashedPassword = await saltAndHashPassword(password);
 
-    // Create new user
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
-        isAdmin: false, // Default to non-admin
+        isAdmin: false,
       },
     });
 
-    // Automatically sign in the user after registration
     try {
       await signIn('credentials', {
         email,
         password,
-        redirectTo: '/',
+        redirect: false,
       });
     } catch (signInError) {
-      // If sign in fails after registration, still consider registration successful
-      if (signInError instanceof Error && signInError.message.includes('NEXT_REDIRECT')) {
-        redirect('/');
-      }
       console.error('Auto sign-in after registration failed:', signInError);
-      // Don't throw here, registration was successful
     }
   } catch (error) {
     console.error('Registration error:', error);
-    return {
-      error: 'Something went wrong during registration. Please try again.',
-    };
+    if (error instanceof Error && error.message === 'User with this email already exists') {
+      throw error;
+    }
+    throw new Error('Something went wrong during registration. Please try again.');
   }
 };
