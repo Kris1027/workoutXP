@@ -10,13 +10,21 @@ import { toast } from 'sonner';
 import { useForm } from '@tanstack/react-form';
 import { useRouter } from 'next/navigation';
 import { FaGithub } from 'react-icons/fa';
+import type { SignInProps } from '@/types/data-types';
 
-const SignIn = () => {
+interface SignInComponentProps {
+  onSwitchToSignUp?: () => void;
+}
+
+const SignIn = ({ onSwitchToSignUp }: SignInComponentProps) => {
   const router = useRouter();
   const form = useForm({
     defaultValues: {
-      email: 'admin@admin.pl',
-      password: 'zaq12wsx',
+      email: '',
+      password: '',
+    } as SignInProps,
+    validators: {
+      onChange: signInSchema,
     },
     onSubmit: async ({ value }) => {
       try {
@@ -25,6 +33,7 @@ const SignIn = () => {
         router.push('/');
       } catch (error) {
         toast.error(error instanceof Error ? error.message : 'Login failed. Please try again.');
+        console.error('Error submitting form:', error);
       }
     },
   });
@@ -45,38 +54,29 @@ const SignIn = () => {
           }}
           className='space-y-4'
         >
-          <form.Field
-            name='email'
-            validators={{
-              onChange: signInSchema.shape.email,
-            }}
-          >
+          <form.Field name='email'>
             {(field) => (
               <div className='space-y-2'>
                 <Label htmlFor='email'>Email</Label>
                 <Input
-                  type='email'
                   id='email'
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                   onBlur={field.handleBlur}
                   placeholder='Enter your email'
                 />
-                {field.state.meta.errors.length > 0 && (
-                  <p className='text-red-500 text-sm italic'>
-                    {field.state.meta.errors.join(', ')}
+                {!field.state.meta.isValid && (
+                  <p className='text-red-500 italic'>
+                    {field.state.meta.errors
+                      .map((error) => (typeof error === 'string' ? error : error?.message))
+                      .join(', ')}
                   </p>
                 )}
               </div>
             )}
           </form.Field>
 
-          <form.Field
-            name='password'
-            validators={{
-              onChange: signInSchema.shape.password,
-            }}
-          >
+          <form.Field name='password'>
             {(field) => (
               <div className='space-y-2'>
                 <Label htmlFor='password'>Password</Label>
@@ -88,9 +88,11 @@ const SignIn = () => {
                   onBlur={field.handleBlur}
                   placeholder='Enter your password'
                 />
-                {field.state.meta.errors.length > 0 && (
-                  <p className='text-red-500 text-sm italic'>
-                    {field.state.meta.errors.join(', ')}
+                {!field.state.meta.isValid && (
+                  <p className='text-red-500 italic'>
+                    {field.state.meta.errors
+                      .map((error) => (typeof error === 'string' ? error : error?.message))
+                      .join(', ')}
                   </p>
                 )}
               </div>
@@ -100,6 +102,18 @@ const SignIn = () => {
           <Button type='submit' className='w-full' disabled={form.state.isSubmitting}>
             {form.state.isSubmitting ? 'Signing in...' : 'Sign in'}
           </Button>
+
+          {/* Register link */}
+          <div className='text-center text-sm text-muted-foreground'>
+            Don't have an account?{' '}
+            <button
+              type='button'
+              className='text-primary underline hover:text-primary/80 cursor-pointer'
+              onClick={onSwitchToSignUp}
+            >
+              Register
+            </button>
+          </div>
         </form>
 
         {/* Divider */}
