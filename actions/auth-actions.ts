@@ -29,7 +29,6 @@ export const loginWithCredentials = async (credentials: SignInProps) => {
       password: credentials.password,
       redirect: false,
     });
-    return { success: true };
   } catch (error) {
     console.error('Login attempt failed:', {
       email: credentials.email,
