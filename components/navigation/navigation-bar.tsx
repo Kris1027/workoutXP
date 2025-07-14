@@ -14,12 +14,14 @@ type NavigationBarProps = {
   currentUser?: UserProps | null;
 };
 
-const navLinks = [
+const getNavLinks = (currentUser?: UserProps | null) => [
   { name: 'Home', href: '/', icon: HiOutlineHomeModern },
   { name: 'Exercises', href: '/exercises', icon: BsListTask },
   { name: 'Workouts', href: '/workouts', icon: LuDumbbell },
-  { name: 'Profile', href: '/profile', icon: FiUser },
-  { name: 'Theme', href: '#', icon: ModeToggle, isComponent: true }, // Added ModeToggle as a link
+  currentUser
+    ? { name: currentUser.name || 'User', href: '/profile', icon: null, image: currentUser.image }
+    : { name: 'Profile', href: '/profile', icon: FiUser },
+  { name: 'Theme', href: '#', icon: ModeToggle, isComponent: true },
 ];
 
 const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
@@ -27,7 +29,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
   const isActive = (href: string) =>
     href === '/' ? pathname === href : pathname?.startsWith(href);
 
-  console.log('Current User:', currentUser);
+  const navLinks = getNavLinks(currentUser);
 
   return (
     <nav
@@ -43,9 +45,32 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
             <li key={link.name} className='flex-1'>
               {link.isComponent ? (
                 <div className='flex flex-col items-center justify-center py-2 px-1'>
-                  <IconComponent />
+                  {IconComponent && typeof IconComponent === 'function' && <IconComponent />}
                   <span className='text-xs mt-1 font-medium text-gray-400'>{link.name}</span>
                 </div>
+              ) : link.image ? (
+                <Link
+                  aria-current={active ? 'page' : undefined}
+                  href={link.href}
+                  className={`flex flex-col items-center justify-center py-2 px-1 transition-colors duration-200 group ${
+                    active ? 'text-violet-400' : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  <img
+                    src={link.image}
+                    alt={link.name}
+                    className={`rounded-full w-7 h-7 object-cover border-2 ${
+                      active ? 'border-violet-400' : 'border-gray-400 group-hover:border-white'
+                    }`}
+                  />
+                  <span
+                    className={`text-xs mt-1 font-medium transition-colors duration-200 ${
+                      active ? 'text-violet-400' : 'text-gray-400 group-hover:text-white'
+                    }`}
+                  >
+                    {link.name}
+                  </span>
+                </Link>
               ) : (
                 <Link
                   aria-current={active ? 'page' : undefined}
@@ -54,12 +79,14 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
                     active ? 'text-violet-400' : 'text-gray-400 hover:text-white'
                   }`}
                 >
-                  <IconComponent
-                    size={24}
-                    className={`transition-colors duration-200 ${
-                      active ? 'text-violet-400' : 'text-gray-400 group-hover:text-white'
-                    }`}
-                  />
+                  {IconComponent && (
+                    <IconComponent
+                      size={24}
+                      className={`transition-colors duration-200 ${
+                        active ? 'text-violet-400' : 'text-gray-400 group-hover:text-white'
+                      }`}
+                    />
+                  )}
                   <span
                     className={`text-xs mt-1 font-medium transition-colors duration-200 ${
                       active ? 'text-violet-400' : 'text-gray-400 group-hover:text-white'
