@@ -18,7 +18,7 @@ export const createWorkoutSchema = z.object({
 });
 
 export const signInSchema = z.object({
-  email: z.string().nonempty('Email is required').email('Invalid email'),
+  email: z.string().min(1, 'Email is required').email('Invalid email'),
   password: z
     .string()
     .min(8, 'Password must be more than 8 characters')
@@ -32,7 +32,7 @@ export const signUpSchema = z
       .min(2, 'Name must be at least 2 characters')
       .max(50, 'Name must be less than 50 characters')
       .trim(),
-    email: z.string().nonempty('Email is required').email('Invalid email').toLowerCase(),
+    email: z.string().min(1, 'Email is required').email('Invalid email').toLowerCase(),
     password: z
       .string()
       .min(8, 'Password must be at least 8 characters')
