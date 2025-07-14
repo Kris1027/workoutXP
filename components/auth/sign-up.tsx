@@ -46,7 +46,9 @@ const SignUp = ({ onSwitchToSignIn }: SignUpComponentProps) => {
     <Card className='w-full max-w-md'>
       <CardHeader className='text-center'>
         <CardTitle className='text-2xl font-bold'>Sign Up</CardTitle>
-        <CardDescription>Please provide your data to register</CardDescription>
+        <CardDescription>
+          Let&apos;s get you started – just a few details to create your account!
+        </CardDescription>
       </CardHeader>
 
       <CardContent className='space-y-6'>
@@ -154,13 +156,13 @@ const SignUp = ({ onSwitchToSignIn }: SignUpComponentProps) => {
 
           {/* Register link */}
           <div className='text-center text-sm text-muted-foreground'>
-            Already have an account?{' '}
+            Have an account?{' '}
             <button
               type='button'
               className='text-primary underline hover:text-primary/80 cursor-pointer'
               onClick={onSwitchToSignIn}
             >
-              Login
+              Log in here!
             </button>
           </div>
         </form>
