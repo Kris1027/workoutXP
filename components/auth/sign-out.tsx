@@ -2,9 +2,23 @@
 
 import { logout } from '@/actions/auth-actions';
 import { Button } from '../ui/button';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 const SignOut = () => {
-  return <Button onClick={() => logout()}>Sign out</Button>;
+  const router = useRouter();
+  return (
+    <Button
+      onClick={() => {
+        logout().then(() => {
+          toast.success('Successfully signed out!');
+          router.push('/');
+        });
+      }}
+    >
+      Sign out
+    </Button>
+  );
 };
 
 export default SignOut;

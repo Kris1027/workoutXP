@@ -12,7 +12,7 @@ export const githubLogin = async () => {
 };
 
 export const logout = async () => {
-  await signOut({ redirectTo: '/' });
+  await signOut({ redirect: false });
 };
 
 export const loginWithCredentials = async (credentials: SignInProps) => {
