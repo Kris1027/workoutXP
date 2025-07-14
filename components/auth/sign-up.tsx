@@ -26,7 +26,7 @@ const SignUp = ({ onSwitchToSignIn }: SignUpComponentProps) => {
       confirmPassword: '',
     } as SignUpProps,
     validators: {
-      onChange: signUpSchema,
+      onSubmit: signUpSchema,
     },
     onSubmit: async ({ value }) => {
       try {

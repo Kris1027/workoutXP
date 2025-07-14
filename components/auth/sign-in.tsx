@@ -24,7 +24,7 @@ const SignIn = ({ onSwitchToSignUp }: SignInComponentProps) => {
       password: '',
     } as SignInProps,
     validators: {
-      onChange: signInSchema,
+      onSubmit: signInSchema,
     },
     onSubmit: async ({ value }) => {
       try {
