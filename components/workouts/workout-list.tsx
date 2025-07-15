@@ -1,23 +1,21 @@
-import type { ExerciseProps, UserProps, WorkoutProps } from '@/types/data-types';
-import WorkoutItem from './workout-item';
+import { fetchExercises } from '@/actions/exercise-actions';
+import { fetchAllUsers } from '@/actions/user-actions';
+import { fetchWorkouts } from '@/actions/workout-actions';
+import { auth } from '@/auth';
 import { FaFilter } from 'react-icons/fa';
 import WorkoutForm from './workout-form';
+import WorkoutItem from './workout-item';
 
-type WorkoutListProps = {
-  workouts: WorkoutProps[];
-  exercises: ExerciseProps[];
-  users?: UserProps[];
-  currentUserId?: string;
-  isAdmin?: boolean;
-};
+const WorkoutList: React.FC = async () => {
+  const session = await auth();
+  const currentUserId = session?.user?.id;
+  const isAdmin = session?.user?.isAdmin;
+  const [workouts, exercises, users] = await Promise.all([
+    fetchWorkouts(),
+    fetchExercises(),
+    fetchAllUsers(),
+  ]);
 
-const WorkoutList: React.FC<WorkoutListProps> = ({
-  workouts,
-  exercises,
-  users,
-  currentUserId,
-  isAdmin,
-}) => {
   return (
     <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 px-4 py-6'>
       {/* Header */}
