@@ -1,33 +1,26 @@
-import type { ExerciseProps, UserProps, WorkoutProps } from '@/types/data-types';
-import WorkoutItem from './workout-item';
+import { fetchExercises } from '@/actions/exercise-actions';
+import { fetchWorkouts } from '@/actions/workout-actions';
+import { auth } from '@/auth';
 import { FaFilter } from 'react-icons/fa';
 import WorkoutForm from './workout-form';
+import WorkoutItem from './workout-item';
+import { UserProps } from '@/types/data-types';
 
-type WorkoutListProps = {
-  workouts: WorkoutProps[];
-  exercises: ExerciseProps[];
-  users?: UserProps[];
-  currentUserId?: string;
-  isAdmin?: boolean;
-};
+const WorkoutList: React.FC = async () => {
+  const session = await auth();
+  const currentUser = session?.user as UserProps | null;
+  const [workouts, exercises] = await Promise.all([fetchWorkouts(), fetchExercises()]);
 
-const WorkoutList: React.FC<WorkoutListProps> = ({
-  workouts,
-  exercises,
-  users,
-  currentUserId,
-  isAdmin,
-}) => {
   return (
-    <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 px-4 py-6'>
+    <div className='px-4 py-6'>
       {/* Header */}
       <div className='mb-6'>
-        <h1 className='text-3xl font-bold text-gray-900 dark:text-white mb-2'>Workouts</h1>
+        <h1 className='text-3xl font-bold mb-2'>Workouts</h1>
         <p className='text-gray-600 dark:text-gray-400'>
           Discover unique workouts{' '}
-          {currentUserId && (
+          {currentUser && (
             <>
-              <span>or </span> <WorkoutForm exercises={exercises} />
+              <span>or </span> <WorkoutForm exercises={exercises} currentUserId={currentUser.id} />
             </>
           )}
         </p>
@@ -40,9 +33,7 @@ const WorkoutList: React.FC<WorkoutListProps> = ({
             key={workout.id}
             workout={workout}
             allExercises={exercises}
-            users={users}
-            currentUserId={currentUserId}
-            isAdmin={isAdmin}
+            currentUser={currentUser}
           />
         ))}
       </div>

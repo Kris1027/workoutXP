@@ -12,6 +12,7 @@ export const fetchWorkouts = async (): Promise<WorkoutProps[]> => {
       orderBy: { createdAt: 'desc' },
       include: {
         exercises: true,
+        user: true,
       },
     });
   } catch (error) {
@@ -26,10 +27,28 @@ export const fetchWorkoutById = async (id: string): Promise<WorkoutProps | null>
       where: { id: id },
       include: {
         exercises: true,
+        user: true,
       },
     });
   } catch (error) {
     console.error('Error fetching workout', error);
+    throw new Error(error instanceof Error ? error.message : 'Unexpected error');
+  }
+};
+
+export const fetchWorkoutsByUserId = async (userId: string): Promise<WorkoutProps[]> => {
+  if (!userId) throw new Error('User ID is required to fetch workouts');
+
+  try {
+    return await prisma.workout.findMany({
+      where: { userId: userId },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        exercises: true,
+      },
+    });
+  } catch (error) {
+    console.error('Error fetching workouts by user ID', error);
     throw new Error(error instanceof Error ? error.message : 'Unexpected error');
   }
 };

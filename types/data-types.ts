@@ -10,7 +10,6 @@ export type UserProps = {
   isAdmin?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
-  workouts?: WorkoutProps[];
 };
 
 export type ExerciseProps = {
@@ -31,6 +30,7 @@ export type WorkoutProps = {
   description: string;
   exercises: ExerciseProps[];
   userId?: string;
+  user?: UserProps;
   createdAt?: Date;
   updatedAt?: Date;
 };

@@ -14,10 +14,10 @@ export const fetchAllUsers = async (): Promise<UserProps[]> => {
   }
 };
 
-export const fetchUserById = async (id: string): Promise<UserProps | null> => {
+export const fetchUserById = async (userId: string): Promise<UserProps | null> => {
   try {
     const user = await prisma.user.findUnique({
-      where: { id },
+      where: { id: userId },
     });
 
     if (!user) return null;

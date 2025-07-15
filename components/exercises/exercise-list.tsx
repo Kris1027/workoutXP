@@ -1,20 +1,18 @@
-import type { ExerciseProps } from '@/types/data-types';
-import { Session } from 'next-auth';
+import { fetchExercises } from '@/actions/exercise-actions';
+import { auth } from '@/auth';
 import { FaFilter } from 'react-icons/fa';
 import ExerciseForm from './exercise-form';
 import ExerciseItem from './exercise-item';
 
-type ExerciseListProps = {
-  exercises: ExerciseProps[];
-  session?: Session | null;
-};
+const ExerciseList: React.FC = async () => {
+  const session = await auth();
+  const exercises = await fetchExercises();
 
-const ExerciseList: React.FC<ExerciseListProps> = ({ exercises, session }) => {
   return (
-    <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 px-4 py-6'>
+    <div className='px-4 py-6'>
       {/* Header */}
       <div className='mb-6'>
-        <h1 className='text-3xl font-bold text-gray-900 dark:text-white mb-2'>Exercises</h1>
+        <h1 className='text-3xl font-bold mb-2'>Exercises</h1>
         <p className='text-gray-600 dark:text-gray-400'>
           Discover unique exercises{' '}
           {session?.user.isAdmin && (

@@ -35,7 +35,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
   return (
     <nav
       aria-label='Main Navigation'
-      className='bg-gray-800 w-full sticky bottom-0 z-10 flex justify-between'
+      className='bg-gray-100 dark:bg-gray-800 w-full sticky bottom-0 z-10 flex justify-between border-t border-gray-300 dark:border-gray-700'
     >
       <ul className='flex justify-around items-center p-1 flex-1'>
         {navLinks.map((link) => {
@@ -43,18 +43,22 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
           const active = isActive(link.href);
 
           return (
-            <li key={link.name} className='flex-1'>
+            <li key={link.name}>
               {link.isComponent ? (
                 <div className='flex flex-col items-center justify-center py-2 px-1'>
                   {IconComponent && typeof IconComponent === 'function' && <IconComponent />}
-                  <span className='text-xs mt-1 font-medium text-gray-400'>{link.name}</span>
+                  <span className='text-xs mt-1 font-medium text-gray-700 dark:text-gray-400'>
+                    {link.name}
+                  </span>
                 </div>
               ) : link.image ? (
                 <Link
                   aria-current={active ? 'page' : undefined}
                   href={link.href}
-                  className={`flex flex-col items-center justify-center py-2 px-1 transition-colors duration-200 group ${
-                    active ? 'text-violet-400' : 'text-gray-400 hover:text-white'
+                  className={`flex flex-col items-center justify-center h-full py-2 px-1 transition-colors duration-200 group ${
+                    active
+                      ? 'text-violet-700 dark:text-violet-400'
+                      : 'text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
                   <Image
@@ -63,12 +67,16 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
                     width={28}
                     height={28}
                     className={`rounded-full w-7 h-7 object-cover border-2 ${
-                      active ? 'border-violet-400' : 'border-gray-400 group-hover:border-white'
+                      active
+                        ? 'border-violet-700 dark:border-violet-400'
+                        : 'border-gray-400 dark:border-gray-400 group-hover:border-gray-900 dark:group-hover:border-white'
                     }`}
                   />
                   <span
                     className={`text-xs mt-1 font-medium transition-colors duration-200 ${
-                      active ? 'text-violet-400' : 'text-gray-400 group-hover:text-white'
+                      active
+                        ? 'text-violet-700 dark:text-violet-400'
+                        : 'text-gray-700 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white'
                     }`}
                   >
                     {link.name}
@@ -78,21 +86,27 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
                 <Link
                   aria-current={active ? 'page' : undefined}
                   href={link.href}
-                  className={`flex flex-col items-center justify-center py-2 px-1 transition-colors duration-200 group ${
-                    active ? 'text-violet-400' : 'text-gray-400 hover:text-white'
+                  className={`flex flex-col items-center justify-center h-full py-2 px-1 transition-colors duration-200 group ${
+                    active
+                      ? 'text-violet-700 dark:text-violet-400'
+                      : 'text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
                   {IconComponent && (
                     <IconComponent
                       size={24}
                       className={`transition-colors duration-200 ${
-                        active ? 'text-violet-400' : 'text-gray-400 group-hover:text-white'
+                        active
+                          ? 'text-violet-700 dark:text-violet-400'
+                          : 'text-gray-700 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white'
                       }`}
                     />
                   )}
                   <span
                     className={`text-xs mt-1 font-medium transition-colors duration-200 ${
-                      active ? 'text-violet-400' : 'text-gray-400 group-hover:text-white'
+                      active
+                        ? 'text-violet-700 dark:text-violet-400'
+                        : 'text-gray-700 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white'
                     }`}
                   >
                     {link.name}
