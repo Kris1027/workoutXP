@@ -10,6 +10,17 @@ const WorkoutCard = async ({ id }: WorkoutCardProps) => {
   const detailedWorkout = await fetchWorkoutById(id);
   const exercises = detailedWorkout?.exercises || [];
 
+  if (!detailedWorkout) {
+    return (
+      <div className='px-4 py-6 text-center'>
+        <h1 className='text-3xl font-bold mb-2'>Workout Not Found</h1>
+        <p className='text-gray-600 dark:text-gray-400'>
+          The workout you are looking for does not exist or could not be loaded.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className='px-4 py-6'>
       {/* Header */}

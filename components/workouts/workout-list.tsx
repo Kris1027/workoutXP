@@ -20,7 +20,7 @@ const WorkoutList: React.FC = async () => {
           Discover unique workouts{' '}
           {currentUser && (
             <>
-              <span>or </span> <WorkoutForm exercises={exercises} />
+              <span>or </span> <WorkoutForm exercises={exercises} currentUserId={currentUser.id} />
             </>
           )}
         </p>
