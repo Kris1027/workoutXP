@@ -67,7 +67,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises, curren
       <CardContent className='space-y-2'>
         <CardDescription>{workout.description}</CardDescription>
         <CardDescription>
-          created by <span className='font-bold'>{currentUser?.name}</span>
+          created by <span className='font-bold'>{workout.user?.name}</span>
         </CardDescription>
       </CardContent>
 

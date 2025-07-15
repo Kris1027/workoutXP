@@ -7,13 +7,13 @@ import { UploadButton } from '@/utils/uploadthing';
 import { useForm } from '@tanstack/react-form';
 import Image from 'next/image';
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
-import { Label } from '../ui/label';
-import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
 import { Checkbox } from '../ui/checkbox';
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Textarea } from '../ui/textarea';
 
 interface WorkoutFormProps {
   exercises: ExerciseProps[];

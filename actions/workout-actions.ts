@@ -12,6 +12,7 @@ export const fetchWorkouts = async (): Promise<WorkoutProps[]> => {
       orderBy: { createdAt: 'desc' },
       include: {
         exercises: true,
+        user: true,
       },
     });
   } catch (error) {
@@ -26,6 +27,7 @@ export const fetchWorkoutById = async (id: string): Promise<WorkoutProps | null>
       where: { id: id },
       include: {
         exercises: true,
+        user: true,
       },
     });
   } catch (error) {
