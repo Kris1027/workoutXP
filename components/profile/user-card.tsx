@@ -53,7 +53,7 @@ const UserCard = async () => {
 
           <CardContent className='space-y-6'>
             <div className='space-y-4'>
-              <div className='flex items-center gap-3 p-3 rounded-lg border border-gray-700'>
+              <div className='flex items-center gap-3 p-3 rounded-lg border'>
                 <div className='flex-shrink-0'>
                   <Mail className='w-5 h-5' />
                 </div>
@@ -63,7 +63,7 @@ const UserCard = async () => {
                 </div>
               </div>
 
-              <div className='flex items-center gap-3 p-3 rounded-lg border border-gray-700'>
+              <div className='flex items-center gap-3 p-3 rounded-lg border'>
                 <div className='flex-shrink-0'>
                   <User className='w-5 h-5' />
                 </div>
@@ -74,7 +74,7 @@ const UserCard = async () => {
               </div>
 
               {currentUser.createdAt && (
-                <div className='flex items-center gap-3 p-3 rounded-lg border border-gray-700'>
+                <div className='flex items-center gap-3 p-3 rounded-lg border'>
                   <div className='flex-shrink-0'>
                     <Calendar className='w-5 h-5' />
                   </div>
@@ -86,7 +86,7 @@ const UserCard = async () => {
               )}
             </div>
 
-            <div className='flex items-center gap-3 p-3 rounded-lg border border-gray-700'>
+            <div className='flex items-center gap-3 p-3 rounded-lg border'>
               <div className='flex-shrink-0'>
                 <Dumbbell className='w-5 h-5' />
               </div>
