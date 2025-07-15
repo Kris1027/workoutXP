@@ -17,28 +17,18 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
-import WorkoutForm from './workout-form';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import WorkoutForm from './workout-form';
 
 type WorkoutItemProps = {
   workout: WorkoutProps;
   allExercises: ExerciseProps[];
-  users?: UserProps[];
-  currentUserId?: string;
-  isAdmin?: boolean;
+  currentUser: UserProps | null | undefined;
 };
 
-const WorkoutItem: React.FC<WorkoutItemProps> = ({
-  workout,
-  allExercises,
-  users,
-  currentUserId,
-  isAdmin,
-}) => {
+const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises, currentUser }) => {
   const [isPending, startTransition] = useTransition();
-
-  const user = users?.find((user) => user.id === workout.userId);
 
   const handleDelete = async (id: string) => {
     startTransition(async () => {
@@ -54,8 +44,8 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({
     });
   };
 
-  // Show controls if user is owner or admin
-  const canEditOrDelete = currentUserId === workout.userId || isAdmin;
+  // Show controls if user is the creator or admin
+  const canEditOrDelete = currentUser?.isAdmin || workout.userId === currentUser?.id;
 
   return (
     <Card key={workout.id}>
@@ -77,7 +67,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({
       <CardContent className='space-y-2'>
         <CardDescription>{workout.description}</CardDescription>
         <CardDescription>
-          created by <span className='font-bold'>{user?.name}</span>
+          created by <span className='font-bold'>{currentUser?.name}</span>
         </CardDescription>
       </CardContent>
 
@@ -86,7 +76,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({
           <WorkoutForm
             exercises={allExercises}
             isEditedWorkout={workout}
-            currentUserId={currentUserId}
+            currentUserId={currentUser?.id}
           />
 
           <AlertDialog>

@@ -1,20 +1,15 @@
 import { fetchExercises } from '@/actions/exercise-actions';
-import { fetchAllUsers } from '@/actions/user-actions';
 import { fetchWorkouts } from '@/actions/workout-actions';
 import { auth } from '@/auth';
 import { FaFilter } from 'react-icons/fa';
 import WorkoutForm from './workout-form';
 import WorkoutItem from './workout-item';
+import { UserProps } from '@/types/data-types';
 
 const WorkoutList: React.FC = async () => {
   const session = await auth();
-  const currentUserId = session?.user?.id;
-  const isAdmin = session?.user?.isAdmin;
-  const [workouts, exercises, users] = await Promise.all([
-    fetchWorkouts(),
-    fetchExercises(),
-    fetchAllUsers(),
-  ]);
+  const currentUser = session?.user as UserProps | null;
+  const [workouts, exercises] = await Promise.all([fetchWorkouts(), fetchExercises()]);
 
   return (
     <div className='px-4 py-6'>
@@ -23,7 +18,7 @@ const WorkoutList: React.FC = async () => {
         <h1 className='text-3xl font-bold mb-2'>Workouts</h1>
         <p className='text-gray-600 dark:text-gray-400'>
           Discover unique workouts{' '}
-          {currentUserId && (
+          {currentUser && (
             <>
               <span>or </span> <WorkoutForm exercises={exercises} />
             </>
@@ -38,9 +33,7 @@ const WorkoutList: React.FC = async () => {
             key={workout.id}
             workout={workout}
             allExercises={exercises}
-            users={users}
-            currentUserId={currentUserId}
-            isAdmin={isAdmin}
+            currentUser={currentUser}
           />
         ))}
       </div>
