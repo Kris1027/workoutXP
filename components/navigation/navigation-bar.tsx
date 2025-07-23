@@ -7,6 +7,7 @@ import { BsListTask } from 'react-icons/bs';
 import { FiUser } from 'react-icons/fi';
 import { HiOutlineHomeModern } from 'react-icons/hi2';
 import { LuDumbbell } from 'react-icons/lu';
+import { HiFire } from 'react-icons/hi2';
 import { ModeToggle } from './mode-toggle';
 import { UserProps } from '@/types/data-types';
 import Image from 'next/image';
@@ -19,6 +20,7 @@ const getNavLinks = (currentUser?: UserProps | null) => [
   { name: 'Home', href: '/', icon: HiOutlineHomeModern },
   { name: 'Exercises', href: '/exercises', icon: BsListTask },
   { name: 'Workouts', href: '/workouts', icon: LuDumbbell },
+  { name: 'Top', href: '/workouts/top', icon: HiFire },
   currentUser
     ? { name: currentUser.name || 'User', href: '/profile', icon: null, image: currentUser.image }
     : { name: 'Profile', href: '/profile', icon: FiUser },
