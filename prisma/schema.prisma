@@ -20,25 +20,26 @@ model Exercise {
 }
 
 model Workout {
-  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String
   imageUrl    String
   description String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  exercises   Exercise[] @relation("WorkoutExercises")
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  exercises   Exercise[]    @relation("WorkoutExercises")
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
+  likes       WorkoutLike[]
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String    @unique
+  email         String        @unique
   password      String?
   emailVerified DateTime?
   image         String?
-  isAdmin       Boolean   @default(false)
+  isAdmin       Boolean       @default(false)
   accounts      Account[]
   sessions      Session[]
 
@@ -47,6 +48,7 @@ model User {
   // Optional for WebAuthn support
   Authenticator Authenticator[]
   Workout       Workout[]
+  workoutLikes  WorkoutLike[]
 }
 
 model Account {
@@ -86,6 +88,18 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
+}
+
+model WorkoutLike {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String
+  workoutId String   @db.Uuid
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workout Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workoutId])
 }
 
 // Optional for WebAuthn support

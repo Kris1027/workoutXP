@@ -20,6 +20,7 @@ import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import WorkoutForm from './workout-form';
+import WorkoutLikeButton from './workout-like-button';
 
 type WorkoutItemProps = {
   workout: WorkoutProps;
@@ -69,6 +70,14 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises, curren
         <CardDescription>
           created by <span className='font-bold'>{workout.user?.name}</span>
         </CardDescription>
+        <div className='flex items-center justify-between pt-2'>
+          <WorkoutLikeButton
+            workoutId={workout.id!}
+            initialIsLiked={workout.isLikedByUser || false}
+            initialLikeCount={workout._count?.likes || 0}
+            isAuthenticated={!!currentUser}
+          />
+        </div>
       </CardContent>
 
       {canEditOrDelete && (
