@@ -13,12 +13,10 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import type { ExerciseProps, UserProps, WorkoutProps } from '@/types/data-types';
-import Image from 'next/image';
-import Link from 'next/link';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import FitnessCard from '../ui/fitness-card';
 import WorkoutForm from './workout-form';
 import WorkoutLikeButton from './workout-like-button';
 import { formatDate } from '@/utils/format-date';
@@ -55,82 +53,95 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises, curren
   const dateToShow = wasEdited ? workout.updatedAt : workout.createdAt;
   const dateLabel = wasEdited ? 'updated' : 'created';
 
-  return (
-    <Card key={workout.id}>
-      <CardHeader className='space-y-2'>
-        <Link href={`/workouts/${workout.id}`}>
-          <Image
-            src={workout.imageUrl}
-            alt={workout.name}
-            width={0}
-            height={0}
-            sizes='100vw'
-            className='w-full h-auto rounded-md'
-            priority
-          />
-        </Link>
-        <CardTitle>{workout.name}</CardTitle>
-      </CardHeader>
-
-      <CardContent className='space-y-2'>
-        <CardDescription>{workout.description}</CardDescription>
-        <CardDescription>
-          {dateLabel} by <span className='font-bold'>{workout.user?.name}</span>
-          {dateToShow && (
-            <span className='text-xs text-gray-500 dark:text-gray-400 block mt-1'>
-              {formatDate(new Date(dateToShow))}
-            </span>
-          )}
-        </CardDescription>
-        <div className='flex items-center justify-between pt-2'>
-          <WorkoutLikeButton
-            workoutId={workout.id!}
-            initialIsLiked={workout.isLikedByUser || false}
-            initialLikeCount={workout._count?.likes || 0}
-            isAuthenticated={!!currentUser}
-          />
-        </div>
-      </CardContent>
-
-      {canEditOrDelete && (
-        <CardFooter className='flex justify-between items-center'>
-          <WorkoutForm
-            exercises={allExercises}
-            isEditedWorkout={workout}
-            currentUserId={currentUser?.id}
-          />
-
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button disabled={isPending} variant='destructive' className='cursor-pointer'>
-                {isPending ? 'Deleting...' : 'Delete'}
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the workout{' '}
-                  {workout.name} and remove it from your collection.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel className='cursor-pointer'>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => {
-                    if (workout.id) handleDelete(workout.id);
-                  }}
-                  className='cursor-pointer'
-                  disabled={isPending}
-                >
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </CardFooter>
+  // Metadata component
+  const metadata = (
+    <div className='text-gray-500 dark:text-gray-400 text-xs'>
+      {dateLabel} by <span className='font-bold text-gray-700 dark:text-gray-200'>{workout.user?.name}</span>
+      {dateToShow && (
+        <span className='block mt-1'>
+          {formatDate(new Date(dateToShow))}
+        </span>
       )}
-    </Card>
+    </div>
+  );
+
+  // Action component (like button)
+  const actionComponent = (
+    <WorkoutLikeButton
+      workoutId={workout.id!}
+      initialIsLiked={workout.isLikedByUser || false}
+      initialLikeCount={workout._count?.likes || 0}
+      isAuthenticated={!!currentUser}
+    />
+  );
+
+  // Admin controls
+  const adminControls = canEditOrDelete ? (
+    <>
+      <WorkoutForm
+        exercises={allExercises}
+        isEditedWorkout={workout}
+        currentUserId={currentUser?.id}
+      />
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button 
+            disabled={isPending} 
+            variant='destructive' 
+            size='sm'
+            className='cursor-pointer bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 text-white border-0 font-semibold'
+          >
+            {isPending ? 'Deleting...' : 'Delete'}
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the workout{' '}
+              {workout.name} and remove it from your collection.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className='cursor-pointer'>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (workout.id) handleDelete(workout.id);
+              }}
+              className='cursor-pointer'
+              disabled={isPending}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  ) : undefined;
+
+  return (
+    <FitnessCard
+      id={workout.id || ''}
+      title={workout.name}
+      description={workout.description}
+      imageUrl={workout.imageUrl}
+      imageAlt={workout.name}
+      href={`/workouts/${workout.id}`}
+      theme="blue"
+      imageHeight="h-56"
+      leftBadge={{
+        text: `${workout.exercises.length} Exercises`,
+        className: 'bg-blue-500 text-white'
+      }}
+      rightBadge={{
+        text: `${workout._count?.likes || 0} Likes`,
+        className: 'bg-white/90 text-gray-900'
+      }}
+      metadata={metadata}
+      actionComponent={actionComponent}
+      actionText="View Workout"
+      adminControls={adminControls}
+    />
   );
 };
 
