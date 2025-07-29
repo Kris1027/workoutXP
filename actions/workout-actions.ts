@@ -8,13 +8,35 @@ import { auth } from '@/auth';
 
 export const fetchWorkouts = async (): Promise<WorkoutProps[]> => {
   try {
-    return await prisma.workout.findMany({
+    const session = await auth();
+    const currentUserId = session?.user?.id;
+
+    const workouts = await prisma.workout.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
         exercises: true,
         user: true,
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
+        likes: currentUserId ? {
+          where: {
+            userId: currentUserId,
+          },
+          select: {
+            id: true,
+          },
+        } : false,
       },
     });
+
+    // Add isLikedByUser property
+    return workouts.map(workout => ({
+      ...workout,
+      isLikedByUser: currentUserId ? workout.likes.length > 0 : false,
+    }));
   } catch (error) {
     console.error('Error fetching workouts', error);
     throw new Error(error instanceof Error ? error.message : 'Unexpected error');
@@ -23,13 +45,37 @@ export const fetchWorkouts = async (): Promise<WorkoutProps[]> => {
 
 export const fetchWorkoutById = async (id: string): Promise<WorkoutProps | null> => {
   try {
-    return await prisma.workout.findUnique({
+    const session = await auth();
+    const currentUserId = session?.user?.id;
+
+    const workout = await prisma.workout.findUnique({
       where: { id: id },
       include: {
         exercises: true,
         user: true,
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
+        likes: currentUserId ? {
+          where: {
+            userId: currentUserId,
+          },
+          select: {
+            id: true,
+          },
+        } : false,
       },
     });
+
+    if (!workout) return null;
+
+    // Add isLikedByUser property
+    return {
+      ...workout,
+      isLikedByUser: currentUserId ? workout.likes.length > 0 : false,
+    };
   } catch (error) {
     console.error('Error fetching workout', error);
     throw new Error(error instanceof Error ? error.message : 'Unexpected error');
@@ -49,6 +95,50 @@ export const fetchWorkoutsByUserId = async (userId: string): Promise<WorkoutProp
     });
   } catch (error) {
     console.error('Error fetching workouts by user ID', error);
+    throw new Error(error instanceof Error ? error.message : 'Unexpected error');
+  }
+};
+
+export const fetchTopWorkouts = async (limit: number = 20): Promise<WorkoutProps[]> => {
+  try {
+    const session = await auth();
+    const currentUserId = session?.user?.id;
+
+    const workouts = await prisma.workout.findMany({
+      include: {
+        exercises: true,
+        user: true,
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
+        likes: currentUserId ? {
+          where: {
+            userId: currentUserId,
+          },
+          select: {
+            id: true,
+          },
+        } : false,
+      },
+      orderBy: {
+        likes: {
+          _count: 'desc',
+        },
+      },
+      take: limit,
+    });
+
+    // Add isLikedByUser property and filter out workouts with 0 likes
+    return workouts
+      .map(workout => ({
+        ...workout,
+        isLikedByUser: currentUserId ? workout.likes.length > 0 : false,
+      }))
+      .filter(workout => workout._count.likes > 0); // Only show workouts with at least 1 like
+  } catch (error) {
+    console.error('Error fetching top workouts', error);
     throw new Error(error instanceof Error ? error.message : 'Unexpected error');
   }
 };

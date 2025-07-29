@@ -23,6 +23,14 @@ export type ExerciseProps = {
   updatedAt?: Date;
 };
 
+export type WorkoutLikeProps = {
+  id: string;
+  userId: string;
+  workoutId: string;
+  createdAt: Date;
+  user?: UserProps;
+};
+
 export type WorkoutProps = {
   id?: string;
   name: string;
@@ -33,6 +41,11 @@ export type WorkoutProps = {
   user?: UserProps;
   createdAt?: Date;
   updatedAt?: Date;
+  likes?: WorkoutLikeProps[];
+  _count?: {
+    likes: number;
+  };
+  isLikedByUser?: boolean;
 };
 
 export type SignInProps = z.infer<typeof signInSchema>;
