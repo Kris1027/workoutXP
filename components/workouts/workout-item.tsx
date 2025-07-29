@@ -21,6 +21,7 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import WorkoutForm from './workout-form';
 import WorkoutLikeButton from './workout-like-button';
+import { formatDate } from '@/utils/format-date';
 
 type WorkoutItemProps = {
   workout: WorkoutProps;
@@ -48,6 +49,12 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises, curren
   // Show controls if user is the creator or admin
   const canEditOrDelete = currentUser?.isAdmin || workout.userId === currentUser?.id;
 
+  // Determine if workout was edited and format date accordingly
+  const wasEdited = workout.updatedAt && workout.createdAt && 
+    new Date(workout.updatedAt).getTime() > new Date(workout.createdAt).getTime();
+  const dateToShow = wasEdited ? workout.updatedAt : workout.createdAt;
+  const dateLabel = wasEdited ? 'updated' : 'created';
+
   return (
     <Card key={workout.id}>
       <CardHeader className='space-y-2'>
@@ -56,9 +63,9 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises, curren
             src={workout.imageUrl}
             alt={workout.name}
             width={0}
-            height={400}
+            height={0}
             sizes='100vw'
-            className='object-cover rounded-md w-full h-[400px]'
+            className='w-full h-auto rounded-md'
             priority
           />
         </Link>
@@ -68,7 +75,12 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises, curren
       <CardContent className='space-y-2'>
         <CardDescription>{workout.description}</CardDescription>
         <CardDescription>
-          created by <span className='font-bold'>{workout.user?.name}</span>
+          {dateLabel} by <span className='font-bold'>{workout.user?.name}</span>
+          {dateToShow && (
+            <span className='text-xs text-gray-500 dark:text-gray-400 block mt-1'>
+              {formatDate(new Date(dateToShow))}
+            </span>
+          )}
         </CardDescription>
         <div className='flex items-center justify-between pt-2'>
           <WorkoutLikeButton

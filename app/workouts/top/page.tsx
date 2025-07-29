@@ -71,7 +71,7 @@ const TopWorkoutsPage = async () => {
                       alt={workout.name}
                       width={80}
                       height={80}
-                      className='object-cover rounded-lg w-20 h-20'
+                      className='object-contain rounded-lg w-20 h-20 bg-gray-50 dark:bg-gray-800'
                     />
                   </Link>
 

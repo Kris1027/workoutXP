@@ -51,9 +51,9 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, session }) => {
           src={exercise.imageUrl}
           alt={exercise.name}
           width={0}
-          height={400}
+          height={0}
           sizes='100vw'
-          className='object-cover rounded-md w-full h-[400px]'
+          className='w-full h-auto rounded-md'
           priority
         />
         <CardTitle className='text-center '>{exercise.name}</CardTitle>
