@@ -15,6 +15,15 @@ type NavigationBarProps = {
   currentUser?: UserProps | null;
 };
 
+type NavLink = {
+  name: string;
+  href: string;
+  icon: React.ComponentType<any> | null;
+  image?: string | null;
+  label: string;
+  description: string;
+};
+
 const getNavLinks = (currentUser?: UserProps | null) => [
   {
     name: 'Home',
@@ -110,7 +119,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const DesktopNavLink = ({ link }: { link: any }) => {
+  const DesktopNavLink = ({ link }: { link: NavLink }) => {
     const IconComponent = link.icon;
     const active = isActive(link.href);
 
