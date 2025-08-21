@@ -1,4 +1,3 @@
-import { logoUrl } from '@/constants/constants';
 import Image from 'next/image';
 
 const HomePage = () => {
@@ -6,7 +5,7 @@ const HomePage = () => {
     <div className='flex items-center justify-center p-4'>
       <div className='relative w-full max-w-md md:max-w-lg lg:max-w-xl'>
         <Image
-          src={logoUrl}
+          src='/logo.png'
           width={400}
           height={400}
           alt='workoutXP logo'
