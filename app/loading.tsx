@@ -2,7 +2,7 @@
 
 const Loading = () => {
   return (
-    <div className='min-h-screen flex items-center justify-center relative overflow-hidden bg-white dark:bg-black'>
+    <div className='min-h-screen flex items-center justify-center relative overflow-hidden'>
       {/* Main loading container */}
       <div className='relative z-10 text-center'>
         {/* Logo/Brand */}
