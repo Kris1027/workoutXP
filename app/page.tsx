@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   FiArrowRight,
   FiCheckCircle,
@@ -70,6 +71,18 @@ const HomePage = () => {
 
         <div className='max-w-7xl mx-auto'>
           <div className='text-center space-y-8'>
+            {/* Logo */}
+            <div className='flex justify-center mb-8'>
+              <Image
+                src='/logo.png'
+                alt='WorkoutXP Logo'
+                width={400}
+                height={400}
+                className='drop-shadow-2xl'
+                priority
+              />
+            </div>
+
             {/* Badge */}
             <div className='inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-sm font-medium'>
               <FiAward className='text-primary' />
