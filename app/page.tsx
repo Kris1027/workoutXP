@@ -11,6 +11,7 @@ import {
   FiBarChart,
 } from 'react-icons/fi';
 import { LuDumbbell, LuTimer } from 'react-icons/lu';
+import { APP_LOGO } from '@/constants/app-constants';
 
 const HomePage = () => {
   const features = [
@@ -72,7 +73,7 @@ const HomePage = () => {
             {/* Logo */}
             <div className='flex justify-center mb-8'>
               <Image
-                src='/logo.png'
+                src={APP_LOGO}
                 alt='WorkoutXP Logo'
                 width={400}
                 height={400}
