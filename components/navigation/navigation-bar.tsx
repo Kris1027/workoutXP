@@ -2,7 +2,7 @@
 
 import { Link } from 'next-view-transitions';
 import { usePathname } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { BsListTask } from 'react-icons/bs';
 import { FiUser, FiMenu, FiX, FiHome } from 'react-icons/fi';
@@ -69,7 +69,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollY = useRef(0);
   const [navHidden, setNavHidden] = useState(false);
 
   const isActive = (href: string) =>
@@ -85,18 +85,18 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
       setScrolled(currentScrollY > 10);
 
       // Hide/show nav on scroll (desktop only)
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
         setNavHidden(true);
       } else {
         setNavHidden(false);
       }
 
-      setLastScrollY(currentScrollY);
+      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, []);
 
   // Close mobile menu on route change
   useEffect(() => {
