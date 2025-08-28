@@ -106,14 +106,15 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
+      // Store the original overflow value
+      const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+      
+      // Restore the original overflow value on cleanup
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
     }
-
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [isMobileMenuOpen]);
 
   const toggleMobileMenu = () => {
