@@ -81,16 +81,25 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      const scrolledNow = currentScrollY > 10;
 
-      // Add shadow on scroll
-      setScrolled(currentScrollY > 10);
+      // Only update scrolled state if it changed
+      setScrolled((prevScrolled) => {
+        if (prevScrolled !== scrolledNow) {
+          return scrolledNow;
+        }
+        return prevScrolled;
+      });
 
       // Hide/show nav on scroll (desktop only)
-      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
-        setNavHidden(true);
-      } else {
-        setNavHidden(false);
-      }
+      const shouldHide = currentScrollY > lastScrollY.current && currentScrollY > 100;
+      
+      setNavHidden((prevHidden) => {
+        if (prevHidden !== shouldHide) {
+          return shouldHide;
+        }
+        return prevHidden;
+      });
 
       lastScrollY.current = currentScrollY;
     };
