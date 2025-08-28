@@ -7,6 +7,8 @@ import { SignInProps, SignUpProps } from '@/types/data-types';
 import { saltAndHashPassword } from '@/utils/salt-and-hash-password';
 import { AuthError } from 'next-auth';
 
+const DEFAULT_ACCOUNT_IMAGE = '/default-account.jpg';
+
 export const githubLogin = async () => {
   await signIn('github', { redirectTo: '/profile' });
 };
@@ -76,7 +78,7 @@ export const registerUser = async (credentials: SignUpProps) => {
       data: {
         name,
         email,
-        image: '/default-account.jpg',
+        image: DEFAULT_ACCOUNT_IMAGE,
         password: hashedPassword,
         isAdmin: false,
       },

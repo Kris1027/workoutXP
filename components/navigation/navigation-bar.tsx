@@ -358,16 +358,6 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
       {/* Spacer for fixed navigation */}
       <div className='h-16 hidden md:block' />
       <div className='h-14 md:hidden' /> {/* Top mobile header spacer */}
-      {/* Add custom styles */}
-      <style jsx global>{`
-        @media (prefers-reduced-motion: reduce) {
-          * {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-      `}</style>
     </>
   );
 };
