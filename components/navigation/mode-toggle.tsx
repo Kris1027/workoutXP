@@ -67,7 +67,7 @@ export function ModeToggle() {
       size="icon" 
       onClick={toggleTheme} 
       aria-label={getThemeLabel()}
-      className="relative h-9 w-9 rounded-lg transition-all duration-200 hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-primary/50"
+      className="relative h-9 w-9 rounded-lg transition-all duration-200 hover:bg-accent/50 focus-ring-primary"
     >
       <div className="transition-transform duration-200 hover:scale-110">
         {getThemeIcon()}
