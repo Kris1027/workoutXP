@@ -71,6 +71,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
   const [scrolled, setScrolled] = useState(false);
   const lastScrollY = useRef(0);
   const [navHidden, setNavHidden] = useState(false);
+  const originalOverflowRef = useRef<string>('');
 
   const isActive = (href: string) =>
     href === '/' ? pathname === href : pathname?.startsWith(href);
@@ -106,15 +107,24 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ currentUser }) => {
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
-      // Store the original overflow value
-      const originalOverflow = document.body.style.overflow;
+      // Store the original overflow value only if not already stored
+      if (!originalOverflowRef.current) {
+        originalOverflowRef.current = document.body.style.overflow || 'unset';
+      }
       document.body.style.overflow = 'hidden';
-      
-      // Restore the original overflow value on cleanup
-      return () => {
-        document.body.style.overflow = originalOverflow;
-      };
+    } else if (originalOverflowRef.current) {
+      // Restore the original overflow value when menu closes
+      document.body.style.overflow = originalOverflowRef.current;
+      originalOverflowRef.current = '';
     }
+
+    // Always restore on unmount if we modified the overflow
+    return () => {
+      if (originalOverflowRef.current) {
+        document.body.style.overflow = originalOverflowRef.current;
+        originalOverflowRef.current = '';
+      }
+    };
   }, [isMobileMenuOpen]);
 
   const toggleMobileMenu = () => {
