@@ -1,12 +1,12 @@
 'use server';
 
 import { signIn, signOut } from '@/auth';
-import { userDefaultImage } from '@/constants/constants';
 import { prisma } from '@/lib/prisma';
 import { signInSchema, signUpSchema } from '@/schemas/data-schemas';
 import { SignInProps, SignUpProps } from '@/types/data-types';
 import { saltAndHashPassword } from '@/utils/salt-and-hash-password';
 import { AuthError } from 'next-auth';
+import { DEFAULT_ACCOUNT_IMAGE } from '@/constants/app-constants';
 
 export const githubLogin = async () => {
   await signIn('github', { redirectTo: '/profile' });
@@ -77,7 +77,7 @@ export const registerUser = async (credentials: SignUpProps) => {
       data: {
         name,
         email,
-        image: userDefaultImage,
+        image: DEFAULT_ACCOUNT_IMAGE,
         password: hashedPassword,
         isAdmin: false,
       },

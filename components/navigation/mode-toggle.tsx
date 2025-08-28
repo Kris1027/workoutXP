@@ -20,34 +20,59 @@ export function ModeToggle() {
     setTheme(nextTheme);
   };
 
+  const getThemeIcon = () => {
+    switch (theme) {
+      case 'light':
+        return <Sun className="h-5 w-5" />;
+      case 'dark':
+        return <Moon className="h-5 w-5" />;
+      case 'system':
+        return <Monitor className="h-5 w-5" />;
+      default:
+        return <Sun className="h-5 w-5" />;
+    }
+  };
+
+  const getThemeLabel = () => {
+    switch (theme) {
+      case 'light':
+        return 'Light mode';
+      case 'dark':
+        return 'Dark mode';
+      case 'system':
+        return 'System mode';
+      default:
+        return 'Toggle theme';
+    }
+  };
+
   // Show a neutral state during SSR and initial hydration
   if (!mounted) {
     return (
-      <Button variant='outline' size='icon' aria-label='Toggle theme'>
-        <Sun className='h-[1.2rem] w-[1.2rem]' />
-        <span className='sr-only'>Toggle theme</span>
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        aria-label="Toggle theme"
+        className="relative h-9 w-9 rounded-lg transition-colors hover:bg-accent/50"
+      >
+        <Sun className="h-5 w-5" />
+        <span className="sr-only">Toggle theme</span>
       </Button>
     );
   }
 
   return (
-    <Button variant='outline' size='icon' onClick={toggleTheme} aria-label='Toggle theme'>
-      <Sun
-        className={`h-[1.2rem] w-[1.2rem] transition-all ${
-          theme === 'light' ? 'scale-100 rotate-0' : 'scale-0 -rotate-90'
-        }`}
-      />
-      <Moon
-        className={`absolute h-[1.2rem] w-[1.2rem] transition-all ${
-          theme === 'dark' ? 'scale-100 rotate-0' : 'scale-0 rotate-90'
-        }`}
-      />
-      <Monitor
-        className={`absolute h-[1.2rem] w-[1.2rem] transition-all ${
-          theme === 'system' ? 'scale-100 rotate-0' : 'scale-0 rotate-90'
-        }`}
-      />
-      <span className='sr-only'>Toggle theme</span>
+    <Button 
+      variant="ghost" 
+      size="icon" 
+      onClick={toggleTheme} 
+      aria-label={getThemeLabel()}
+      className="relative h-9 w-9 rounded-lg transition-all duration-200 hover:bg-accent/50 focus-ring-primary"
+    >
+      <div className="transition-transform duration-200 hover:scale-110">
+        {getThemeIcon()}
+      </div>
+      <span className="sr-only">{getThemeLabel()}</span>
     </Button>
   );
 }

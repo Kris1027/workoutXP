@@ -17,7 +17,7 @@ const RootLayout = ({
 }>) => {
   return (
     <html lang='en' suppressHydrationWarning>
-      <body>
+      <body className="min-h-screen bg-background font-sans antialiased">
         <ViewTransitions>
           <ThemeProvider
             attribute='class'
@@ -25,9 +25,13 @@ const RootLayout = ({
             enableSystem
             disableTransitionOnChange
           >
-            <Navigation />
-            <main>{children}</main>
-            <Toaster />
+            <div className="relative flex min-h-screen flex-col">
+              <Navigation />
+              <main className="flex-1 px-4 py-6 md:px-6 md:py-8 max-w-7xl mx-auto w-full">
+                {children}
+              </main>
+              <Toaster />
+            </div>
           </ThemeProvider>
         </ViewTransitions>
       </body>
