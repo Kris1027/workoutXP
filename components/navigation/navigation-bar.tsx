@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { BsListTask } from 'react-icons/bs';
 import { FiUser, FiMenu, FiX, FiHome } from 'react-icons/fi';
 import { LuDumbbell } from 'react-icons/lu';
+import { IconType } from 'react-icons';
 import { ModeToggle } from './mode-toggle';
 import { UserProps } from '@/types/data-types';
 import Image from 'next/image';
@@ -18,7 +19,7 @@ type NavigationBarProps = {
 type NavLink = {
   name: string;
   href: string;
-  icon: React.ComponentType<any> | null;
+  icon: IconType | null;
   image?: string | null;
   label: string;
   description: string;
