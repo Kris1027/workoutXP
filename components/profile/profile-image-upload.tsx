@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { updateProfileImage } from '@/actions/profile-actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -13,9 +13,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import ImageUpload from '@/components/ui/image-upload';
 import { getUserInitials } from '@/utils/get-user-initials';
-import { useUploadThing } from '@/utils/uploadthing';
-import { Camera, User, Loader2, ImagePlus } from 'lucide-react';
+import { Camera, User } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ProfileImageUploadProps {
@@ -29,52 +29,18 @@ export default function ProfileImageUpload({
   userName,
 }: ProfileImageUploadProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  
-  const { startUpload } = useUploadThing('profileImage', {
-    onClientUploadComplete: (res) => {
-      if (res?.[0]) {
-        const fileUrl = `https://utfs.io/f/${res[0].key}`;
-        handleImageUpload(fileUrl);
-      }
-    },
-    onUploadError: (error: Error) => {
-      toast.error(`Upload failed: ${error.message}`);
-      setIsUploading(false);
-    },
-  });
+  const [tempImage, setTempImage] = useState(currentImage);
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      toast.error('Please select an image file');
-      return;
-    }
-    
-    // Validate file size (4MB max)
-    if (file.size > 4 * 1024 * 1024) {
-      toast.error('File size must be less than 4MB');
-      return;
-    }
-    
-    setIsUploading(true);
-    await startUpload([file]);
-  };
-
-  const handleImageUpload = async (url: string) => {
+  const handleImageChange = async (url: string) => {
     const result = await updateProfileImage(url);
     
     if (result.success) {
+      setTempImage(url);
       toast.success('Profile image updated successfully');
       setIsOpen(false);
     } else {
       toast.error(result.error || 'Failed to update profile image');
     }
-    setIsUploading(false);
   };
 
 
@@ -117,9 +83,9 @@ export default function ProfileImageUpload({
         
         <div className='flex flex-col items-center gap-6 py-4'>
           <Avatar className='w-32 h-32 border-4 border-violet-400'>
-            {currentImage ? (
+            {tempImage ? (
               <AvatarImage
-                src={currentImage}
+                src={tempImage}
                 alt={userName || 'User'}
                 className='object-cover'
               />
@@ -133,32 +99,15 @@ export default function ProfileImageUpload({
             </AvatarFallback>
           </Avatar>
           
-          <div className='flex flex-col gap-3 w-full'>
-            <input
-              ref={fileInputRef}
-              type='file'
-              accept='image/*'
-              onChange={handleFileSelect}
-              className='hidden'
-              disabled={isUploading}
+          <div className='w-full'>
+            <ImageUpload
+              value={tempImage || ''}
+              onChange={handleImageChange}
+              endpoint='profileImage'
+              preview={false}
+              buttonText={tempImage ? 'Change Profile Picture' : 'Upload Profile Picture'}
+              className='flex justify-center'
             />
-            <Button
-              onClick={() => fileInputRef.current?.click()}
-              disabled={isUploading}
-              className='w-full'
-            >
-              {isUploading ? (
-                <>
-                  <Loader2 className='w-4 h-4 mr-2 animate-spin' />
-                  Uploading...
-                </>
-              ) : (
-                <>
-                  <ImagePlus className='w-4 h-4 mr-2' />
-                  {currentImage ? 'Change Image' : 'Upload Image'}
-                </>
-              )}
-            </Button>
           </div>
         </div>
         

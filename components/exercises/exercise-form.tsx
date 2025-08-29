@@ -4,8 +4,7 @@ import { createExercise, updateExercise } from '@/actions/exercise-actions';
 import { createExerciseSchema } from '@/schemas/data-schemas';
 import type { ExerciseProps } from '@/types/data-types';
 import { useForm } from '@tanstack/react-form';
-import { UploadButton } from '@/utils/uploadthing';
-import Image from 'next/image';
+import ImageUpload from '@/components/ui/image-upload';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
@@ -77,29 +76,15 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
           <form.Field name='imageUrl'>
             {(field) => (
               <div className='space-y-2'>
-                <UploadButton
+                <Label>Exercise Image:</Label>
+                <ImageUpload
+                  value={field.state.value}
+                  onChange={(url) => field.handleChange(url)}
                   endpoint='imageUploader'
-                  onClientUploadComplete={(res) => {
-                    if (res && res.length > 0) {
-                      field.handleChange(res[0].ufsUrl);
-                    }
-                  }}
-                  onUploadError={(error: Error) => {
-                    console.error('Upload failed:', error);
-                    toast.error(`Error! ${error.message}`);
-                  }}
+                  buttonText={field.state.value ? 'Change Image' : 'Upload Image'}
+                  showRemoveButton={true}
+                  onRemove={() => field.handleChange('')}
                 />
-                {field.state.value && (
-                  <div className='mt-2'>
-                    <Image
-                      src={field.state.value}
-                      alt='Exercise'
-                      width={100}
-                      height={100}
-                      className='object-cover object-center'
-                    />
-                  </div>
-                )}
                 {!field.state.meta.isValid && (
                   <p className='text-red-500 italic'>
                     {field.state.meta.errors

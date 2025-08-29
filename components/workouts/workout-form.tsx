@@ -3,9 +3,8 @@
 import { createWorkout, updateWorkout } from '@/actions/workout-actions';
 import { createWorkoutSchema } from '@/schemas/data-schemas';
 import type { ExerciseProps, WorkoutProps } from '@/types/data-types';
-import { UploadButton } from '@/utils/uploadthing';
+import ImageUpload from '@/components/ui/image-upload';
 import { useForm } from '@tanstack/react-form';
-import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
@@ -77,30 +76,16 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
           {/* image */}
           <form.Field name='imageUrl'>
             {(field) => (
-              <div>
-                <UploadButton
+              <div className='space-y-2'>
+                <Label>Workout Image:</Label>
+                <ImageUpload
+                  value={field.state.value}
+                  onChange={(url) => field.handleChange(url)}
                   endpoint='imageUploader'
-                  onClientUploadComplete={(res) => {
-                    if (res && res.length > 0) {
-                      field.handleChange(res[0].ufsUrl);
-                    }
-                  }}
-                  onUploadError={(error: Error) => {
-                    console.error('Upload failed:', error);
-                    toast.error('Image upload failed. Please try again.');
-                  }}
+                  buttonText={field.state.value ? 'Change Image' : 'Upload Image'}
+                  showRemoveButton={true}
+                  onRemove={() => field.handleChange('')}
                 />
-                {field.state.value && (
-                  <div className='mt-2'>
-                    <Image
-                      src={field.state.value}
-                      alt='Workout'
-                      width={100}
-                      height={100}
-                      className='object-cover object-center'
-                    />
-                  </div>
-                )}
                 {!field.state.meta.isValid && (
                   <p className='text-red-500 italic'>
                     {field.state.meta.errors
