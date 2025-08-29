@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { updateProfileImage, deleteProfileImage } from '@/actions/profile-actions';
+import { updateProfileImage } from '@/actions/profile-actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,20 +13,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
 import { getUserInitials } from '@/utils/get-user-initials';
 import { useUploadThing } from '@/utils/uploadthing';
-import { Camera, Trash2, User, Loader2, Upload } from 'lucide-react';
+import { Camera, User, Loader2, ImagePlus } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ProfileImageUploadProps {
@@ -41,7 +30,6 @@ export default function ProfileImageUpload({
 }: ProfileImageUploadProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const { startUpload } = useUploadThing('profileImage', {
@@ -89,18 +77,6 @@ export default function ProfileImageUpload({
     setIsUploading(false);
   };
 
-  const handleImageDelete = async () => {
-    setIsDeleting(true);
-    const result = await deleteProfileImage();
-    
-    if (result.success) {
-      toast.success('Profile image removed successfully');
-      setIsOpen(false);
-    } else {
-      toast.error(result.error || 'Failed to remove profile image');
-    }
-    setIsDeleting(false);
-  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -133,7 +109,9 @@ export default function ProfileImageUpload({
         <DialogHeader>
           <DialogTitle>Change Profile Picture</DialogTitle>
           <DialogDescription>
-            Upload a new profile picture or remove the current one
+            {currentImage 
+              ? 'Upload a new profile picture to replace the current one'
+              : 'Upload your first profile picture'}
           </DialogDescription>
         </DialogHeader>
         
@@ -176,49 +154,11 @@ export default function ProfileImageUpload({
                 </>
               ) : (
                 <>
-                  <Upload className='w-4 h-4 mr-2' />
-                  Upload New Image
+                  <ImagePlus className='w-4 h-4 mr-2' />
+                  {currentImage ? 'Change Image' : 'Upload Image'}
                 </>
               )}
             </Button>
-            
-            {currentImage && (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button 
-                    variant='destructive' 
-                    className='w-full'
-                    disabled={isDeleting}
-                  >
-                    {isDeleting ? (
-                      <>
-                        <Loader2 className='w-4 h-4 mr-2 animate-spin' />
-                        Removing...
-                      </>
-                    ) : (
-                      <>
-                        <Trash2 className='w-4 h-4 mr-2' />
-                        Remove Current Image
-                      </>
-                    )}
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This will remove your current profile picture. You can upload a new one anytime.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleImageDelete}>
-                      Remove Image
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            )}
           </div>
         </div>
         
