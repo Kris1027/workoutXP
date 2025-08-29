@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent } from './card';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useId } from 'react';
 import { Loader2 } from 'lucide-react';
 
 interface FitnessCardProps {
@@ -58,6 +58,7 @@ const FitnessCard: React.FC<FitnessCardProps> = ({
   imageHeight = 'h-64'
 }) => {
   const [isImageLoading, setIsImageLoading] = useState(true);
+  const gradientId = useId(); // Generate unique ID for this component instance
   // Theme-based styling
   const themeStyles = {
     orange: {
@@ -99,13 +100,13 @@ const FitnessCard: React.FC<FitnessCardProps> = ({
                   className="w-10 h-10 animate-spin" 
                   strokeWidth={2}
                   style={{
-                    stroke: 'url(#loading-gradient)',
+                    stroke: `url(#${gradientId})`,
                   }}
                 />
-                {/* SVG gradient definition */}
+                {/* SVG gradient definition with unique ID */}
                 <svg width="0" height="0" className="absolute">
                   <defs>
-                    <linearGradient id="loading-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stopColor="#60a5fa" />
                       <stop offset="50%" stopColor="#a78bfa" />
                       <stop offset="100%" stopColor="#60a5fa" />
