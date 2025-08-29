@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useUploadThing } from '@/utils/uploadthing';
+import { deleteImageFromStorage } from '@/actions/image-actions';
 import { Loader2, Upload, ImagePlus, X } from 'lucide-react';
 import { toast } from 'sonner';
 import Image from 'next/image';
@@ -20,6 +21,7 @@ interface ImageUploadProps {
   buttonVariant?: 'default' | 'outline' | 'ghost' | 'secondary';
   showRemoveButton?: boolean;
   disabled?: boolean;
+  deleteOnRemove?: boolean; // Whether to delete from storage when removing
 }
 
 export default function ImageUpload({
@@ -34,8 +36,10 @@ export default function ImageUpload({
   buttonVariant = 'default',
   showRemoveButton = false,
   disabled = false,
+  deleteOnRemove = true,
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadedInSession, setUploadedInSession] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { startUpload } = useUploadThing(endpoint, {
@@ -43,6 +47,7 @@ export default function ImageUpload({
       if (res?.[0]) {
         const fileUrl = `https://utfs.io/f/${res[0].key}`;
         onChange(fileUrl);
+        setUploadedInSession(fileUrl); // Track that we uploaded this in current session
         setIsUploading(false);
         toast.success('Image uploaded successfully');
       }
@@ -78,7 +83,20 @@ export default function ImageUpload({
     }
   };
 
-  const handleRemove = () => {
+  const handleRemove = async () => {
+    // If we uploaded this image in the current session and deleteOnRemove is true,
+    // delete it from storage since it's not saved to database yet
+    if (value && uploadedInSession === value && deleteOnRemove) {
+      const result = await deleteImageFromStorage(value);
+      if (!result.success) {
+        console.error('Failed to delete image from storage:', result.error);
+      }
+    }
+    
+    // Clear the uploaded in session tracker
+    setUploadedInSession(null);
+    
+    // Call the provided onRemove or clear the value
     if (onRemove) {
       onRemove();
     } else {

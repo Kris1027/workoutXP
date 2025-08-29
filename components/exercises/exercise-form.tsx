@@ -84,6 +84,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
                   buttonText={field.state.value ? 'Change Image' : 'Upload Image'}
                   showRemoveButton={true}
                   onRemove={() => field.handleChange('')}
+                  deleteOnRemove={!isEditedExercise} // Only delete from storage for new exercises
                 />
                 {!field.state.meta.isValid && (
                   <p className='text-red-500 italic'>
