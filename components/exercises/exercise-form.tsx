@@ -4,8 +4,8 @@ import { createExercise, updateExercise } from '@/actions/exercise-actions';
 import { createExerciseSchema } from '@/schemas/data-schemas';
 import type { ExerciseProps } from '@/types/data-types';
 import { useForm } from '@tanstack/react-form';
-import { UploadButton } from '@/utils/uploadthing';
-import Image from 'next/image';
+import ImageUpload from '@/components/ui/image-upload';
+import { deleteImageFromStorage } from '@/actions/image-actions';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
@@ -13,7 +13,7 @@ import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { toast } from 'sonner';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 interface ExerciseFormProps {
   isEditedExercise?: ExerciseProps | null;
@@ -21,13 +21,16 @@ interface ExerciseFormProps {
 
 const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
   const [open, setOpen] = useState(false);
+  const uploadedImageRef = useRef<string | null>(null);
+  const initialImageUrl = isEditedExercise?.imageUrl || '';
+  
   const form = useForm({
     defaultValues: {
       id: isEditedExercise?.id || '',
       name: isEditedExercise?.name || '',
       category: isEditedExercise?.category || '',
       difficulty: isEditedExercise?.difficulty || '',
-      imageUrl: isEditedExercise?.imageUrl || '',
+      imageUrl: initialImageUrl,
       description: isEditedExercise?.description || '',
     } as ExerciseProps,
     validators: {
@@ -43,6 +46,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
           toast.success('Exercise created successfully!');
           form.reset();
         }
+        uploadedImageRef.current = null; // Clear the ref after successful submit
         setOpen(false);
       } catch (error) {
         toast.error('Something went wrong. Please try again.');
@@ -51,8 +55,29 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
     },
   });
 
+  const handleOpenChange = async (newOpen: boolean) => {
+    // If closing the modal without saving
+    if (!newOpen && !isEditedExercise) {
+      const currentImageUrl = form.state.values.imageUrl;
+      
+      // If there's an uploaded image that wasn't saved, delete it
+      if (currentImageUrl && uploadedImageRef.current === currentImageUrl) {
+        const deleteResult = await deleteImageFromStorage(currentImageUrl);
+        if (!deleteResult.success) {
+          console.error('Failed to delete orphaned image:', deleteResult.error || 'Unknown error');
+        }
+      }
+      
+      // Reset the form
+      form.reset();
+      uploadedImageRef.current = null;
+    }
+    
+    setOpen(newOpen);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button className='cursor-pointer'>
           {isEditedExercise ? 'Edit Exercise' : 'Create New Exercise'}
@@ -77,29 +102,28 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
           <form.Field name='imageUrl'>
             {(field) => (
               <div className='space-y-2'>
-                <UploadButton
-                  endpoint='imageUploader'
-                  onClientUploadComplete={(res) => {
-                    if (res && res.length > 0) {
-                      field.handleChange(res[0].ufsUrl);
+                <Label>Exercise Image:</Label>
+                <ImageUpload
+                  value={field.state.value}
+                  onChange={(url) => {
+                    field.handleChange(url);
+                    // Track newly uploaded images for cleanup if modal closes
+                    if (!isEditedExercise) {
+                      uploadedImageRef.current = url;
                     }
                   }}
-                  onUploadError={(error: Error) => {
-                    console.error('Upload failed:', error);
-                    toast.error(`Error! ${error.message}`);
+                  endpoint='imageUploader'
+                  buttonText={field.state.value ? 'Change Image' : 'Upload Image'}
+                  showRemoveButton={true}
+                  onRemove={() => {
+                    field.handleChange('');
+                    // Clear the ref when user manually removes
+                    if (!isEditedExercise) {
+                      uploadedImageRef.current = null;
+                    }
                   }}
+                  deleteOnRemove={!isEditedExercise} // Only delete from storage for new exercises
                 />
-                {field.state.value && (
-                  <div className='mt-2'>
-                    <Image
-                      src={field.state.value}
-                      alt='Exercise'
-                      width={100}
-                      height={100}
-                      className='object-cover object-center'
-                    />
-                  </div>
-                )}
                 {!field.state.meta.isValid && (
                   <p className='text-red-500 italic'>
                     {field.state.meta.errors

@@ -238,23 +238,23 @@ export const updateWorkout = async (workoutData: WorkoutProps): Promise<void> =>
   const selectedExerciseIds = exercises.map((exercise) => exercise.id);
 
   try {
-    // Delete the old image from storage if the imageUrl is being updated
-    if (imageUrl) {
-      const existingWorkout = await prisma.workout.findUnique({
-        where: { id },
-      });
+    const existingWorkout = await prisma.workout.findUnique({
+      where: { id },
+    });
 
-      if (existingWorkout?.imageUrl && existingWorkout.imageUrl !== imageUrl) {
-        try {
-          const url = new URL(existingWorkout.imageUrl);
-          const fileKey = url.pathname.split('/').pop();
-          if (fileKey) {
-            await deleteFileFromUploadThing(fileKey);
-          }
-        } catch (error) {
-          console.error('Invalid old image URL:', existingWorkout.imageUrl, error);
-          throw new Error(error instanceof Error ? error.message : 'Unexpected error');
+    // Delete the old image from storage if:
+    // 1. The imageUrl is being changed to a different URL
+    // 2. The imageUrl is being removed (set to empty string)
+    if (existingWorkout?.imageUrl && existingWorkout.imageUrl !== imageUrl) {
+      try {
+        const url = new URL(existingWorkout.imageUrl);
+        const fileKey = url.pathname.split('/').pop();
+        if (fileKey) {
+          await deleteFileFromUploadThing(fileKey);
         }
+      } catch (error) {
+        console.error('Invalid old image URL:', existingWorkout.imageUrl, error);
+        // Continue with update even if deletion fails
       }
     }
 
