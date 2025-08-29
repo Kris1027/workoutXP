@@ -44,6 +44,15 @@ export default function ImageUpload({
   const [uploadedInSession, setUploadedInSession] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Helper to determine if image should be deleted from storage
+  const shouldDeleteFromStorage = (): boolean => {
+    // Delete only if:
+    // 1. There's a value (image URL exists)
+    // 2. This image was uploaded in current session (not from DB)
+    // 3. deleteOnRemove flag is true (for new items, not edits)
+    return Boolean(value && uploadedInSession === value && deleteOnRemove);
+  };
+
   const { startUpload } = useUploadThing(endpoint, {
     onClientUploadComplete: (res) => {
       if (res?.[0]) {
@@ -86,11 +95,10 @@ export default function ImageUpload({
   };
 
   const handleRemove = async () => {
-    // If we uploaded this image in the current session and deleteOnRemove is true,
-    // delete it from storage since it's not saved to database yet
-    if (value && uploadedInSession === value && deleteOnRemove) {
+    // Delete from storage if this is a newly uploaded image
+    if (shouldDeleteFromStorage()) {
       setIsDeleting(true);
-      const result = await deleteImageFromStorage(value);
+      const result = await deleteImageFromStorage(value!); // Safe to assert - shouldDeleteFromStorage checks value exists
       setIsDeleting(false);
       
       if (!result.success) {
