@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { updateProfileImage, deleteProfileImage } from '@/actions/profile-actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -25,8 +25,8 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { getUserInitials } from '@/utils/get-user-initials';
-import { UploadButton } from '@/utils/uploadthing';
-import { Camera, Trash2, User, Loader2 } from 'lucide-react';
+import { useUploadThing } from '@/utils/uploadthing';
+import { Camera, Trash2, User, Loader2, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ProfileImageUploadProps {
@@ -38,11 +38,44 @@ interface ProfileImageUploadProps {
 export default function ProfileImageUpload({
   currentImage,
   userName,
-  userId,
 }: ProfileImageUploadProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const { startUpload } = useUploadThing('profileImage', {
+    onClientUploadComplete: (res) => {
+      if (res?.[0]) {
+        const fileUrl = `https://utfs.io/f/${res[0].key}`;
+        handleImageUpload(fileUrl);
+      }
+    },
+    onUploadError: (error: Error) => {
+      toast.error(`Upload failed: ${error.message}`);
+      setIsUploading(false);
+    },
+  });
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+    
+    // Validate file size (4MB max)
+    if (file.size > 4 * 1024 * 1024) {
+      toast.error('File size must be less than 4MB');
+      return;
+    }
+    
+    setIsUploading(true);
+    await startUpload([file]);
+  };
 
   const handleImageUpload = async (url: string) => {
     const result = await updateProfileImage(url);
@@ -53,6 +86,7 @@ export default function ProfileImageUpload({
     } else {
       toast.error(result.error || 'Failed to update profile image');
     }
+    setIsUploading(false);
   };
 
   const handleImageDelete = async () => {
@@ -122,50 +156,31 @@ export default function ProfileImageUpload({
           </Avatar>
           
           <div className='flex flex-col gap-3 w-full'>
-            <UploadButton
-              endpoint='profileImage'
-              onClientUploadComplete={(res) => {
-                if (res?.[0]) {
-                  setIsUploading(true);
-                  // Construct the URL from the file key
-                  const fileUrl = `https://utfs.io/f/${res[0].key}`;
-                  handleImageUpload(fileUrl).finally(() => setIsUploading(false));
-                }
-              }}
-              onUploadError={(error: Error) => {
-                toast.error(`Upload failed: ${error.message}`);
-              }}
-              appearance={{
-                button: 'w-full bg-primary hover:bg-primary/90 text-primary-foreground',
-                container: 'w-full',
-              }}
-              content={{
-                button({ ready }) {
-                  if (isUploading) {
-                    return (
-                      <>
-                        <Loader2 className='w-4 h-4 mr-2 animate-spin' />
-                        Updating...
-                      </>
-                    );
-                  }
-                  if (ready) {
-                    return (
-                      <>
-                        <Camera className='w-4 h-4 mr-2' />
-                        Upload New Image
-                      </>
-                    );
-                  }
-                  return 'Getting ready...';
-                },
-                allowedContent({ ready, isUploading }) {
-                  if (!ready) return 'Checking what you allow';
-                  if (isUploading) return 'Uploading...';
-                  return `Image files up to 4MB`;
-                },
-              }}
+            <input
+              ref={fileInputRef}
+              type='file'
+              accept='image/*'
+              onChange={handleFileSelect}
+              className='hidden'
+              disabled={isUploading}
             />
+            <Button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploading}
+              className='w-full'
+            >
+              {isUploading ? (
+                <>
+                  <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <Upload className='w-4 h-4 mr-2' />
+                  Upload New Image
+                </>
+              )}
+            </Button>
             
             {currentImage && (
               <AlertDialog>
