@@ -2,9 +2,9 @@ import { UTApi } from 'uploadthing/server';
 
 const utapi = new UTApi();
 
-export async function deleteImageFromStorage(imageUrl: string | null | undefined) {
+export async function deleteImageFromStorage(imageUrl: string | null | undefined): Promise<{ success: boolean; error?: string }> {
   if (!imageUrl || !imageUrl.includes('utfs.io')) {
-    return false;
+    return { success: false, error: 'Invalid or missing image URL' };
   }
 
   try {
@@ -13,11 +13,14 @@ export async function deleteImageFromStorage(imageUrl: string | null | undefined
     if (fileKey) {
       await utapi.deleteFiles([fileKey]);
       console.log('Deleted image from storage:', fileKey);
-      return true;
+      return { success: true };
     }
+    return { success: false, error: 'Could not extract file key from URL' };
   } catch (error) {
     console.error('Error deleting image from storage:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to delete image from storage' 
+    };
   }
-  
-  return false;
 }
