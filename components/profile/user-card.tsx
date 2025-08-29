@@ -3,13 +3,12 @@ import { fetchWorkoutsByUserId } from '@/actions/workout-actions';
 import { auth } from '@/auth';
 import AuthContainer from '@/components/auth/auth-container';
 import SignOut from '@/components/auth/sign-out';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import ProfileImageUpload from '@/components/profile/profile-image-upload';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { formatDate } from '@/utils/format-date';
-import { getUserInitials } from '@/utils/get-user-initials';
 import { Calendar, Mail, Settings, User, Dumbbell } from 'lucide-react';
 
 const UserCard = async () => {
@@ -27,23 +26,12 @@ const UserCard = async () => {
       {currentUser && (
         <Card className='w-full max-w-md'>
           <CardHeader className='flex flex-col justify-center items-center pb-2'>
-            <Avatar className='w-24 h-24 border-4 border-violet-400 shadow-lg'>
-              {currentUser?.image ? (
-                <AvatarImage
-                  src={currentUser.image}
-                  alt={currentUser.name || 'User'}
-                  className='object-cover'
-                />
-              ) : null}
-              <AvatarFallback className='bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xl font-semibold'>
-                {currentUser?.name ? (
-                  getUserInitials(currentUser.name)
-                ) : (
-                  <User className='w-8 h-8' />
-                )}
-              </AvatarFallback>
-            </Avatar>
-            <CardTitle className='text-2xl font-bold mb-1'>
+            <ProfileImageUpload
+              currentImage={currentUser.image || null}
+              userName={currentUser.name || null}
+              userId={currentUser.id}
+            />
+            <CardTitle className='text-2xl font-bold mb-1 mt-4'>
               {currentUser?.name || 'Anonymous User'}
             </CardTitle>
             <Badge variant={currentUser.isAdmin ? 'destructive' : 'secondary'} className='mb-2'>
