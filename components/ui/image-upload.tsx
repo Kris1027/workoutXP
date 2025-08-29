@@ -40,6 +40,7 @@ export default function ImageUpload({
   deleteOnRemove = true,
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [uploadedInSession, setUploadedInSession] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -88,10 +89,18 @@ export default function ImageUpload({
     // If we uploaded this image in the current session and deleteOnRemove is true,
     // delete it from storage since it's not saved to database yet
     if (value && uploadedInSession === value && deleteOnRemove) {
+      setIsDeleting(true);
       const result = await deleteImageFromStorage(value);
+      setIsDeleting(false);
+      
       if (!result.success) {
         console.error('Failed to delete image from storage:', result.error);
+        toast.error('Failed to remove image from storage. Please try again.');
+        // Don't clear the image from UI if deletion failed
+        return;
       }
+      
+      toast.success('Image removed successfully');
     }
     
     // Clear the uploaded in session tracker
@@ -146,12 +155,21 @@ export default function ImageUpload({
           <Button
             type='button'
             onClick={handleRemove}
-            disabled={disabled}
+            disabled={disabled || isDeleting}
             variant='outline'
             size='sm'
           >
-            <X className='w-4 h-4 mr-2' />
-            Remove
+            {isDeleting ? (
+              <>
+                <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+                Removing...
+              </>
+            ) : (
+              <>
+                <X className='w-4 h-4 mr-2' />
+                Remove
+              </>
+            )}
           </Button>
         )}
       </div>
