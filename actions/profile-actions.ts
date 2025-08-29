@@ -4,6 +4,7 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { UTApi } from 'uploadthing/server';
+import { extractFileKeyFromUrl } from '@/utils/uploadthing-helpers';
 
 const utapi = new UTApi();
 
@@ -23,15 +24,14 @@ export async function updateProfileImage(imageUrl: string) {
 
     // If user has an existing image, delete it from UploadThing storage
     if (currentUser?.image && currentUser.image.includes('utfs.io')) {
-      try {
-        // Extract the file key from the URL
-        const fileKey = currentUser.image.split('/').pop();
-        if (fileKey) {
+      const fileKey = extractFileKeyFromUrl(currentUser.image);
+      if (fileKey) {
+        try {
           await utapi.deleteFiles([fileKey]);
+        } catch (deleteError) {
+          console.error('Error deleting old image from storage:', deleteError);
+          // Continue with update even if deletion fails
         }
-      } catch (deleteError) {
-        console.error('Error deleting old image from storage:', deleteError);
-        // Continue with update even if deletion fails
       }
     }
 

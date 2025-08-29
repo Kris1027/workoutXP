@@ -2,6 +2,7 @@
 
 import { UTApi } from 'uploadthing/server';
 import { auth } from '@/auth';
+import { extractFileKeyFromUrl } from '@/utils/uploadthing-helpers';
 
 const utapi = new UTApi();
 
@@ -16,14 +17,14 @@ export async function deleteImageFromStorage(imageUrl: string) {
     return { success: false, error: 'Invalid image URL' };
   }
 
+  const fileKey = extractFileKeyFromUrl(imageUrl);
+  if (!fileKey) {
+    return { success: false, error: 'Could not extract file key from URL' };
+  }
+
   try {
-    // Extract the file key from the URL
-    const fileKey = imageUrl.split('/').pop();
-    if (fileKey) {
-      await utapi.deleteFiles([fileKey]);
-      return { success: true };
-    }
-    return { success: false, error: 'Could not extract file key' };
+    await utapi.deleteFiles([fileKey]);
+    return { success: true };
   } catch (error) {
     console.error('Error deleting image from storage:', error);
     return { success: false, error: 'Failed to delete image from storage' };
