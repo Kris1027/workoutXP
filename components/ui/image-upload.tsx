@@ -42,6 +42,7 @@ export default function ImageUpload({
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(false);
   const [uploadedInSession, setUploadedInSession] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -185,12 +186,23 @@ export default function ImageUpload({
 
       {preview && value && (
         <div className='relative inline-block'>
+          {isImageLoading && (
+            <div 
+              className='absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-md border'
+              style={{ width: previewSize.width, height: previewSize.height }}
+            >
+              <Loader2 className='w-6 h-6 animate-spin text-gray-400' />
+            </div>
+          )}
           <Image
             src={value}
             alt='Uploaded image'
             width={previewSize.width}
             height={previewSize.height}
             className='object-cover rounded-md border'
+            onLoadingComplete={() => setIsImageLoading(false)}
+            onLoad={() => setIsImageLoading(false)}
+            onLoadStart={() => setIsImageLoading(true)}
           />
         </div>
       )}

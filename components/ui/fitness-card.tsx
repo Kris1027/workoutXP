@@ -3,7 +3,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent } from './card';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 interface FitnessCardProps {
   id: string;
@@ -56,6 +57,7 @@ const FitnessCard: React.FC<FitnessCardProps> = ({
   className = '',
   imageHeight = 'h-64'
 }) => {
+  const [isImageLoading, setIsImageLoading] = useState(true);
   // Theme-based styling
   const themeStyles = {
     orange: {
@@ -81,6 +83,13 @@ const FitnessCard: React.FC<FitnessCardProps> = ({
     >
       {/* Image with overlay */}
       <div className={`relative ${imageHeight} overflow-hidden`}>
+        {/* Loading spinner */}
+        {isImageLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 z-10">
+            <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+          </div>
+        )}
+        
         <Link href={href} className="block w-full h-full">
           <Image
             src={imageUrl}
@@ -90,6 +99,8 @@ const FitnessCard: React.FC<FitnessCardProps> = ({
             sizes='100vw'
             className='w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105'
             priority
+            onLoadingComplete={() => setIsImageLoading(false)}
+            onError={() => setIsImageLoading(false)}
           />
         </Link>
         
