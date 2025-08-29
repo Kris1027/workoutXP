@@ -209,7 +209,6 @@ export default function ImageUpload({
             height={previewSize.height}
             className='object-cover rounded-md border'
             onLoadingComplete={() => setIsImageLoading(false)}
-            onLoad={() => setIsImageLoading(false)}
             onLoadStart={() => setIsImageLoading(true)}
           />
         </div>
