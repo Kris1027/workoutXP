@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useUploadThing } from '@/utils/uploadthing';
 import { constructUploadThingUrl } from '@/utils/uploadthing-helpers';
 import { deleteImageFromStorage } from '@/actions/image-actions';
+import { UPLOAD_CONFIG } from '@/utils/upload-constants';
 import { Loader2, Upload, ImagePlus, X } from 'lucide-react';
 import { toast } from 'sonner';
 import Image from 'next/image';
@@ -79,9 +80,9 @@ export default function ImageUpload({
       return;
     }
 
-    // Validate file size (4MB max)
-    if (file.size > 4 * 1024 * 1024) {
-      toast.error('File size must be less than 4MB');
+    // Validate file size
+    if (file.size > UPLOAD_CONFIG.IMAGE.MAX_FILE_SIZE_BYTES) {
+      toast.error(`File size must be less than ${UPLOAD_CONFIG.IMAGE.MAX_FILE_SIZE_MB}MB`);
       return;
     }
 

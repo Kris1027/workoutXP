@@ -1,15 +1,19 @@
 import { createUploadthing, type FileRouter } from 'uploadthing/next';
 import { auth } from '@/auth';
 import { constructUploadThingUrl } from '@/utils/uploadthing-helpers';
+import { UPLOAD_CONFIG } from '@/utils/upload-constants';
 
 const f = createUploadthing();
 
+// Image upload configuration for UploadThing
+const IMAGE_CONFIG = {
+  maxFileSize: UPLOAD_CONFIG.IMAGE.MAX_FILE_SIZE_STRING,
+  maxFileCount: UPLOAD_CONFIG.IMAGE.MAX_FILE_COUNT,
+} as const;
+
 export const ourFileRouter = {
   profileImage: f({
-    image: {
-      maxFileSize: '4MB',
-      maxFileCount: 1,
-    },
+    image: IMAGE_CONFIG,
   })
     .middleware(async () => {
       const session = await auth();
@@ -26,10 +30,7 @@ export const ourFileRouter = {
     }),
   
   imageUploader: f({
-    image: {
-      maxFileSize: '4MB',
-      maxFileCount: 1,
-    },
+    image: IMAGE_CONFIG,
   })
     .middleware(async () => {
       const session = await auth();
