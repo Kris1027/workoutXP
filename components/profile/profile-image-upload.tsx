@@ -159,7 +159,7 @@ export default function ProfileImageUpload({
                   }
                   return 'Getting ready...';
                 },
-                allowedContent({ ready, fileTypes, isUploading }) {
+                allowedContent({ ready, isUploading }) {
                   if (!ready) return 'Checking what you allow';
                   if (isUploading) return 'Uploading...';
                   return `Image files up to 4MB`;
