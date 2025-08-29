@@ -21,7 +21,6 @@ export async function deleteImageFromStorage(imageUrl: string) {
     const fileKey = imageUrl.split('/').pop();
     if (fileKey) {
       await utapi.deleteFiles([fileKey]);
-      console.log('Deleted image from storage:', fileKey);
       return { success: true };
     }
     return { success: false, error: 'Could not extract file key' };

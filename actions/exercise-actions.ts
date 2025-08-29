@@ -111,7 +111,6 @@ export const updateExercise = async (exerciseData: ExerciseProps): Promise<void>
         const fileKey = url.pathname.split('/').pop();
         if (fileKey) {
           await deleteFileFromUploadThing(fileKey);
-          console.log('Deleted old exercise image:', fileKey);
         }
       } catch (error) {
         console.error('Invalid old image URL:', existingExercise.imageUrl, error);

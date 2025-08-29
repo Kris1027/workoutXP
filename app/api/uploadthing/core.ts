@@ -21,12 +21,7 @@ export const ourFileRouter = {
       return { userId: session.user.id };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log('Upload complete for userId:', metadata.userId);
-      console.log('File key:', file.key);
-      console.log('File name:', file.name);
-      
       const fileUrl = constructUploadThingUrl(file.key);
-      
       return { uploadedBy: metadata.userId, url: fileUrl };
     }),
   
@@ -46,11 +41,7 @@ export const ourFileRouter = {
       return { userId: session.user.id };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log('Upload complete for userId:', metadata.userId);
-      console.log('File key:', file.key);
-      
       const fileUrl = constructUploadThingUrl(file.key);
-      
       return { uploadedBy: metadata.userId, url: fileUrl };
     }),
 } satisfies FileRouter;

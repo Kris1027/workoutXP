@@ -28,7 +28,6 @@ export async function updateProfileImage(imageUrl: string) {
         const fileKey = currentUser.image.split('/').pop();
         if (fileKey) {
           await utapi.deleteFiles([fileKey]);
-          console.log('Deleted old image:', fileKey);
         }
       } catch (deleteError) {
         console.error('Error deleting old image from storage:', deleteError);

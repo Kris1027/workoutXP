@@ -65,9 +65,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
       // If there's an uploaded image that wasn't saved, delete it
       if (currentImageUrl && uploadedImageRef.current === currentImageUrl) {
         const deleteResult = await deleteImageFromStorage(currentImageUrl);
-        if (deleteResult.success) {
-          console.log('Deleted orphaned image on modal close:', currentImageUrl);
-        } else {
+        if (!deleteResult.success) {
           console.error('Failed to delete orphaned image:', deleteResult.error || 'Unknown error');
         }
       }
