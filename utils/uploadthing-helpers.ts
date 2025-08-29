@@ -13,13 +13,9 @@ export const constructUploadThingUrl = (fileKey: string): string => {
  * @returns The file key or null if invalid URL
  */
 export const extractFileKeyFromUrl = (url: string): string | null => {
-  if (!url.includes('utfs.io')) {
+  if (!url || !url.includes('utfs.io')) {
     return null;
   }
   
-  try {
-    return url.split('/').pop() || null;
-  } catch {
-    return null;
-  }
+  return url.split('/').pop() || null;
 };
