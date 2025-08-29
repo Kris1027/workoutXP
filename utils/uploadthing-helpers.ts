@@ -17,5 +17,10 @@ export const extractFileKeyFromUrl = (url: string): string | null => {
     return null;
   }
   
-  return url.split('/').pop() || null;
+  // Remove trailing slashes and extract the file key
+  const sanitizedUrl = url.replace(/\/+$/, '');
+  const fileKey = sanitizedUrl.split('/').pop();
+  
+  // Return null if fileKey is empty or undefined
+  return fileKey && fileKey.length > 0 ? fileKey : null;
 };
