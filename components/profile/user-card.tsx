@@ -29,7 +29,6 @@ const UserCard = async () => {
             <ProfileImageUpload
               currentImage={currentUser.image || null}
               userName={currentUser.name || null}
-              userId={currentUser.id}
             />
             <CardTitle className='text-2xl font-bold mb-1 mt-4'>
               {currentUser?.name || 'Anonymous User'}

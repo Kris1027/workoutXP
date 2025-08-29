@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useUploadThing } from '@/utils/uploadthing';
+import { constructUploadThingUrl } from '@/utils/uploadthing-helpers';
 import { deleteImageFromStorage } from '@/actions/image-actions';
 import { Loader2, Upload, ImagePlus, X } from 'lucide-react';
 import { toast } from 'sonner';
@@ -45,7 +46,7 @@ export default function ImageUpload({
   const { startUpload } = useUploadThing(endpoint, {
     onClientUploadComplete: (res) => {
       if (res?.[0]) {
-        const fileUrl = `https://utfs.io/f/${res[0].key}`;
+        const fileUrl = constructUploadThingUrl(res[0].key);
         onChange(fileUrl);
         setUploadedInSession(fileUrl); // Track that we uploaded this in current session
         setIsUploading(false);

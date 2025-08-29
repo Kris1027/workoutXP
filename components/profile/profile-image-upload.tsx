@@ -21,7 +21,6 @@ import { toast } from 'sonner';
 interface ProfileImageUploadProps {
   currentImage: string | null;
   userName: string | null;
-  userId: string;
 }
 
 export default function ProfileImageUpload({

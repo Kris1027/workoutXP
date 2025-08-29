@@ -1,5 +1,6 @@
 import { createUploadthing, type FileRouter } from 'uploadthing/next';
 import { auth } from '@/auth';
+import { constructUploadThingUrl } from '@/utils/uploadthing-helpers';
 
 const f = createUploadthing();
 
@@ -24,8 +25,7 @@ export const ourFileRouter = {
       console.log('File key:', file.key);
       console.log('File name:', file.name);
       
-      // Construct the URL from the file key
-      const fileUrl = `https://utfs.io/f/${file.key}`;
+      const fileUrl = constructUploadThingUrl(file.key);
       
       return { uploadedBy: metadata.userId, url: fileUrl };
     }),
@@ -49,8 +49,7 @@ export const ourFileRouter = {
       console.log('Upload complete for userId:', metadata.userId);
       console.log('File key:', file.key);
       
-      // Construct the URL from the file key
-      const fileUrl = `https://utfs.io/f/${file.key}`;
+      const fileUrl = constructUploadThingUrl(file.key);
       
       return { uploadedBy: metadata.userId, url: fileUrl };
     }),
