@@ -188,10 +188,18 @@ export default function ImageUpload({
         <div className='relative inline-block'>
           {isImageLoading && (
             <div 
-              className='absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-md border'
+              className='absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-md border border-gray-200 dark:border-gray-700 backdrop-blur-sm'
               style={{ width: previewSize.width, height: previewSize.height }}
             >
-              <Loader2 className='w-6 h-6 animate-spin text-gray-400' />
+              <div className='relative'>
+                {/* Animated pulse ring */}
+                <div className='absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full blur-md opacity-30 animate-pulse' />
+                
+                {/* Spinner */}
+                <div className='relative bg-white dark:bg-gray-800 p-2 rounded-full shadow-md'>
+                  <Loader2 className='w-5 h-5 animate-spin text-blue-500 dark:text-blue-400' strokeWidth={2.5} />
+                </div>
+              </div>
             </div>
           )}
           <Image

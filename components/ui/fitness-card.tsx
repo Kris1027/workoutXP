@@ -82,11 +82,38 @@ const FitnessCard: React.FC<FitnessCardProps> = ({
       className={`group relative overflow-hidden bg-white dark:bg-black/90 border border-gray-200 dark:border-gray-800 ${currentTheme.cardHover} transition-all duration-500 ease-out hover:shadow-2xl p-0 ${className}`}
     >
       {/* Image with overlay */}
-      <div className={`relative ${imageHeight} overflow-hidden`}>
+      <div className={`relative ${imageHeight} overflow-hidden bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900`}>
         {/* Loading spinner */}
         {isImageLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 z-10">
-            <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+          <div className="absolute inset-0 flex items-center justify-center z-10 backdrop-blur-sm">
+            {/* Animated background effect */}
+            <div className="absolute inset-0 opacity-30">
+              <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-blue-400 rounded-full blur-3xl animate-pulse" />
+              <div className="absolute bottom-1/4 right-1/4 w-32 h-32 bg-purple-400 rounded-full blur-3xl animate-pulse delay-75" />
+            </div>
+            
+            {/* Spinner container */}
+            <div className="relative">
+              <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-md p-3 rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50">
+                <Loader2 
+                  className="w-10 h-10 animate-spin" 
+                  strokeWidth={2}
+                  style={{
+                    stroke: 'url(#loading-gradient)',
+                  }}
+                />
+                {/* SVG gradient definition */}
+                <svg width="0" height="0" className="absolute">
+                  <defs>
+                    <linearGradient id="loading-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#60a5fa" />
+                      <stop offset="50%" stopColor="#a78bfa" />
+                      <stop offset="100%" stopColor="#60a5fa" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+            </div>
           </div>
         )}
         
