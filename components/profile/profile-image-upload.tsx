@@ -38,13 +38,34 @@ export default function ProfileImageUpload({
       toast.success('Profile image updated successfully');
       setIsOpen(false);
     } else {
+      // Database update failed, delete the uploaded image from storage
       toast.error(result.error || 'Failed to update profile image');
+      
+      // Clean up the orphaned image
+      try {
+        const { deleteImageFromStorage } = await import('@/actions/image-actions');
+        const deleteResult = await deleteImageFromStorage(url);
+        if (!deleteResult.success) {
+          console.error('Failed to clean up orphaned image:', deleteResult.error);
+        }
+      } catch (error) {
+        console.error('Error cleaning up orphaned image:', error);
+      }
+      
+      // Keep the tempImage as the original to maintain correct UI state
+      setTempImage(currentImage);
     }
   };
 
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      setIsOpen(open);
+      // Reset temp image when dialog opens to ensure it matches current image
+      if (open) {
+        setTempImage(currentImage);
+      }
+    }}>
       <DialogTrigger asChild>
         <div className='relative group cursor-pointer'>
           <Avatar className='w-24 h-24 border-4 border-violet-400 shadow-lg transition-opacity group-hover:opacity-80'>
