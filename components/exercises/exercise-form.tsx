@@ -5,6 +5,7 @@ import { createExerciseSchema } from '@/schemas/data-schemas';
 import type { ExerciseProps } from '@/types/data-types';
 import { useForm } from '@tanstack/react-form';
 import ImageUpload from '@/components/ui/image-upload';
+import { deleteImageFromStorage } from '@/actions/image-actions';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
@@ -12,7 +13,7 @@ import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { toast } from 'sonner';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 interface ExerciseFormProps {
   isEditedExercise?: ExerciseProps | null;
@@ -20,13 +21,16 @@ interface ExerciseFormProps {
 
 const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
   const [open, setOpen] = useState(false);
+  const uploadedImageRef = useRef<string | null>(null);
+  const initialImageUrl = isEditedExercise?.imageUrl || '';
+  
   const form = useForm({
     defaultValues: {
       id: isEditedExercise?.id || '',
       name: isEditedExercise?.name || '',
       category: isEditedExercise?.category || '',
       difficulty: isEditedExercise?.difficulty || '',
-      imageUrl: isEditedExercise?.imageUrl || '',
+      imageUrl: initialImageUrl,
       description: isEditedExercise?.description || '',
     } as ExerciseProps,
     validators: {
@@ -42,6 +46,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
           toast.success('Exercise created successfully!');
           form.reset();
         }
+        uploadedImageRef.current = null; // Clear the ref after successful submit
         setOpen(false);
       } catch (error) {
         toast.error('Something went wrong. Please try again.');
@@ -50,8 +55,31 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
     },
   });
 
+  const handleOpenChange = async (newOpen: boolean) => {
+    // If closing the modal without saving
+    if (!newOpen && !isEditedExercise) {
+      const currentImageUrl = form.state.values.imageUrl;
+      
+      // If there's an uploaded image that wasn't saved, delete it
+      if (currentImageUrl && uploadedImageRef.current === currentImageUrl) {
+        try {
+          await deleteImageFromStorage(currentImageUrl);
+          console.log('Deleted orphaned image on modal close:', currentImageUrl);
+        } catch (error) {
+          console.error('Failed to delete orphaned image:', error);
+        }
+      }
+      
+      // Reset the form
+      form.reset();
+      uploadedImageRef.current = null;
+    }
+    
+    setOpen(newOpen);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button className='cursor-pointer'>
           {isEditedExercise ? 'Edit Exercise' : 'Create New Exercise'}
@@ -79,11 +107,23 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
                 <Label>Exercise Image:</Label>
                 <ImageUpload
                   value={field.state.value}
-                  onChange={(url) => field.handleChange(url)}
+                  onChange={(url) => {
+                    field.handleChange(url);
+                    // Track newly uploaded images for cleanup if modal closes
+                    if (!isEditedExercise) {
+                      uploadedImageRef.current = url;
+                    }
+                  }}
                   endpoint='imageUploader'
                   buttonText={field.state.value ? 'Change Image' : 'Upload Image'}
                   showRemoveButton={true}
-                  onRemove={() => field.handleChange('')}
+                  onRemove={() => {
+                    field.handleChange('');
+                    // Clear the ref when user manually removes
+                    if (!isEditedExercise) {
+                      uploadedImageRef.current = null;
+                    }
+                  }}
                   deleteOnRemove={!isEditedExercise} // Only delete from storage for new exercises
                 />
                 {!field.state.meta.isValid && (

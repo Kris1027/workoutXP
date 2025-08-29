@@ -4,8 +4,9 @@ import { createWorkout, updateWorkout } from '@/actions/workout-actions';
 import { createWorkoutSchema } from '@/schemas/data-schemas';
 import type { ExerciseProps, WorkoutProps } from '@/types/data-types';
 import ImageUpload from '@/components/ui/image-upload';
+import { deleteImageFromStorage } from '@/actions/image-actions';
 import { useForm } from '@tanstack/react-form';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
@@ -22,11 +23,14 @@ interface WorkoutFormProps {
 
 const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, currentUserId }) => {
   const [open, setOpen] = useState(false);
+  const uploadedImageRef = useRef<string | null>(null);
+  const initialImageUrl = isEditedWorkout?.imageUrl || '';
+  
   const form = useForm({
     defaultValues: {
       id: isEditedWorkout?.id || '',
       name: isEditedWorkout?.name || '',
-      imageUrl: isEditedWorkout?.imageUrl || '',
+      imageUrl: initialImageUrl,
       description: isEditedWorkout?.description || '',
       exercises: isEditedWorkout?.exercises || ([] as ExerciseProps[]),
       userId: isEditedWorkout?.userId || currentUserId,
@@ -44,6 +48,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
           toast.success('Workout created successfully!');
           form.reset();
         }
+        uploadedImageRef.current = null; // Clear the ref after successful submit
         setOpen(false);
       } catch (error) {
         toast.error('Something went wrong. Please try again.');
@@ -52,8 +57,31 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
     },
   });
 
+  const handleOpenChange = async (newOpen: boolean) => {
+    // If closing the modal without saving
+    if (!newOpen && !isEditedWorkout) {
+      const currentImageUrl = form.state.values.imageUrl;
+      
+      // If there's an uploaded image that wasn't saved, delete it
+      if (currentImageUrl && uploadedImageRef.current === currentImageUrl) {
+        try {
+          await deleteImageFromStorage(currentImageUrl);
+          console.log('Deleted orphaned image on modal close:', currentImageUrl);
+        } catch (error) {
+          console.error('Failed to delete orphaned image:', error);
+        }
+      }
+      
+      // Reset the form
+      form.reset();
+      uploadedImageRef.current = null;
+    }
+    
+    setOpen(newOpen);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button className='cursor-pointer'>
           {isEditedWorkout ? 'Edit Workout' : 'Create New Workout'}
@@ -80,11 +108,23 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
                 <Label>Workout Image:</Label>
                 <ImageUpload
                   value={field.state.value}
-                  onChange={(url) => field.handleChange(url)}
+                  onChange={(url) => {
+                    field.handleChange(url);
+                    // Track newly uploaded images for cleanup if modal closes
+                    if (!isEditedWorkout) {
+                      uploadedImageRef.current = url;
+                    }
+                  }}
                   endpoint='imageUploader'
                   buttonText={field.state.value ? 'Change Image' : 'Upload Image'}
                   showRemoveButton={true}
-                  onRemove={() => field.handleChange('')}
+                  onRemove={() => {
+                    field.handleChange('');
+                    // Clear the ref when user manually removes
+                    if (!isEditedWorkout) {
+                      uploadedImageRef.current = null;
+                    }
+                  }}
                   deleteOnRemove={!isEditedWorkout} // Only delete from storage for new workouts
                 />
                 {!field.state.meta.isValid && (
