@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { updateProfileImage } from '@/actions/profile-actions';
+import { deleteImageFromStorage } from '@/actions/image-actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -42,14 +43,9 @@ export default function ProfileImageUpload({
       toast.error(result.error || 'Failed to update profile image');
       
       // Clean up the orphaned image
-      try {
-        const { deleteImageFromStorage } = await import('@/actions/image-actions');
-        const deleteResult = await deleteImageFromStorage(url);
-        if (!deleteResult.success) {
-          console.error('Failed to clean up orphaned image:', deleteResult.error);
-        }
-      } catch (error) {
-        console.error('Error cleaning up orphaned image:', error);
+      const deleteResult = await deleteImageFromStorage(url);
+      if (!deleteResult.success) {
+        console.error('Failed to clean up orphaned image:', deleteResult.error);
       }
       
       // Keep the tempImage as the original to maintain correct UI state
