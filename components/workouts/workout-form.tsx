@@ -14,6 +14,8 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } 
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Loader2 } from 'lucide-react';
 
 interface WorkoutFormProps {
   exercises: ExerciseProps[];
@@ -23,6 +25,7 @@ interface WorkoutFormProps {
 
 const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, currentUserId }) => {
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const uploadedImageRef = useRef<string | null>(null);
   const initialImageUrl = isEditedWorkout?.imageUrl || '';
   
@@ -32,6 +35,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
       name: isEditedWorkout?.name || '',
       imageUrl: initialImageUrl,
       description: isEditedWorkout?.description || '',
+      difficulty: isEditedWorkout?.difficulty || 'Beginner',
       exercises: isEditedWorkout?.exercises || ([] as ExerciseProps[]),
       userId: isEditedWorkout?.userId || currentUserId,
     } as WorkoutProps,
@@ -39,6 +43,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
       onSubmit: createWorkoutSchema,
     },
     onSubmit: async ({ value }) => {
+      setIsSubmitting(true);
       try {
         if (isEditedWorkout) {
           await updateWorkout(value);
@@ -53,11 +58,18 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
       } catch (error) {
         toast.error('Something went wrong. Please try again.');
         console.error('Error submitting form:', error);
+      } finally {
+        setIsSubmitting(false);
       }
     },
   });
 
   const handleOpenChange = async (newOpen: boolean) => {
+    // Prevent closing during submission
+    if (!newOpen && isSubmitting) {
+      return;
+    }
+    
     // If closing the modal without saving
     if (!newOpen && !isEditedWorkout) {
       const currentImageUrl = form.state.values.imageUrl;
@@ -81,7 +93,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className='cursor-pointer'>
+        <Button className='cursor-pointer' disabled={isSubmitting}>
           {isEditedWorkout ? 'Edit Workout' : 'Create New Workout'}
         </Button>
       </DialogTrigger>
@@ -124,6 +136,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
                     }
                   }}
                   deleteOnRemove={!isEditedWorkout} // Only delete from storage for new workouts
+                  disabled={isSubmitting}
                 />
                 {!field.state.meta.isValid && (
                   <p className='text-red-500 italic'>
@@ -146,6 +159,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
                   id='name'
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
+                  disabled={isSubmitting}
                 />
                 {!field.state.meta.isValid && (
                   <p className='text-red-500 italic'>
@@ -167,7 +181,38 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
                   id='description'
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
+                  disabled={isSubmitting}
                 />
+                {!field.state.meta.isValid && (
+                  <p className='text-red-500 italic'>
+                    {field.state.meta.errors
+                      .map((error) => (typeof error === 'string' ? error : error?.message))
+                      .join(', ')}
+                  </p>
+                )}
+              </div>
+            )}
+          </form.Field>
+
+          {/* difficulty */}
+          <form.Field name='difficulty'>
+            {(field) => (
+              <div>
+                <Label htmlFor='difficulty'>Difficulty:</Label>
+                <Select
+                  value={field.state.value}
+                  onValueChange={(value) => field.handleChange(value)}
+                  disabled={isSubmitting}
+                >
+                  <SelectTrigger id='difficulty'>
+                    <SelectValue placeholder='Select difficulty' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='Beginner'>Beginner</SelectItem>
+                    <SelectItem value='Intermediate'>Intermediate</SelectItem>
+                    <SelectItem value='Advanced'>Advanced</SelectItem>
+                  </SelectContent>
+                </Select>
                 {!field.state.meta.isValid && (
                   <p className='text-red-500 italic'>
                     {field.state.meta.errors
@@ -190,6 +235,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
                       <li key={exercise.id} className='flex items-center space-x-2'>
                         <Checkbox
                           checked={field.state.value.some((ex) => ex.id === exercise.id)}
+                          disabled={isSubmitting}
                           onCheckedChange={(checked) => {
                             if (checked) {
                               field.handleChange([...field.state.value, exercise]);
@@ -215,7 +261,16 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
             )}
           </form.Field>
 
-          <Button type='submit'>{isEditedWorkout ? 'Update Workout' : 'Create Workout'}</Button>
+          <Button type='submit' disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              isEditedWorkout ? 'Update Workout' : 'Create Workout'
+            )}
+          </Button>
         </form>
       </DialogContent>
     </Dialog>

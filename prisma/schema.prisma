@@ -24,6 +24,7 @@ model Workout {
   name        String
   imageUrl    String
   description String
+  difficulty  String
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   exercises   Exercise[]    @relation("WorkoutExercises")

@@ -36,6 +36,7 @@ export type WorkoutProps = {
   name: string;
   imageUrl: string;
   description: string;
+  difficulty: string;
   exercises: ExerciseProps[];
   userId?: string;
   user?: UserProps;

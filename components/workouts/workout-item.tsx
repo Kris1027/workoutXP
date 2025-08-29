@@ -20,6 +20,7 @@ import FitnessCard from '../ui/fitness-card';
 import WorkoutForm from './workout-form';
 import WorkoutLikeButton from './workout-like-button';
 import { formatDate } from '@/utils/format-date';
+import { getDifficultyColor } from '@/utils/get-difficulty-color';
 
 type WorkoutItemProps = {
   workout: WorkoutProps;
@@ -60,6 +61,11 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises, curren
       {dateToShow && (
         <span className='block mt-1'>
           {formatDate(new Date(dateToShow))}
+        </span>
+      )}
+      {workout.difficulty && (
+        <span className={`inline-block mt-2 ${getDifficultyColor(workout.difficulty)}`}>
+          {workout.difficulty}
         </span>
       )}
     </div>
