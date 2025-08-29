@@ -14,6 +14,7 @@ export const createWorkoutSchema = z.object({
   name: z.string().min(1, 'Workout name is required'),
   imageUrl: z.string().min(1, 'Image is required'),
   description: z.string().min(1, 'Workout description is required'),
+  difficulty: z.string().min(1, 'Difficulty is required'),
   exercises: z.array(createExerciseSchema).min(1, 'Exercises are required'),
 });
 

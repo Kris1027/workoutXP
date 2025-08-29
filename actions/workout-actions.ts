@@ -144,7 +144,7 @@ export const fetchTopWorkouts = async (limit: number = 20): Promise<WorkoutProps
 };
 
 export const createWorkout = async (workoutData: Omit<WorkoutProps, 'userId'>): Promise<void> => {
-  const { name, description, imageUrl, exercises } = workoutData;
+  const { name, description, imageUrl, difficulty, exercises } = workoutData;
 
   const session = await auth();
   const userId = session?.user?.id;
@@ -161,6 +161,7 @@ export const createWorkout = async (workoutData: Omit<WorkoutProps, 'userId'>): 
         name,
         description,
         imageUrl,
+        difficulty,
         userId,
         exercises: {
           connect: selectedExerciseIds,
@@ -224,7 +225,7 @@ export const deleteWorkout = async (workoutId: string): Promise<void> => {
 };
 
 export const updateWorkout = async (workoutData: WorkoutProps): Promise<void> => {
-  const { name, description, imageUrl, exercises, id, userId } = workoutData;
+  const { name, description, imageUrl, difficulty, exercises, id, userId } = workoutData;
 
   const session = await auth();
   const currentUserId = session?.user?.id;
@@ -266,6 +267,7 @@ export const updateWorkout = async (workoutData: WorkoutProps): Promise<void> =>
         name,
         description,
         imageUrl,
+        difficulty,
         exercises: {
           set: selectedExerciseIds.map((id) => ({ id })),
         },

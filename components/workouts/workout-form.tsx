@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } 
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 interface WorkoutFormProps {
   exercises: ExerciseProps[];
@@ -32,6 +33,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
       name: isEditedWorkout?.name || '',
       imageUrl: initialImageUrl,
       description: isEditedWorkout?.description || '',
+      difficulty: isEditedWorkout?.difficulty || 'Beginner',
       exercises: isEditedWorkout?.exercises || ([] as ExerciseProps[]),
       userId: isEditedWorkout?.userId || currentUserId,
     } as WorkoutProps,
@@ -168,6 +170,35 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
+                {!field.state.meta.isValid && (
+                  <p className='text-red-500 italic'>
+                    {field.state.meta.errors
+                      .map((error) => (typeof error === 'string' ? error : error?.message))
+                      .join(', ')}
+                  </p>
+                )}
+              </div>
+            )}
+          </form.Field>
+
+          {/* difficulty */}
+          <form.Field name='difficulty'>
+            {(field) => (
+              <div>
+                <Label htmlFor='difficulty'>Difficulty:</Label>
+                <Select
+                  value={field.state.value}
+                  onValueChange={(value) => field.handleChange(value)}
+                >
+                  <SelectTrigger id='difficulty'>
+                    <SelectValue placeholder='Select difficulty' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='Beginner'>Beginner</SelectItem>
+                    <SelectItem value='Intermediate'>Intermediate</SelectItem>
+                    <SelectItem value='Advanced'>Advanced</SelectItem>
+                  </SelectContent>
+                </Select>
                 {!field.state.meta.isValid && (
                   <p className='text-red-500 italic'>
                     {field.state.meta.errors

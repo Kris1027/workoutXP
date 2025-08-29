@@ -4,6 +4,7 @@ import ExerciseItem from '../exercises/exercise-item';
 import { FaFilter } from 'react-icons/fa';
 import WorkoutLikeButton from './workout-like-button';
 import { formatDate } from '@/utils/format-date';
+import { getDifficultyColor } from '@/utils/get-difficulty-color';
 
 interface WorkoutCardProps {
   id: string;
@@ -48,6 +49,11 @@ const WorkoutCard = async ({ id }: WorkoutCardProps) => {
                 </span>
               )}
             </p>
+            {detailedWorkout?.difficulty && (
+              <span className={`inline-block mt-2 ${getDifficultyColor(detailedWorkout.difficulty)}`}>
+                {detailedWorkout.difficulty}
+              </span>
+            )}
           </div>
           <div className='ml-4'>
             <WorkoutLikeButton
