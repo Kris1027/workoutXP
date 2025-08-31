@@ -19,6 +19,7 @@ export type ExerciseProps = {
   difficulty: string;
   imageUrl: string;
   description: string;
+  instructions?: string;
   createdAt?: Date;
   updatedAt?: Date;
 };

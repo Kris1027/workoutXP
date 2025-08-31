@@ -16,8 +16,19 @@ export const fetchExercises = async (): Promise<ExerciseProps[]> => {
   }
 };
 
+export const fetchExerciseById = async (id: string): Promise<ExerciseProps | null> => {
+  try {
+    return await prisma.exercise.findUnique({
+      where: { id },
+    });
+  } catch (error) {
+    console.error('Error fetching exercise by id', error);
+    throw new Error(error instanceof Error ? error.message : 'Unexpected error');
+  }
+};
+
 export const createExercise = async (exerciseData: ExerciseProps): Promise<void> => {
-  const { name, category, difficulty, imageUrl, description } = exerciseData;
+  const { name, category, difficulty, imageUrl, description, instructions } = exerciseData;
 
   try {
     await prisma.exercise.create({
@@ -27,6 +38,7 @@ export const createExercise = async (exerciseData: ExerciseProps): Promise<void>
         difficulty,
         imageUrl,
         description,
+        instructions,
       },
     });
 
@@ -93,7 +105,7 @@ export const deleteExercise = async (exerciseId: string): Promise<void> => {
 };
 
 export const updateExercise = async (exerciseData: ExerciseProps): Promise<void> => {
-  const { name, category, difficulty, imageUrl, description, id } = exerciseData;
+  const { name, category, difficulty, imageUrl, description, instructions, id } = exerciseData;
 
   if (!id) throw new Error('Missing ID for exercise update');
 
@@ -128,6 +140,7 @@ export const updateExercise = async (exerciseData: ExerciseProps): Promise<void>
         difficulty,
         imageUrl,
         description,
+        instructions,
       },
     });
 
