@@ -4,14 +4,15 @@ import ExerciseDetail from '@/components/exercises/exercise-detail';
 import { notFound } from 'next/navigation';
 
 interface ExerciseDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 const ExerciseDetailPage = async ({ params }: ExerciseDetailPageProps) => {
   const session = await auth();
-  const exercise = await fetchExerciseById(params.id);
+  const { id } = await params;
+  const exercise = await fetchExerciseById(id);
 
   if (!exercise) {
     notFound();

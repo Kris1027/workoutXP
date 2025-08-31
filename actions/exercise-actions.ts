@@ -7,9 +7,14 @@ import { revalidatePath } from 'next/cache';
 
 export const fetchExercises = async (): Promise<ExerciseProps[]> => {
   try {
-    return await prisma.exercise.findMany({
+    const exercises = await prisma.exercise.findMany({
       orderBy: { createdAt: 'desc' },
     });
+    
+    return exercises.map(exercise => ({
+      ...exercise,
+      instructions: exercise.instructions ?? undefined,
+    }));
   } catch (error) {
     console.error('Error fetching exercises', error);
     throw new Error(error instanceof Error ? error.message : 'Unexpected error');
@@ -18,9 +23,16 @@ export const fetchExercises = async (): Promise<ExerciseProps[]> => {
 
 export const fetchExerciseById = async (id: string): Promise<ExerciseProps | null> => {
   try {
-    return await prisma.exercise.findUnique({
+    const exercise = await prisma.exercise.findUnique({
       where: { id },
     });
+    
+    if (!exercise) return null;
+    
+    return {
+      ...exercise,
+      instructions: exercise.instructions ?? undefined,
+    };
   } catch (error) {
     console.error('Error fetching exercise by id', error);
     throw new Error(error instanceof Error ? error.message : 'Unexpected error');
