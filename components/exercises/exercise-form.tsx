@@ -32,6 +32,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
       difficulty: isEditedExercise?.difficulty || '',
       imageUrl: initialImageUrl,
       description: isEditedExercise?.description || '',
+      instructions: isEditedExercise?.instructions || '',
     } as ExerciseProps,
     validators: {
       onSubmit: createExerciseSchema,
@@ -212,9 +213,34 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
           <form.Field name='description'>
             {(field) => (
               <div className='space-y-2'>
-                <Label htmlFor='description'>Exercise description:</Label>
+                <Label htmlFor='description'>Short Description (for card):</Label>
                 <Textarea
                   id='description'
+                  placeholder='Brief description shown on exercise card'
+                  rows={2}
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+                {!field.state.meta.isValid && (
+                  <p className='text-red-500 italic'>
+                    {field.state.meta.errors
+                      .map((error) => (typeof error === 'string' ? error : error?.message))
+                      .join(', ')}
+                  </p>
+                )}
+              </div>
+            )}
+          </form.Field>
+
+          {/* instructions */}
+          <form.Field name='instructions'>
+            {(field) => (
+              <div className='space-y-2'>
+                <Label htmlFor='instructions'>Detailed Instructions (for detail page):</Label>
+                <Textarea
+                  id='instructions'
+                  placeholder='Step-by-step instructions on how to perform this exercise...'
+                  rows={6}
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                 />

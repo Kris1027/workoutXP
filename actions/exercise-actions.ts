@@ -7,17 +7,40 @@ import { revalidatePath } from 'next/cache';
 
 export const fetchExercises = async (): Promise<ExerciseProps[]> => {
   try {
-    return await prisma.exercise.findMany({
+    const exercises = await prisma.exercise.findMany({
       orderBy: { createdAt: 'desc' },
     });
+    
+    return exercises.map(exercise => ({
+      ...exercise,
+      instructions: exercise.instructions ?? undefined,
+    }));
   } catch (error) {
     console.error('Error fetching exercises', error);
     throw new Error(error instanceof Error ? error.message : 'Unexpected error');
   }
 };
 
+export const fetchExerciseById = async (id: string): Promise<ExerciseProps | null> => {
+  try {
+    const exercise = await prisma.exercise.findUnique({
+      where: { id },
+    });
+    
+    if (!exercise) return null;
+    
+    return {
+      ...exercise,
+      instructions: exercise.instructions ?? undefined,
+    };
+  } catch (error) {
+    console.error('Error fetching exercise by id', error);
+    throw new Error(error instanceof Error ? error.message : 'Unexpected error');
+  }
+};
+
 export const createExercise = async (exerciseData: ExerciseProps): Promise<void> => {
-  const { name, category, difficulty, imageUrl, description } = exerciseData;
+  const { name, category, difficulty, imageUrl, description, instructions } = exerciseData;
 
   try {
     await prisma.exercise.create({
@@ -27,6 +50,7 @@ export const createExercise = async (exerciseData: ExerciseProps): Promise<void>
         difficulty,
         imageUrl,
         description,
+        instructions,
       },
     });
 
@@ -93,7 +117,7 @@ export const deleteExercise = async (exerciseId: string): Promise<void> => {
 };
 
 export const updateExercise = async (exerciseData: ExerciseProps): Promise<void> => {
-  const { name, category, difficulty, imageUrl, description, id } = exerciseData;
+  const { name, category, difficulty, imageUrl, description, instructions, id } = exerciseData;
 
   if (!id) throw new Error('Missing ID for exercise update');
 
@@ -128,6 +152,7 @@ export const updateExercise = async (exerciseData: ExerciseProps): Promise<void>
         difficulty,
         imageUrl,
         description,
+        instructions,
       },
     });
 

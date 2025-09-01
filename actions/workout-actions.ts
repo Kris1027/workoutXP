@@ -32,9 +32,13 @@ export const fetchWorkouts = async (): Promise<WorkoutProps[]> => {
       },
     });
 
-    // Add isLikedByUser property
+    // Add isLikedByUser property and fix instructions field
     return workouts.map(workout => ({
       ...workout,
+      exercises: workout.exercises.map(exercise => ({
+        ...exercise,
+        instructions: exercise.instructions ?? undefined,
+      })),
       isLikedByUser: currentUserId ? workout.likes.length > 0 : false,
     }));
   } catch (error) {
@@ -71,9 +75,13 @@ export const fetchWorkoutById = async (id: string): Promise<WorkoutProps | null>
 
     if (!workout) return null;
 
-    // Add isLikedByUser property
+    // Add isLikedByUser property and fix instructions field
     return {
       ...workout,
+      exercises: workout.exercises.map(exercise => ({
+        ...exercise,
+        instructions: exercise.instructions ?? undefined,
+      })),
       isLikedByUser: currentUserId ? workout.likes.length > 0 : false,
     };
   } catch (error) {
@@ -86,13 +94,22 @@ export const fetchWorkoutsByUserId = async (userId: string): Promise<WorkoutProp
   if (!userId) throw new Error('User ID is required to fetch workouts');
 
   try {
-    return await prisma.workout.findMany({
+    const workouts = await prisma.workout.findMany({
       where: { userId: userId },
       orderBy: { createdAt: 'desc' },
       include: {
         exercises: true,
       },
     });
+
+    // Fix instructions field for exercises
+    return workouts.map(workout => ({
+      ...workout,
+      exercises: workout.exercises.map(exercise => ({
+        ...exercise,
+        instructions: exercise.instructions ?? undefined,
+      })),
+    }));
   } catch (error) {
     console.error('Error fetching workouts by user ID', error);
     throw new Error(error instanceof Error ? error.message : 'Unexpected error');
@@ -130,10 +147,14 @@ export const fetchTopWorkouts = async (limit: number = 20): Promise<WorkoutProps
       take: limit,
     });
 
-    // Add isLikedByUser property and filter out workouts with 0 likes
+    // Add isLikedByUser property, fix instructions field, and filter out workouts with 0 likes
     return workouts
       .map(workout => ({
         ...workout,
+        exercises: workout.exercises.map(exercise => ({
+          ...exercise,
+          instructions: exercise.instructions ?? undefined,
+        })),
         isLikedByUser: currentUserId ? workout.likes.length > 0 : false,
       }))
       .filter(workout => workout._count.likes > 0); // Only show workouts with at least 1 like
