@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import type { ExerciseProps } from '@/types/data-types';
+import { formatDate } from '@/utils/format-date';
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
 import type { Session } from 'next-auth';
 import Image from 'next/image';
@@ -32,6 +33,12 @@ interface ExerciseDetailProps {
 const ExerciseDetail: React.FC<ExerciseDetailProps> = ({ exercise, session }) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+
+  // Determine if exercise was edited and format date accordingly
+  const wasEdited = exercise.updatedAt && exercise.createdAt && 
+    new Date(exercise.updatedAt).getTime() > new Date(exercise.createdAt).getTime();
+  const dateToShow = wasEdited ? exercise.updatedAt : exercise.createdAt;
+  const dateLabel = wasEdited ? 'Updated' : 'Created';
 
   const handleDelete = async (id: string) => {
     startTransition(async () => {
@@ -93,6 +100,16 @@ const ExerciseDetail: React.FC<ExerciseDetailProps> = ({ exercise, session }) =>
               <p className="text-lg text-gray-600 dark:text-gray-300">
                 {exercise.description}
               </p>
+              {exercise.user && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
+                  {dateLabel} by <span className="font-semibold">{exercise.user.name || 'Anonymous'}</span>
+                  {dateToShow && (
+                    <span className="block text-xs mt-1">
+                      {formatDate(new Date(dateToShow))}
+                    </span>
+                  )}
+                </p>
+              )}
             </div>
 
             {/* Exercise Info Cards */}
