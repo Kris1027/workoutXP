@@ -43,8 +43,11 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, session }) => {
     });
   };
 
+  // Show controls if user is the creator or admin
+  const canEditOrDelete = session?.user.isAdmin || exercise.userId === session?.user.id;
+
   // Admin/Owner controls
-  const adminControls = (session?.user.isAdmin || session?.user.id === exercise.userId) ? (
+  const adminControls = canEditOrDelete ? (
     <>
       <ExerciseForm isEditedExercise={exercise} />
       <AlertDialog>
