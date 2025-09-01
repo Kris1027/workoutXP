@@ -127,8 +127,8 @@ const ExerciseDetail: React.FC<ExerciseDetailProps> = ({ exercise, session }) =>
               </div>
             )}
 
-            {/* Admin Controls */}
-            {session?.user.isAdmin && (
+            {/* Admin/Owner Controls */}
+            {(session?.user.isAdmin || session?.user.id === exercise.userId) && (
               <div className="flex gap-4 pt-4">
                 <ExerciseForm isEditedExercise={exercise} />
                 <AlertDialog>

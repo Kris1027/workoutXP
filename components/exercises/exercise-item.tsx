@@ -43,8 +43,8 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, session }) => {
     });
   };
 
-  // Admin controls
-  const adminControls = session?.user.isAdmin ? (
+  // Admin/Owner controls
+  const adminControls = (session?.user.isAdmin || session?.user.id === exercise.userId) ? (
     <>
       <ExerciseForm isEditedExercise={exercise} />
       <AlertDialog>

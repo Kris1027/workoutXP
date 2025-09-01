@@ -1,3 +1,4 @@
+import { fetchExercisesByUserId } from '@/actions/exercise-actions';
 import { fetchUserById } from '@/actions/user-actions';
 import { fetchWorkoutsByUserId } from '@/actions/workout-actions';
 import { auth } from '@/auth';
@@ -9,12 +10,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { formatDate } from '@/utils/format-date';
-import { Calendar, Mail, Settings, User, Dumbbell } from 'lucide-react';
+import { Calendar, Mail, Settings, User, Dumbbell, Target } from 'lucide-react';
 
 const UserCard = async () => {
   const session = await auth();
   const currentUser = await fetchUserById(session?.user?.id || '');
   const userWorkouts = currentUser ? await fetchWorkoutsByUserId(currentUser.id) : [];
+  const userExercises = currentUser ? await fetchExercisesByUserId(currentUser.id) : [];
 
   return (
     <div className='flex items-center justify-center p-6'>
@@ -73,13 +75,24 @@ const UserCard = async () => {
               )}
             </div>
 
-            <div className='flex items-center gap-3 p-3 rounded-lg border'>
-              <div className='flex-shrink-0'>
-                <Dumbbell className='w-5 h-5' />
+            <div className='grid grid-cols-2 gap-3'>
+              <div className='flex items-center gap-3 p-3 rounded-lg border'>
+                <div className='flex-shrink-0'>
+                  <Dumbbell className='w-5 h-5' />
+                </div>
+                <div className='flex-1 min-w-0'>
+                  <p className='text-sm font-medium'>Workouts</p>
+                  <p className='text-sm'>{userWorkouts?.length ?? 0}</p>
+                </div>
               </div>
-              <div className='flex-1 min-w-0'>
-                <p className='text-sm font-medium'>Workouts</p>
-                <p className='text-sm'>{userWorkouts?.length ?? 0}</p>
+              <div className='flex items-center gap-3 p-3 rounded-lg border'>
+                <div className='flex-shrink-0'>
+                  <Target className='w-5 h-5' />
+                </div>
+                <div className='flex-1 min-w-0'>
+                  <p className='text-sm font-medium'>Exercises</p>
+                  <p className='text-sm'>{userExercises?.length ?? 0}</p>
+                </div>
               </div>
             </div>
 

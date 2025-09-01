@@ -20,6 +20,8 @@ export type ExerciseProps = {
   imageUrl: string;
   description: string;
   instructions?: string;
+  userId?: string | null;
+  user?: UserProps | null;
   createdAt?: Date;
   updatedAt?: Date;
 };

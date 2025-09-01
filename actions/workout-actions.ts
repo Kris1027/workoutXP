@@ -38,6 +38,7 @@ export const fetchWorkouts = async (): Promise<WorkoutProps[]> => {
       exercises: workout.exercises.map(exercise => ({
         ...exercise,
         instructions: exercise.instructions ?? undefined,
+        userId: exercise.userId ?? undefined,
       })),
       isLikedByUser: currentUserId ? workout.likes.length > 0 : false,
     }));
@@ -81,6 +82,7 @@ export const fetchWorkoutById = async (id: string): Promise<WorkoutProps | null>
       exercises: workout.exercises.map(exercise => ({
         ...exercise,
         instructions: exercise.instructions ?? undefined,
+        userId: exercise.userId ?? undefined,
       })),
       isLikedByUser: currentUserId ? workout.likes.length > 0 : false,
     };
@@ -108,6 +110,7 @@ export const fetchWorkoutsByUserId = async (userId: string): Promise<WorkoutProp
       exercises: workout.exercises.map(exercise => ({
         ...exercise,
         instructions: exercise.instructions ?? undefined,
+        userId: exercise.userId ?? undefined,
       })),
     }));
   } catch (error) {
@@ -154,6 +157,7 @@ export const fetchTopWorkouts = async (limit: number = 20): Promise<WorkoutProps
         exercises: workout.exercises.map(exercise => ({
           ...exercise,
           instructions: exercise.instructions ?? undefined,
+          userId: exercise.userId ?? undefined,
         })),
         isLikedByUser: currentUserId ? workout.likes.length > 0 : false,
       }))
