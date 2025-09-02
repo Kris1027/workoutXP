@@ -12,8 +12,14 @@ import {
 } from 'react-icons/fi';
 import { LuDumbbell, LuTimer } from 'react-icons/lu';
 import { APP_LOGO } from '@/constants/app-constants';
+import FinishedWorkouts from '@/components/home/finished-workouts';
+import { auth } from '@/auth';
+import { fetchLatestWorkoutSession } from '@/actions/workout-session-actions';
+import { Suspense } from 'react';
 
-const HomePage = () => {
+const HomePage = async () => {
+  const session = await auth();
+  const hasWorkoutHistory = session?.user ? await fetchLatestWorkoutSession() : null;
   const features = [
     {
       icon: LuDumbbell,
@@ -57,6 +63,23 @@ const HomePage = () => {
     { value: '24/7', label: 'Support' },
   ];
 
+  // Show workout history for logged-in users who have completed workouts
+  if (session?.user && hasWorkoutHistory) {
+    return (
+      <Suspense fallback={
+        <div className='min-h-screen flex items-center justify-center'>
+          <div className='animate-pulse'>
+            <div className='h-8 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-4' />
+            <div className='h-64 bg-gray-200 dark:bg-gray-700 rounded-xl' />
+          </div>
+        </div>
+      }>
+        <FinishedWorkouts />
+      </Suspense>
+    );
+  }
+
+  // Show landing page for new users or users without workout history
   return (
     <div className='min-h-screen'>
       {/* Hero Section */}

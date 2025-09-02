@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useTransition } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import WorkoutTimer from './workout-timer';
 import WorkoutProgress from './workout-progress';
 import { WorkoutNavigationGuard } from './workout-navigation-guard';
+import { saveWorkoutSession } from '@/actions/workout-session-actions';
+import { toast } from 'sonner';
 
 interface WorkoutSessionProps {
   children: React.ReactNode;
@@ -13,9 +15,11 @@ interface WorkoutSessionProps {
 
 const WorkoutSession = ({ children, workoutId }: WorkoutSessionProps) => {
   const storageKey = workoutId ? `workout-session-${workoutId}` : 'workout-session';
+  const totalExercises = Array.isArray(children) ? children.length : 0;
   
   const [isWorkoutActive, setIsWorkoutActive] = useState(false);
   const [completedExercises, setCompletedExercises] = useState<Set<string>>(new Set());
+  const [isPending, startTransition] = useTransition();
 
   // Load persisted state on mount
   useEffect(() => {
@@ -54,7 +58,23 @@ const WorkoutSession = ({ children, workoutId }: WorkoutSessionProps) => {
     }
   };
 
-  const handleFinishWorkout = () => {
+  const handleFinishWorkout = async (duration?: number) => {
+    // Save workout session to database if we have all the info
+    if (workoutId && duration && duration > 0) {
+      startTransition(async () => {
+        const result = await saveWorkoutSession(
+          workoutId,
+          duration,
+          completedExercises.size,
+          totalExercises
+        );
+        
+        if (result.success) {
+          toast.success('Workout completed! Great job! 💪');
+        }
+      });
+    }
+    
     setIsWorkoutActive(false);
     setCompletedExercises(new Set());
     // Clear localStorage
@@ -78,16 +98,17 @@ const WorkoutSession = ({ children, workoutId }: WorkoutSessionProps) => {
     });
   };
 
-  // Count total exercises
-  const totalExercises = Array.isArray(children) ? children.length : 0;
-
   return (
     <WorkoutNavigationGuard 
       isWorkoutActive={isWorkoutActive}
       workoutId={workoutId}
       onFinishWorkout={handleFinishWorkout}
     >
-      <WorkoutTimer onToggle={handleWorkoutToggle} workoutId={workoutId} />
+      <WorkoutTimer 
+        onToggle={handleWorkoutToggle} 
+        workoutId={workoutId}
+        onFinish={handleFinishWorkout}
+      />
       
       <WorkoutProgress 
         completedCount={completedExercises.size}

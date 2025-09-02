@@ -6,9 +6,10 @@ import { FaPlay, FaStop } from 'react-icons/fa';
 interface WorkoutTimerProps {
   onToggle?: (isActive: boolean) => void;
   workoutId?: string;
+  onFinish?: (duration: number) => void;
 }
 
-const WorkoutTimer = ({ onToggle, workoutId }: WorkoutTimerProps) => {
+const WorkoutTimer = ({ onToggle, workoutId, onFinish }: WorkoutTimerProps) => {
   const storageKey = workoutId ? `workout-timer-${workoutId}` : 'workout-timer';
   const [isRunning, setIsRunning] = useState(false);
   const [seconds, setSeconds] = useState(0);
@@ -85,10 +86,12 @@ const WorkoutTimer = ({ onToggle, workoutId }: WorkoutTimerProps) => {
 
   const handleToggle = () => {
     if (isRunning) {
+      const finalDuration = seconds;
       setIsRunning(false);
       setSeconds(0);
       setStartTime(null);
       onToggle?.(false);
+      onFinish?.(finalDuration);
     } else {
       const now = Date.now();
       setStartTime(now);
