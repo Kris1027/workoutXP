@@ -17,6 +17,19 @@ export async function saveWorkoutSession(
       throw new Error('You must be logged in to save workout sessions');
     }
 
+    // Validate input data
+    if (duration < 1) {
+      throw new Error('Workout duration must be at least 1 second');
+    }
+    
+    if (exercisesCompleted < 0 || totalExercises < 1) {
+      throw new Error('Invalid exercise count');
+    }
+    
+    if (exercisesCompleted > totalExercises) {
+      throw new Error('Completed exercises cannot exceed total exercises');
+    }
+
     const workoutSession = await prisma.workoutSession.create({
       data: {
         userId: session.user.id,

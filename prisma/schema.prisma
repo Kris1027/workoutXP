@@ -129,9 +129,9 @@ model WorkoutSession {
   id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId           String
   workoutId        String   @db.Uuid
-  duration         Int      // Duration in seconds
-  exercisesCompleted Int
-  totalExercises   Int
+  duration         Int      @db.Integer // Duration in seconds (must be positive)
+  exercisesCompleted Int    @db.Integer
+  totalExercises   Int      @db.Integer
   completedAt      DateTime @default(now())
   
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
