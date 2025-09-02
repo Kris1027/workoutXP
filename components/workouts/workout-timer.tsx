@@ -30,7 +30,12 @@ const WorkoutTimer = ({ onToggle, workoutId, onFinish }: WorkoutTimerProps) => {
           onToggle?.(true);
         }
       } catch (e) {
-        console.error('Failed to parse timer state from localStorage:', e);
+        console.error(
+          'Failed to parse timer state from localStorage. Timer will start from 0:00. Error:',
+          e
+        );
+        // Clean up corrupted localStorage entry
+        localStorage.removeItem(storageKey);
       }
     }
   }, [storageKey, onToggle]);
