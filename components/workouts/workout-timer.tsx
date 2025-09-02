@@ -30,7 +30,7 @@ const WorkoutTimer = ({ onToggle, workoutId, onFinish }: WorkoutTimerProps) => {
           onToggle?.(true);
         }
       } catch (e) {
-        console.error('Failed to load timer state:', e);
+        console.error('Failed to parse timer state from localStorage:', e);
       }
     }
   }, [storageKey, onToggle]);
