@@ -29,9 +29,11 @@ import ExerciseForm from './exercise-form';
 interface ExerciseDetailProps {
   exercise: ExerciseProps;
   session: Session | null;
+  from?: string;
+  workoutId?: string;
 }
 
-const ExerciseDetail: React.FC<ExerciseDetailProps> = ({ exercise, session }) => {
+const ExerciseDetail: React.FC<ExerciseDetailProps> = ({ exercise, session, from, workoutId }) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -58,12 +60,21 @@ const ExerciseDetail: React.FC<ExerciseDetailProps> = ({ exercise, session }) =>
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Back button */}
-        <Link href="/exercises">
-          <Button variant="ghost" className="mb-6 hover:bg-orange-100 dark:hover:bg-gray-700">
-            <FaArrowLeft className="mr-2" />
-            Back to Exercises
-          </Button>
-        </Link>
+        {from === 'workout' && workoutId ? (
+          <Link href={`/workouts/${workoutId}`}>
+            <Button variant="ghost" className="mb-6 hover:bg-orange-100 dark:hover:bg-gray-700">
+              <FaArrowLeft className="mr-2" />
+              Back to Workout
+            </Button>
+          </Link>
+        ) : (
+          <Link href="/exercises">
+            <Button variant="ghost" className="mb-6 hover:bg-orange-100 dark:hover:bg-gray-700">
+              <FaArrowLeft className="mr-2" />
+              Back to Exercises
+            </Button>
+          </Link>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Image Section */}

@@ -34,6 +34,7 @@ model Workout {
   user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   likes       WorkoutLike[]
+  sessions    WorkoutSession[]
 }
 
 model User {
@@ -54,6 +55,7 @@ model User {
   Workout       Workout[]
   workoutLikes  WorkoutLike[]
   Exercise      Exercise[]
+  workoutSessions WorkoutSession[]
 }
 
 model Account {
@@ -121,4 +123,20 @@ model Authenticator {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, credentialID])
+}
+
+model WorkoutSession {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId           String
+  workoutId        String   @db.Uuid
+  duration         Int      @db.Integer // Duration in seconds (must be positive)
+  exercisesCompleted Int    @db.Integer
+  totalExercises   Int      @db.Integer
+  completedAt      DateTime @default(now())
+  
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workout Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([workoutId])
 }

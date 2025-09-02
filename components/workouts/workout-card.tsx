@@ -3,6 +3,7 @@ import { auth } from '@/auth';
 import ExerciseItem from '../exercises/exercise-item';
 import { FaFilter } from 'react-icons/fa';
 import WorkoutLikeButton from './workout-like-button';
+import WorkoutSession from './workout-session';
 import { formatDate } from '@/utils/format-date';
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
 
@@ -66,12 +67,12 @@ const WorkoutCard = async ({ id }: WorkoutCardProps) => {
         </div>
       </div>
 
-      {/* Exercise Grid */}
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+      {/* Workout Session with Timer and Exercise Grid */}
+      <WorkoutSession workoutId={detailedWorkout.id} exercises={exercises}>
         {exercises.map((exercise) => (
-          <ExerciseItem key={exercise.id} exercise={exercise} />
+          <ExerciseItem key={exercise.id} exercise={exercise} workoutId={detailedWorkout.id} />
         ))}
-      </div>
+      </WorkoutSession>
 
       {exercises.length === 0 && (
         <div className='text-center py-12'>
