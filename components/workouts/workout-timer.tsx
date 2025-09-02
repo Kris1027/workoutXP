@@ -3,7 +3,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { FaPlay, FaStop } from 'react-icons/fa';
 
-const WorkoutTimer = () => {
+interface WorkoutTimerProps {
+  onToggle?: (isActive: boolean) => void;
+}
+
+const WorkoutTimer = ({ onToggle }: WorkoutTimerProps) => {
   const [isRunning, setIsRunning] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -46,8 +50,10 @@ const WorkoutTimer = () => {
     if (isRunning) {
       setIsRunning(false);
       setSeconds(0);
+      onToggle?.(false);
     } else {
       setIsRunning(true);
+      onToggle?.(true);
     }
   };
 
