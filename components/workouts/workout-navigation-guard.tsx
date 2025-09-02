@@ -35,8 +35,8 @@ export const WorkoutNavigationGuard = ({
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (isWorkoutActive) {
-        e.preventDefault();
-        // Modern browsers will show their own generic message
+        // Setting e.returnValue triggers the browser's confirmation dialog
+        // Modern browsers ignore custom messages and show their own generic message
         e.returnValue = '';
       }
     };
