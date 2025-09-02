@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import WorkoutTimer from './workout-timer';
+import { WorkoutNavigationGuard } from './workout-navigation-guard';
 
 interface WorkoutSessionProps {
   children: React.ReactNode;
@@ -52,6 +53,16 @@ const WorkoutSession = ({ children, workoutId }: WorkoutSessionProps) => {
     }
   };
 
+  const handleFinishWorkout = () => {
+    setIsWorkoutActive(false);
+    setCompletedExercises(new Set());
+    // Clear localStorage
+    localStorage.removeItem(storageKey);
+    if (workoutId) {
+      localStorage.removeItem(`workout-timer-${workoutId}`);
+    }
+  };
+
   const toggleExerciseComplete = (exerciseId: string) => {
     if (!isWorkoutActive) return;
     
@@ -67,7 +78,11 @@ const WorkoutSession = ({ children, workoutId }: WorkoutSessionProps) => {
   };
 
   return (
-    <>
+    <WorkoutNavigationGuard 
+      isWorkoutActive={isWorkoutActive}
+      workoutId={workoutId}
+      onFinishWorkout={handleFinishWorkout}
+    >
       <WorkoutTimer onToggle={handleWorkoutToggle} workoutId={workoutId} />
       
       <div 
@@ -119,7 +134,7 @@ const WorkoutSession = ({ children, workoutId }: WorkoutSessionProps) => {
           );
         }) : children}
       </div>
-    </>
+    </WorkoutNavigationGuard>
   );
 };
 
