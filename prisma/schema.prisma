@@ -18,6 +18,8 @@ model Exercise {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   workouts     Workout[] @relation("WorkoutExercises")
+  user         User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String?
 }
 
 model Workout {
@@ -51,6 +53,7 @@ model User {
   Authenticator Authenticator[]
   Workout       Workout[]
   workoutLikes  WorkoutLike[]
+  Exercise      Exercise[]
 }
 
 model Account {

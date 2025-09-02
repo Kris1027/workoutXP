@@ -163,12 +163,24 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
             {(field) => (
               <div className='space-y-2'>
                 <Label htmlFor='category'>Category:</Label>
-                <Input
-                  type='text'
-                  id='category'
+                <Select
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
+                  onValueChange={(value) => field.handleChange(value)}
+                >
+                  <SelectTrigger id='category'>
+                    <SelectValue placeholder='Select category' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='Chest'>Chest</SelectItem>
+                    <SelectItem value='Back'>Back</SelectItem>
+                    <SelectItem value='Arms'>Arms</SelectItem>
+                    <SelectItem value='Shoulders'>Shoulders</SelectItem>
+                    <SelectItem value='Legs'>Legs</SelectItem>
+                    <SelectItem value='Core'>Core</SelectItem>
+                    <SelectItem value='Cardio'>Cardio</SelectItem>
+                    <SelectItem value='Full Body'>Full Body</SelectItem>
+                  </SelectContent>
+                </Select>
                 {!field.state.meta.isValid && (
                   <p className='text-red-500 italic'>
                     {field.state.meta.errors

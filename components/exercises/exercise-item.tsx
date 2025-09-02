@@ -13,6 +13,8 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import type { ExerciseProps } from '@/types/data-types';
+import { getDateMetadata } from '@/utils/date-utils';
+import { formatDate } from '@/utils/format-date';
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
 import type { Session } from 'next-auth';
 import { useTransition } from 'react';
@@ -43,8 +45,26 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, session }) => {
     });
   };
 
-  // Admin controls
-  const adminControls = session?.user.isAdmin ? (
+  // Show controls if user is the creator or admin
+  const canEditOrDelete = session?.user.isAdmin || exercise.userId === session?.user.id;
+
+  // Determine if exercise was edited and format date accordingly
+  const { dateToShow, dateLabel } = getDateMetadata(exercise.updatedAt, exercise.createdAt);
+
+  // Metadata component
+  const metadata = exercise.user ? (
+    <div className='text-gray-500 dark:text-gray-400 text-xs'>
+      {dateLabel} by <span className='font-bold text-gray-700 dark:text-gray-200'>{exercise.user.name || 'Anonymous'}</span>
+      {dateToShow && (
+        <span className='block mt-1'>
+          {formatDate(new Date(dateToShow))}
+        </span>
+      )}
+    </div>
+  ) : undefined;
+
+  // Admin/Owner controls
+  const adminControls = canEditOrDelete ? (
     <>
       <ExerciseForm isEditedExercise={exercise} />
       <AlertDialog>
@@ -97,6 +117,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, session }) => {
         text: exercise.difficulty,
         className: getDifficultyColor(exercise.difficulty)
       }}
+      metadata={metadata}
       rightBadge={{
         text: exercise.category,
         className: 'bg-orange-500 text-white'

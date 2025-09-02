@@ -1,19 +1,37 @@
 'use server';
 
+import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { utapi } from '@/server/uploadthings';
 import type { ExerciseProps } from '@/types/data-types';
+import type { Exercise } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
+
+function checkExercisePermission(
+  exercise: Exercise | null,
+  currentUserId: string | undefined,
+  isAdmin: boolean | undefined
+): void {
+  if (!exercise) throw new Error('Exercise not found');
+  if (!currentUserId) throw new Error('User not authenticated');
+  if (exercise.userId !== currentUserId && !isAdmin) {
+    throw new Error('User not authorized to modify this exercise');
+  }
+}
 
 export const fetchExercises = async (): Promise<ExerciseProps[]> => {
   try {
     const exercises = await prisma.exercise.findMany({
       orderBy: { createdAt: 'desc' },
+      include: {
+        user: true,
+      },
     });
     
     return exercises.map(exercise => ({
       ...exercise,
       instructions: exercise.instructions ?? undefined,
+      userId: exercise.userId ?? undefined,
     }));
   } catch (error) {
     console.error('Error fetching exercises', error);
@@ -25,6 +43,9 @@ export const fetchExerciseById = async (id: string): Promise<ExerciseProps | nul
   try {
     const exercise = await prisma.exercise.findUnique({
       where: { id },
+      include: {
+        user: true,
+      },
     });
     
     if (!exercise) return null;
@@ -32,6 +53,7 @@ export const fetchExerciseById = async (id: string): Promise<ExerciseProps | nul
     return {
       ...exercise,
       instructions: exercise.instructions ?? undefined,
+      userId: exercise.userId ?? undefined,
     };
   } catch (error) {
     console.error('Error fetching exercise by id', error);
@@ -39,8 +61,40 @@ export const fetchExerciseById = async (id: string): Promise<ExerciseProps | nul
   }
 };
 
-export const createExercise = async (exerciseData: ExerciseProps): Promise<void> => {
+export const fetchExercisesByUserId = async (userId: string): Promise<ExerciseProps[]> => {
+  if (!userId) throw new Error('User ID is required to fetch exercises');
+
+  try {
+    const exercises = await prisma.exercise.findMany({
+      where: { userId: userId },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        user: true,
+      },
+    });
+
+    return exercises.map(exercise => ({
+      ...exercise,
+      instructions: exercise.instructions ?? undefined,
+      userId: exercise.userId ?? undefined,
+    }));
+  } catch (error) {
+    console.error('Error fetching exercises by user ID', error);
+    throw new Error(error instanceof Error ? error.message : 'Unexpected error');
+  }
+};
+
+export const createExercise = async (
+  exerciseData: Omit<ExerciseProps, 'id' | 'userId' | 'user' | 'createdAt' | 'updatedAt'>
+): Promise<void> => {
   const { name, category, difficulty, imageUrl, description, instructions } = exerciseData;
+
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    throw new Error('User not authenticated');
+  }
 
   try {
     await prisma.exercise.create({
@@ -51,6 +105,7 @@ export const createExercise = async (exerciseData: ExerciseProps): Promise<void>
         imageUrl,
         description,
         instructions,
+        userId,
       },
     });
 
@@ -72,6 +127,10 @@ const deleteFileFromUploadThing = async (fileKey: string | string[]) => {
 export const deleteExercise = async (exerciseId: string): Promise<void> => {
   if (!exerciseId) throw new Error('Missing ID for exercise deletion');
 
+  const session = await auth();
+  const currentUserId = session?.user?.id;
+  const isAdmin = session?.user?.isAdmin;
+
   try {
     // Check if any workout is using this exercise
     const workoutsUsingExercise = await prisma.workout.count({
@@ -90,6 +149,9 @@ export const deleteExercise = async (exerciseId: string): Promise<void> => {
       where: { id: exerciseId },
     });
 
+    checkExercisePermission(exercise, currentUserId, isAdmin);
+
+    // After checkExercisePermission, exercise is guaranteed to be non-null
     if (!exercise) throw new Error('Exercise not found');
 
     try {
@@ -119,17 +181,27 @@ export const deleteExercise = async (exerciseId: string): Promise<void> => {
 export const updateExercise = async (exerciseData: ExerciseProps): Promise<void> => {
   const { name, category, difficulty, imageUrl, description, instructions, id } = exerciseData;
 
+  const session = await auth();
+  const currentUserId = session?.user?.id;
+  const isAdmin = session?.user?.isAdmin;
+
   if (!id) throw new Error('Missing ID for exercise update');
+  if (!currentUserId) throw new Error('User not authenticated');
 
   try {
     const existingExercise = await prisma.exercise.findUnique({
       where: { id },
     });
 
+    checkExercisePermission(existingExercise, currentUserId, isAdmin);
+
+    // After checkExercisePermission, existingExercise is guaranteed to be non-null
+    if (!existingExercise) throw new Error('Exercise not found');
+
     // Delete the old image from storage if:
     // 1. The imageUrl is being changed to a different URL
     // 2. The imageUrl is being removed (set to empty string)
-    if (existingExercise?.imageUrl && existingExercise.imageUrl !== imageUrl) {
+    if (existingExercise.imageUrl && existingExercise.imageUrl !== imageUrl) {
       try {
         const url = new URL(existingExercise.imageUrl);
         const fileKey = url.pathname.split('/').pop();

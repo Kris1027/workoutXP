@@ -15,7 +15,7 @@ const ExerciseList: React.FC = async () => {
         <h1 className='text-3xl font-bold mb-2'>Exercises</h1>
         <p className='text-gray-600 dark:text-gray-400'>
           Discover unique exercises{' '}
-          {session?.user.isAdmin && (
+          {session?.user && (
             <>
               <span>or </span> <ExerciseForm />
             </>

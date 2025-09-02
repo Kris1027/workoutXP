@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import type { ExerciseProps } from '@/types/data-types';
+import { getDateMetadata } from '@/utils/date-utils';
+import { formatDate } from '@/utils/format-date';
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
 import type { Session } from 'next-auth';
 import Image from 'next/image';
@@ -32,6 +34,10 @@ interface ExerciseDetailProps {
 const ExerciseDetail: React.FC<ExerciseDetailProps> = ({ exercise, session }) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+
+  // Determine if exercise was edited and format date accordingly
+  const { dateToShow, dateLabel } = getDateMetadata(exercise.updatedAt, exercise.createdAt);
+  const capitalizedDateLabel = dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1);
 
   const handleDelete = async (id: string) => {
     startTransition(async () => {
@@ -93,6 +99,16 @@ const ExerciseDetail: React.FC<ExerciseDetailProps> = ({ exercise, session }) =>
               <p className="text-lg text-gray-600 dark:text-gray-300">
                 {exercise.description}
               </p>
+              {exercise.user && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
+                  {capitalizedDateLabel} by <span className="font-semibold">{exercise.user.name || 'Anonymous'}</span>
+                  {dateToShow && (
+                    <span className="block text-xs mt-1">
+                      {formatDate(new Date(dateToShow))}
+                    </span>
+                  )}
+                </p>
+              )}
             </div>
 
             {/* Exercise Info Cards */}
@@ -127,8 +143,8 @@ const ExerciseDetail: React.FC<ExerciseDetailProps> = ({ exercise, session }) =>
               </div>
             )}
 
-            {/* Admin Controls */}
-            {session?.user.isAdmin && (
+            {/* Admin/Owner Controls */}
+            {(session?.user.isAdmin || session?.user.id === exercise.userId) && (
               <div className="flex gap-4 pt-4">
                 <ExerciseForm isEditedExercise={exercise} />
                 <AlertDialog>
