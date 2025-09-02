@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import type { ExerciseProps } from '@/types/data-types';
+import { getDateMetadata } from '@/utils/date-utils';
 import { formatDate } from '@/utils/format-date';
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
 import type { Session } from 'next-auth';
@@ -35,10 +36,8 @@ const ExerciseDetail: React.FC<ExerciseDetailProps> = ({ exercise, session }) =>
   const router = useRouter();
 
   // Determine if exercise was edited and format date accordingly
-  const wasEdited = exercise.updatedAt && exercise.createdAt && 
-    new Date(exercise.updatedAt).getTime() > new Date(exercise.createdAt).getTime();
-  const dateToShow = wasEdited ? exercise.updatedAt : exercise.createdAt;
-  const dateLabel = wasEdited ? 'Updated' : 'Created';
+  const { dateToShow, dateLabel } = getDateMetadata(exercise.updatedAt, exercise.createdAt);
+  const capitalizedDateLabel = dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1);
 
   const handleDelete = async (id: string) => {
     startTransition(async () => {
@@ -102,7 +101,7 @@ const ExerciseDetail: React.FC<ExerciseDetailProps> = ({ exercise, session }) =>
               </p>
               {exercise.user && (
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
-                  {dateLabel} by <span className="font-semibold">{exercise.user.name || 'Anonymous'}</span>
+                  {capitalizedDateLabel} by <span className="font-semibold">{exercise.user.name || 'Anonymous'}</span>
                   {dateToShow && (
                     <span className="block text-xs mt-1">
                       {formatDate(new Date(dateToShow))}

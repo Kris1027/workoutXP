@@ -13,6 +13,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import type { ExerciseProps } from '@/types/data-types';
+import { getDateMetadata } from '@/utils/date-utils';
 import { formatDate } from '@/utils/format-date';
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
 import type { Session } from 'next-auth';
@@ -48,10 +49,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, session }) => {
   const canEditOrDelete = session?.user.isAdmin || exercise.userId === session?.user.id;
 
   // Determine if exercise was edited and format date accordingly
-  const wasEdited = exercise.updatedAt && exercise.createdAt &&
-    exercise.updatedAt > exercise.createdAt;
-  const dateToShow = wasEdited ? exercise.updatedAt : exercise.createdAt;
-  const dateLabel = wasEdited ? 'updated' : 'created';
+  const { dateToShow, dateLabel } = getDateMetadata(exercise.updatedAt, exercise.createdAt);
 
   // Metadata component
   const metadata = exercise.user ? (
