@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import WorkoutTimer from './workout-timer';
+import WorkoutProgress from './workout-progress';
 import { WorkoutNavigationGuard } from './workout-navigation-guard';
 
 interface WorkoutSessionProps {
@@ -77,6 +78,9 @@ const WorkoutSession = ({ children, workoutId }: WorkoutSessionProps) => {
     });
   };
 
+  // Count total exercises
+  const totalExercises = Array.isArray(children) ? children.length : 0;
+
   return (
     <WorkoutNavigationGuard 
       isWorkoutActive={isWorkoutActive}
@@ -84,6 +88,12 @@ const WorkoutSession = ({ children, workoutId }: WorkoutSessionProps) => {
       onFinishWorkout={handleFinishWorkout}
     >
       <WorkoutTimer onToggle={handleWorkoutToggle} workoutId={workoutId} />
+      
+      <WorkoutProgress 
+        completedCount={completedExercises.size}
+        totalCount={totalExercises}
+        isActive={isWorkoutActive}
+      />
       
       <div 
         className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'
