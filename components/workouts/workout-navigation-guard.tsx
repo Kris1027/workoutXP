@@ -36,8 +36,8 @@ export const WorkoutNavigationGuard = ({
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (isWorkoutActive) {
         e.preventDefault();
-        e.returnValue = 'You have an active workout session. Are you sure you want to leave?';
-        return e.returnValue;
+        // Modern browsers will show their own generic message
+        e.returnValue = '';
       }
     };
 
