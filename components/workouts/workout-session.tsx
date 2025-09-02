@@ -32,7 +32,7 @@ const WorkoutSession = ({ children, workoutId }: WorkoutSessionProps) => {
           setCompletedExercises(new Set(parsed.completedExercises || []));
         }
       } catch (e) {
-        console.error('Failed to load workout session:', e);
+        console.error('Failed to parse workout session from localStorage:', e);
       }
     }
   }, [storageKey]);
