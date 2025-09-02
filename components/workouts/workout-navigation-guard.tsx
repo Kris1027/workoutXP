@@ -79,7 +79,7 @@ export const WorkoutNavigationGuard = ({
 
     // Override navigation methods
     router.push = (...args: Parameters<typeof router.push>) => {
-      const url = typeof args[0] === 'string' ? args[0] : args[0].toString();
+      const url = typeof args[0] === 'string' ? args[0] : String(args[0]);
       if (url === pathname) return Promise.resolve(true);
       
       handleNavigation(() => originalPush.apply(router, args), url);
@@ -87,7 +87,7 @@ export const WorkoutNavigationGuard = ({
     };
 
     router.replace = (...args: Parameters<typeof router.replace>) => {
-      const url = typeof args[0] === 'string' ? args[0] : args[0].toString();
+      const url = typeof args[0] === 'string' ? args[0] : String(args[0]);
       handleNavigation(() => originalReplace.apply(router, args), url);
       return Promise.resolve(true);
     };
