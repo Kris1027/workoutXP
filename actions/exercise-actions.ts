@@ -71,7 +71,9 @@ export const fetchExercisesByUserId = async (userId: string): Promise<ExercisePr
   }
 };
 
-export const createExercise = async (exerciseData: Omit<ExerciseProps, 'userId'>): Promise<void> => {
+export const createExercise = async (
+  exerciseData: Omit<ExerciseProps, 'id' | 'userId' | 'user' | 'createdAt' | 'updatedAt'>
+): Promise<void> => {
   const { name, category, difficulty, imageUrl, description, instructions } = exerciseData;
 
   const session = await auth();
@@ -163,7 +165,7 @@ export const deleteExercise = async (exerciseId: string): Promise<void> => {
 };
 
 export const updateExercise = async (exerciseData: ExerciseProps): Promise<void> => {
-  const { name, category, difficulty, imageUrl, description, instructions, id, userId } = exerciseData;
+  const { name, category, difficulty, imageUrl, description, instructions, id } = exerciseData;
 
   const session = await auth();
   const currentUserId = session?.user?.id;

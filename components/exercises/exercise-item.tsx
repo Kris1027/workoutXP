@@ -48,8 +48,8 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, session }) => {
   const canEditOrDelete = session?.user.isAdmin || exercise.userId === session?.user.id;
 
   // Determine if exercise was edited and format date accordingly
-  const wasEdited = exercise.updatedAt && exercise.createdAt && 
-    new Date(exercise.updatedAt).getTime() > new Date(exercise.createdAt).getTime();
+  const wasEdited = exercise.updatedAt && exercise.createdAt &&
+    exercise.updatedAt > exercise.createdAt;
   const dateToShow = wasEdited ? exercise.updatedAt : exercise.createdAt;
   const dateLabel = wasEdited ? 'updated' : 'created';
 
