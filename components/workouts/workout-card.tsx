@@ -3,6 +3,7 @@ import { auth } from '@/auth';
 import ExerciseItem from '../exercises/exercise-item';
 import { FaFilter } from 'react-icons/fa';
 import WorkoutLikeButton from './workout-like-button';
+import WorkoutTimer from './workout-timer';
 import { formatDate } from '@/utils/format-date';
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
 
@@ -65,6 +66,9 @@ const WorkoutCard = async ({ id }: WorkoutCardProps) => {
           </div>
         </div>
       </div>
+
+      {/* Workout Timer */}
+      <WorkoutTimer />
 
       {/* Exercise Grid */}
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
