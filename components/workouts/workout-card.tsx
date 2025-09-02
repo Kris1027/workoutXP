@@ -68,7 +68,7 @@ const WorkoutCard = async ({ id }: WorkoutCardProps) => {
       </div>
 
       {/* Workout Session with Timer and Exercise Grid */}
-      <WorkoutSession workoutId={detailedWorkout.id}>
+      <WorkoutSession workoutId={detailedWorkout.id} exercises={exercises}>
         {exercises.map((exercise) => (
           <ExerciseItem key={exercise.id} exercise={exercise} workoutId={detailedWorkout.id} />
         ))}

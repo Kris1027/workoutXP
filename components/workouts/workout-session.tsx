@@ -1,21 +1,23 @@
 'use client';
 
-import { useState, useEffect, useTransition } from 'react';
+import React, { useState, useEffect, useTransition } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import WorkoutTimer from './workout-timer';
 import WorkoutProgress from './workout-progress';
 import { WorkoutNavigationGuard } from './workout-navigation-guard';
 import { saveWorkoutSession } from '@/actions/workout-session-actions';
 import { toast } from 'sonner';
+import type { ExerciseProps } from '@/types/data-types';
 
 interface WorkoutSessionProps {
   children: React.ReactNode;
   workoutId?: string;
+  exercises?: ExerciseProps[];
 }
 
-const WorkoutSession = ({ children, workoutId }: WorkoutSessionProps) => {
+const WorkoutSession = ({ children, workoutId, exercises = [] }: WorkoutSessionProps) => {
   const storageKey = workoutId ? `workout-session-${workoutId}` : 'workout-session';
-  const totalExercises = Array.isArray(children) ? children.length : 0;
+  const totalExercises = exercises.length;
   
   const [isWorkoutActive, setIsWorkoutActive] = useState(false);
   const [completedExercises, setCompletedExercises] = useState<Set<string>>(new Set());
@@ -121,39 +123,30 @@ const WorkoutSession = ({ children, workoutId }: WorkoutSessionProps) => {
         isActive={isWorkoutActive}
       />
       
-      <div 
-        className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'
-        onClick={(e) => {
-          if (!isWorkoutActive) return;
-          
-          // Check if the click was on a link, button, or their children
-          const target = e.target as HTMLElement;
-          const isInteractiveElement = target.closest('a, button');
-          
-          // Only toggle completion if not clicking on interactive elements
-          if (!isInteractiveElement) {
-            const exerciseCard = target.closest('[data-exercise-id]');
-            if (exerciseCard) {
-              const exerciseId = exerciseCard.getAttribute('data-exercise-id');
-              if (exerciseId) {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleExerciseComplete(exerciseId);
-              }
-            }
-          }
-        }}
-      >
-        {/* Clone children and add visual indicators for completed exercises */}
-        {Array.isArray(children) ? children.map((child: React.ReactElement) => {
-          const exerciseId = child?.key;
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+        {React.Children.map(children, (child, index) => {
+          const exercise = exercises[index];
+          const exerciseId = exercise?.id;
           const isCompleted = exerciseId && completedExercises.has(exerciseId);
           
           return (
             <div 
-              key={exerciseId}
-              data-exercise-id={exerciseId}
+              key={exerciseId || index}
               className={`relative ${isWorkoutActive ? 'cursor-pointer' : ''}`}
+              onClick={(e) => {
+                if (!isWorkoutActive || !exerciseId) return;
+                
+                // Check if the click was on a link, button, or their children
+                const target = e.target as HTMLElement;
+                const isInteractiveElement = target.closest('a, button');
+                
+                // Only toggle completion if not clicking on interactive elements
+                if (!isInteractiveElement) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  toggleExerciseComplete(exerciseId);
+                }
+              }}
             >
               {child}
               {isWorkoutActive && isCompleted && (
@@ -168,7 +161,7 @@ const WorkoutSession = ({ children, workoutId }: WorkoutSessionProps) => {
               )}
             </div>
           );
-        }) : children}
+        })}
       </div>
     </WorkoutNavigationGuard>
   );
