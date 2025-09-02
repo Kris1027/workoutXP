@@ -7,18 +7,23 @@ interface ExerciseDetailPageProps {
   params: Promise<{
     id: string;
   }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-const ExerciseDetailPage = async ({ params }: ExerciseDetailPageProps) => {
+const ExerciseDetailPage = async ({ params, searchParams }: ExerciseDetailPageProps) => {
   const session = await auth();
   const { id } = await params;
+  const resolvedSearchParams = await searchParams;
   const exercise = await fetchExerciseById(id);
 
   if (!exercise) {
     notFound();
   }
 
-  return <ExerciseDetail exercise={exercise} session={session} />;
+  const from = resolvedSearchParams?.from as string | undefined;
+  const workoutId = resolvedSearchParams?.workoutId as string | undefined;
+
+  return <ExerciseDetail exercise={exercise} session={session} from={from} workoutId={workoutId} />;
 };
 
 export default ExerciseDetailPage;

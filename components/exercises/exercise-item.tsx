@@ -26,9 +26,10 @@ import ExerciseForm from './exercise-form';
 type ExerciseItemProps = {
   exercise: ExerciseProps;
   session?: Session | null;
+  workoutId?: string;
 };
 
-const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, session }) => {
+const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, session, workoutId }) => {
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = async (id: string) => {
@@ -110,7 +111,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, session }) => {
       description={exercise.description}
       imageUrl={exercise.imageUrl}
       imageAlt={exercise.name}
-      href={`/exercises/${exercise.id}`}
+      href={`/exercises/${exercise.id}${workoutId ? `?from=workout&workoutId=${workoutId}` : ''}`}
       theme="orange"
       imageHeight="h-64"
       leftBadge={{
