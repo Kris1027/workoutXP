@@ -1,16 +1,48 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import WorkoutTimer from './workout-timer';
 
 interface WorkoutSessionProps {
   children: React.ReactNode;
+  workoutId?: string;
 }
 
-const WorkoutSession = ({ children }: WorkoutSessionProps) => {
+const WorkoutSession = ({ children, workoutId }: WorkoutSessionProps) => {
+  const storageKey = workoutId ? `workout-session-${workoutId}` : 'workout-session';
+  
   const [isWorkoutActive, setIsWorkoutActive] = useState(false);
   const [completedExercises, setCompletedExercises] = useState<Set<string>>(new Set());
+
+  // Load persisted state on mount
+  useEffect(() => {
+    const savedSession = localStorage.getItem(storageKey);
+    if (savedSession) {
+      try {
+        const parsed = JSON.parse(savedSession);
+        if (parsed.isActive) {
+          setIsWorkoutActive(true);
+          setCompletedExercises(new Set(parsed.completedExercises || []));
+        }
+      } catch (e) {
+        console.error('Failed to load workout session:', e);
+      }
+    }
+  }, [storageKey]);
+
+  // Save state when it changes
+  useEffect(() => {
+    if (isWorkoutActive) {
+      localStorage.setItem(storageKey, JSON.stringify({
+        isActive: true,
+        completedExercises: Array.from(completedExercises),
+        timestamp: Date.now()
+      }));
+    } else {
+      localStorage.removeItem(storageKey);
+    }
+  }, [isWorkoutActive, completedExercises, storageKey]);
 
   const handleWorkoutToggle = (active: boolean) => {
     setIsWorkoutActive(active);
@@ -36,19 +68,27 @@ const WorkoutSession = ({ children }: WorkoutSessionProps) => {
 
   return (
     <>
-      <WorkoutTimer onToggle={handleWorkoutToggle} />
+      <WorkoutTimer onToggle={handleWorkoutToggle} workoutId={workoutId} />
       
       <div 
         className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'
         onClick={(e) => {
           if (!isWorkoutActive) return;
           
-          // Find the closest exercise card that was clicked
-          const exerciseCard = (e.target as HTMLElement).closest('[data-exercise-id]');
-          if (exerciseCard) {
-            const exerciseId = exerciseCard.getAttribute('data-exercise-id');
-            if (exerciseId) {
-              toggleExerciseComplete(exerciseId);
+          // Check if the click was on a link, button, or their children
+          const target = e.target as HTMLElement;
+          const isInteractiveElement = target.closest('a, button');
+          
+          // Only toggle completion if not clicking on interactive elements
+          if (!isInteractiveElement) {
+            const exerciseCard = target.closest('[data-exercise-id]');
+            if (exerciseCard) {
+              const exerciseId = exerciseCard.getAttribute('data-exercise-id');
+              if (exerciseId) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleExerciseComplete(exerciseId);
+              }
             }
           }
         }}

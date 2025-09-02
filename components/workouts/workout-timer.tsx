@@ -5,17 +5,42 @@ import { FaPlay, FaStop } from 'react-icons/fa';
 
 interface WorkoutTimerProps {
   onToggle?: (isActive: boolean) => void;
+  workoutId?: string;
 }
 
-const WorkoutTimer = ({ onToggle }: WorkoutTimerProps) => {
+const WorkoutTimer = ({ onToggle, workoutId }: WorkoutTimerProps) => {
+  const storageKey = workoutId ? `workout-timer-${workoutId}` : 'workout-timer';
   const [isRunning, setIsRunning] = useState(false);
   const [seconds, setSeconds] = useState(0);
+  const [startTime, setStartTime] = useState<number | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Load persisted timer state on mount
+  useEffect(() => {
+    const savedTimer = localStorage.getItem(storageKey);
+    if (savedTimer) {
+      try {
+        const parsed = JSON.parse(savedTimer);
+        if (parsed.isRunning && parsed.startTime) {
+          const elapsed = Math.floor((Date.now() - parsed.startTime) / 1000);
+          setSeconds(elapsed);
+          setStartTime(parsed.startTime);
+          setIsRunning(true);
+          onToggle?.(true);
+        }
+      } catch (e) {
+        console.error('Failed to load timer state:', e);
+      }
+    }
+  }, [storageKey]);
 
   useEffect(() => {
     if (isRunning) {
       intervalRef.current = setInterval(() => {
-        setSeconds(prevSeconds => prevSeconds + 1);
+        if (startTime) {
+          const elapsed = Math.floor((Date.now() - startTime) / 1000);
+          setSeconds(elapsed);
+        }
       }, 1000);
     } else {
       if (intervalRef.current) {
@@ -29,7 +54,19 @@ const WorkoutTimer = ({ onToggle }: WorkoutTimerProps) => {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isRunning]);
+  }, [isRunning, startTime]);
+
+  // Save/clear timer state when running state changes
+  useEffect(() => {
+    if (isRunning && startTime) {
+      localStorage.setItem(storageKey, JSON.stringify({
+        startTime: startTime,
+        isRunning: true
+      }));
+    } else if (!isRunning) {
+      localStorage.removeItem(storageKey);
+    }
+  }, [isRunning, startTime, storageKey]);
 
   const formatTime = (totalSeconds: number) => {
     const hours = Math.floor(totalSeconds / 3600);
@@ -50,9 +87,13 @@ const WorkoutTimer = ({ onToggle }: WorkoutTimerProps) => {
     if (isRunning) {
       setIsRunning(false);
       setSeconds(0);
+      setStartTime(null);
       onToggle?.(false);
     } else {
+      const now = Date.now();
+      setStartTime(now);
       setIsRunning(true);
+      setSeconds(0);
       onToggle?.(true);
     }
   };
