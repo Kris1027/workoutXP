@@ -110,17 +110,17 @@ export const WorkoutNavigationGuard = ({
   }, [isWorkoutActive, workoutId, pathname, router]);
 
   const handleConfirmNavigation = useCallback(() => {
-    // Finish the workout
+    // Close dialog first
+    setShowDialog(false);
+    
+    // Finish the workout (this will clear localStorage and reset state)
     onFinishWorkout();
     
-    // Execute the pending navigation after a small delay to ensure state is updated
-    setTimeout(() => {
-      if (pendingNavigation) {
-        pendingNavigation();
-        setPendingNavigation(null);
-      }
-      setShowDialog(false);
-    }, 100);
+    // Execute the pending navigation
+    if (pendingNavigation) {
+      pendingNavigation();
+      setPendingNavigation(null);
+    }
   }, [pendingNavigation, onFinishWorkout]);
 
   const handleCancelNavigation = useCallback(() => {
