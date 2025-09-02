@@ -4,7 +4,20 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { utapi } from '@/server/uploadthings';
 import type { ExerciseProps } from '@/types/data-types';
+import type { Exercise } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
+
+function checkExercisePermission(
+  exercise: Exercise | null,
+  currentUserId: string | undefined,
+  isAdmin: boolean | undefined
+): void {
+  if (!exercise) throw new Error('Exercise not found');
+  if (!currentUserId) throw new Error('User not authenticated');
+  if (exercise.userId !== currentUserId && !isAdmin) {
+    throw new Error('User not authorized to modify this exercise');
+  }
+}
 
 export const fetchExercises = async (): Promise<ExerciseProps[]> => {
   try {
@@ -136,9 +149,10 @@ export const deleteExercise = async (exerciseId: string): Promise<void> => {
       where: { id: exerciseId },
     });
 
+    checkExercisePermission(exercise, currentUserId, isAdmin);
+
+    // After checkExercisePermission, exercise is guaranteed to be non-null
     if (!exercise) throw new Error('Exercise not found');
-    if (exercise.userId !== currentUserId && !isAdmin)
-      throw new Error('User not authorized to delete this exercise');
 
     try {
       const url = new URL(exercise.imageUrl);
@@ -179,9 +193,10 @@ export const updateExercise = async (exerciseData: ExerciseProps): Promise<void>
       where: { id },
     });
 
+    checkExercisePermission(existingExercise, currentUserId, isAdmin);
+
+    // After checkExercisePermission, existingExercise is guaranteed to be non-null
     if (!existingExercise) throw new Error('Exercise not found');
-    if (existingExercise.userId !== currentUserId && !isAdmin)
-      throw new Error('User not authorized to update this exercise');
 
     // Delete the old image from storage if:
     // 1. The imageUrl is being changed to a different URL
