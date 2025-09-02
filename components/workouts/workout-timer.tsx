@@ -33,7 +33,7 @@ const WorkoutTimer = ({ onToggle, workoutId, onFinish }: WorkoutTimerProps) => {
         console.error('Failed to load timer state:', e);
       }
     }
-  }, [storageKey]);
+  }, [storageKey, onToggle]);
 
   useEffect(() => {
     if (isRunning) {

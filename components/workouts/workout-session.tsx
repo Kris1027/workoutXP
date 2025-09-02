@@ -19,7 +19,7 @@ const WorkoutSession = ({ children, workoutId }: WorkoutSessionProps) => {
   
   const [isWorkoutActive, setIsWorkoutActive] = useState(false);
   const [completedExercises, setCompletedExercises] = useState<Set<string>>(new Set());
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   // Load persisted state on mount
   useEffect(() => {
@@ -140,7 +140,7 @@ const WorkoutSession = ({ children, workoutId }: WorkoutSessionProps) => {
         }}
       >
         {/* Clone children and add visual indicators for completed exercises */}
-        {Array.isArray(children) ? children.map((child: any) => {
+        {Array.isArray(children) ? children.map((child: React.ReactElement) => {
           const exerciseId = child?.key;
           const isCompleted = exerciseId && completedExercises.has(exerciseId);
           
