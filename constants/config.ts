@@ -23,11 +23,11 @@ export const APP_CONFIG = {
   ENABLE_SOCIAL_FEATURES: process.env.NEXT_PUBLIC_ENABLE_SOCIAL_FEATURES !== 'false',
   
   // Limits
-  MAX_FILE_SIZE_MB: parseInt(process.env.NEXT_PUBLIC_MAX_FILE_SIZE_MB || '5'),
-  MAX_EXERCISES_PER_WORKOUT: parseInt(process.env.NEXT_PUBLIC_MAX_EXERCISES_PER_WORKOUT || '20'),
+  MAX_FILE_SIZE_MB: parseInt(process.env.NEXT_PUBLIC_MAX_FILE_SIZE_MB || '5', 10),
+  MAX_EXERCISES_PER_WORKOUT: parseInt(process.env.NEXT_PUBLIC_MAX_EXERCISES_PER_WORKOUT || '20', 10),
   
   // Feature Flags
-  SHOW_NEW_BADGE_DAYS: parseInt(process.env.NEXT_PUBLIC_SHOW_NEW_BADGE_DAYS || '7'),
+  SHOW_NEW_BADGE_DAYS: parseInt(process.env.NEXT_PUBLIC_SHOW_NEW_BADGE_DAYS || '7', 10),
 } as const;
 
 export type AppConfig = typeof APP_CONFIG;
