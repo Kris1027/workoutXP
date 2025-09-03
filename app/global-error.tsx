@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { FaExclamationCircle, FaHome } from 'react-icons/fa';
+import { useEffect } from 'react';
 
 export default function GlobalError({
   error,
@@ -10,6 +11,12 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    // Log the error to console in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Global application error:', error);
+    }
+  }, [error]);
   return (
     <html>
       <body>
