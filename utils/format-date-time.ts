@@ -12,6 +12,31 @@ export const formatDateTime = (date: Date) => {
 export const formatDateTimeRelative = (date: Date) => {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
+  
+  // Handle future dates
+  if (diffMs < 0) {
+    const futureDiffMs = Math.abs(diffMs);
+    const futureDiffMins = Math.floor(futureDiffMs / (1000 * 60));
+    const futureDiffHours = Math.floor(futureDiffMs / (1000 * 60 * 60));
+    const futureDiffDays = Math.floor(futureDiffMs / (1000 * 60 * 60 * 24));
+
+    if (futureDiffMins < 1) {
+      return 'In a moment';
+    }
+    if (futureDiffMins < 60) {
+      return `In ${futureDiffMins} minute${futureDiffMins === 1 ? '' : 's'}`;
+    }
+    if (futureDiffHours < 24) {
+      return `In ${futureDiffHours} hour${futureDiffHours === 1 ? '' : 's'}`;
+    }
+    if (futureDiffDays < 7) {
+      return `In ${futureDiffDays} day${futureDiffDays === 1 ? '' : 's'}`;
+    }
+    // For dates more than a week in the future, show the full date with time
+    return formatDateTime(date);
+  }
+  
+  // Handle past dates
   const diffMins = Math.floor(diffMs / (1000 * 60));
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
