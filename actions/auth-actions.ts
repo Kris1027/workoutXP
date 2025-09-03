@@ -7,6 +7,7 @@ import { SignInProps, SignUpProps } from '@/types/data-types';
 import { saltAndHashPassword } from '@/utils/salt-and-hash-password';
 import { AuthError } from 'next-auth';
 import { DEFAULT_ACCOUNT_IMAGE } from '@/constants/app-constants';
+import { logger } from '@/utils/logger';
 
 export const githubLogin = async () => {
   await signIn('github', { redirectTo: '/profile' });
@@ -20,8 +21,9 @@ export const loginWithCredentials = async (credentials: SignInProps) => {
   const result = signInSchema.safeParse(credentials);
 
   if (!result.success) {
-    const flattened = result.error.flatten().fieldErrors;
-    throw new Error('Validation failed: ' + JSON.stringify(flattened));
+    const errors = result.error.flatten().fieldErrors;
+    const firstError = Object.values(errors)[0]?.[0] || 'Please check your input and try again.';
+    throw new Error(firstError);
   }
 
   try {
@@ -31,24 +33,25 @@ export const loginWithCredentials = async (credentials: SignInProps) => {
       redirect: false,
     });
   } catch (error) {
-    console.error('Login attempt failed:', {
-      email: credentials.email,
-      error: error instanceof Error ? error.message : 'Unknown error',
-    });
+    // Log error for debugging (without sensitive data)
+    logger.authError('login', error instanceof AuthError ? error.type : 'Unknown');
 
-    // Handle AuthError specifically
+    // Handle AuthError specifically with user-friendly messages
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
-          throw new Error('Invalid email or password');
+          throw new Error('Invalid email or password. Please check your credentials.');
         case 'CallbackRouteError':
-          throw new Error('Invalid email or password');
+          throw new Error('Invalid email or password. Please check your credentials.');
+        case 'AccessDenied':
+          throw new Error('Access denied. Your account may be restricted.');
         default:
-          throw new Error('Login failed. Please try again.');
+          throw new Error('Unable to sign in. Please try again or contact support.');
       }
     }
 
-    throw new Error('Login failed. Please try again.');
+    // Generic error fallback
+    throw new Error('Unable to sign in. Please check your connection and try again.');
   }
 };
 
@@ -58,8 +61,9 @@ export const registerUser = async (credentials: SignUpProps) => {
   const result = signUpSchema.safeParse(credentials);
 
   if (!result.success) {
-    const flattened = result.error.flatten().fieldErrors;
-    throw new Error('Validation failed: ' + JSON.stringify(flattened));
+    const errors = result.error.flatten().fieldErrors;
+    const firstError = Object.values(errors)[0]?.[0] || 'Please check your input and try again.';
+    throw new Error(firstError);
   }
 
   try {
@@ -68,7 +72,7 @@ export const registerUser = async (credentials: SignUpProps) => {
     });
 
     if (existingUser) {
-      throw new Error('User with this email already exists');
+      throw new Error('An account with this email already exists. Please sign in instead.');
     }
 
     const hashedPassword = await saltAndHashPassword(password);
@@ -90,13 +94,21 @@ export const registerUser = async (credentials: SignUpProps) => {
         redirect: false,
       });
     } catch (signInError) {
-      console.error('Auto sign-in after registration failed:', signInError);
+      logger.authError('auto-login', signInError instanceof Error ? signInError.message : 'Unknown');
+      // Don't throw here - registration was successful
     }
   } catch (error) {
-    console.error('Registration error:', error);
-    if (error instanceof Error && error.message === 'User with this email already exists') {
-      throw error;
+    logger.authError('registration', error instanceof Error ? error.message : 'Unknown');
+    
+    if (error instanceof Error) {
+      if (error.message.includes('already exists')) {
+        throw error;
+      }
+      if (error.message.includes('prisma') || error.message.includes('database')) {
+        throw new Error('Unable to create account. Please try again later.');
+      }
     }
-    throw new Error('Something went wrong during registration. Please try again.');
+    
+    throw new Error('Registration failed. Please check your information and try again.');
   }
 };

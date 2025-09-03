@@ -29,11 +29,30 @@ const SignIn = ({ onSwitchToSignUp }: SignInComponentProps) => {
     onSubmit: async ({ value }) => {
       try {
         await loginWithCredentials(value);
-        toast.success('Successfully signed in!');
+        toast.success('Welcome back! You have successfully signed in.', {
+          duration: 4000,
+        });
         router.push('/');
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : 'Login failed. Please try again.');
-        console.error('Error submitting form:', error);
+        // User-friendly error messages
+        let errorMessage = 'Unable to sign in. Please try again.';
+        
+        if (error instanceof Error) {
+          if (error.message.includes('Invalid email or password')) {
+            errorMessage = 'Invalid email or password. Please check your credentials and try again.';
+          } else if (error.message.includes('network') || error.message.includes('fetch')) {
+            errorMessage = 'Connection error. Please check your internet and try again.';
+          } else if (error.message.includes('too many')) {
+            errorMessage = 'Too many login attempts. Please try again later.';
+          } else {
+            errorMessage = error.message;
+          }
+        }
+        
+        toast.error(errorMessage, {
+          duration: 5000,
+          description: 'Need help? Contact support if the problem persists.',
+        });
       }
     },
   });

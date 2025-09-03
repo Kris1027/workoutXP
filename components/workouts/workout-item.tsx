@@ -15,7 +15,8 @@ import {
 import type { ExerciseProps, UserProps, WorkoutProps } from '@/types/data-types';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
-import { Button } from '../ui/button';
+import { ActionButton } from '../ui/action-button';
+import { FaTrash } from 'react-icons/fa';
 import FitnessCard from '../ui/fitness-card';
 import WorkoutForm from './workout-form';
 import WorkoutLikeButton from './workout-like-button';
@@ -83,7 +84,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises, curren
 
   // Admin controls
   const adminControls = canEditOrDelete ? (
-    <>
+    <div className="flex gap-2">
       <WorkoutForm
         exercises={allExercises}
         isEditedWorkout={workout}
@@ -91,14 +92,15 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises, curren
       />
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button 
-            disabled={isPending} 
-            variant='destructive' 
+          <ActionButton
+            disabled={isPending}
+            variant='danger'
             size='sm'
-            className='cursor-pointer bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 text-white border-0 font-semibold'
+            icon={<FaTrash className="w-3 h-3" />}
+            loading={isPending}
           >
             {isPending ? 'Deleting...' : 'Delete'}
-          </Button>
+          </ActionButton>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -122,7 +124,7 @@ const WorkoutItem: React.FC<WorkoutItemProps> = ({ workout, allExercises, curren
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   ) : undefined;
 
   return (

@@ -2,7 +2,7 @@ import { fetchUserWorkoutSessions } from '@/actions/workout-session-actions';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaClock, FaDumbbell, FaTrophy, FaFireAlt, FaCheckCircle, FaChartLine } from 'react-icons/fa';
-import { formatDate } from '@/utils/format-date';
+import { formatDateTime } from '@/utils/format-date-time';
 
 const FinishedWorkouts = async () => {
   const workoutSessions = await fetchUserWorkoutSessions(20);
@@ -30,7 +30,7 @@ const FinishedWorkouts = async () => {
     : 0;
 
   return (
-    <div className="min-h-screen py-8 px-4 bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header with Stats */}
         <div className="mb-12">
@@ -103,7 +103,7 @@ const FinishedWorkouts = async () => {
                     src={session.workout.imageUrl}
                     alt={session.workout.name}
                     fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="object-contain group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                   
@@ -179,7 +179,7 @@ const FinishedWorkouts = async () => {
                   {/* Date and Action */}
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {formatDate(new Date(session.completedAt))}
+                      {formatDateTime(new Date(session.completedAt))}
                     </span>
                     
                     <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 flex items-center gap-1">
