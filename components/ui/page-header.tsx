@@ -71,7 +71,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
                 )}
                 <div>
                   <div className="flex items-center gap-3">
-                    <h1 className="text-4xl lg:text-5xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
+                    <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-gray-900 dark:text-white supports-[background-clip:text]:bg-gradient-to-r supports-[background-clip:text]:from-gray-900 supports-[background-clip:text]:to-gray-600 dark:supports-[background-clip:text]:from-white dark:supports-[background-clip:text]:to-gray-400 supports-[background-clip:text]:bg-clip-text supports-[background-clip:text]:text-transparent">
                       {title}
                     </h1>
                     {badge && badge}
