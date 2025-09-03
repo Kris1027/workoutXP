@@ -2,7 +2,7 @@ import { fetchLatestWorkoutSession } from '@/actions/workout-session-actions';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaClock, FaDumbbell, FaTrophy, FaArrowRight } from 'react-icons/fa';
-import { formatDate } from '@/utils/format-date';
+import { formatDateTimeRelative, formatDateTime } from '@/utils/format-date-time';
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
 
 const LatestWorkoutCard = async () => {
@@ -85,8 +85,8 @@ const LatestWorkoutCard = async () => {
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-500 dark:text-gray-400">
-              Completed {formatDate(new Date(latestSession.completedAt))}
+            <div className="text-sm text-gray-500 dark:text-gray-400" title={formatDateTime(new Date(latestSession.completedAt))}>
+              Completed {formatDateTimeRelative(new Date(latestSession.completedAt))}
             </div>
             
             <Link 

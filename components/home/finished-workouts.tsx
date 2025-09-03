@@ -2,7 +2,7 @@ import { fetchUserWorkoutSessions } from '@/actions/workout-session-actions';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaClock, FaDumbbell, FaTrophy, FaFireAlt, FaCheckCircle, FaChartLine } from 'react-icons/fa';
-import { formatDate } from '@/utils/format-date';
+import { formatDateTime } from '@/utils/format-date-time';
 
 const FinishedWorkouts = async () => {
   const workoutSessions = await fetchUserWorkoutSessions(20);
@@ -179,7 +179,7 @@ const FinishedWorkouts = async () => {
                   {/* Date and Action */}
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {formatDate(new Date(session.completedAt))}
+                      {formatDateTime(new Date(session.completedAt))}
                     </span>
                     
                     <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 flex items-center gap-1">
