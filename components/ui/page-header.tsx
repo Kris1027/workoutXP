@@ -1,6 +1,14 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
 
+const gradientMap = {
+  blue: 'from-blue-600 via-blue-500 to-indigo-600',
+  purple: 'from-purple-600 via-purple-500 to-pink-600',
+  orange: 'from-orange-600 via-orange-500 to-red-600',
+  green: 'from-green-600 via-green-500 to-teal-600',
+  red: 'from-red-600 via-red-500 to-pink-600',
+} as const;
+
 interface PageHeaderProps {
   title: string;
   subtitle?: string;
@@ -8,7 +16,7 @@ interface PageHeaderProps {
   icon?: React.ReactNode;
   actions?: React.ReactNode;
   badge?: React.ReactNode;
-  gradient?: 'blue' | 'purple' | 'orange' | 'green' | 'red';
+  gradient?: keyof typeof gradientMap;
   className?: string;
   stats?: Array<{
     label: string;
@@ -17,14 +25,6 @@ interface PageHeaderProps {
     color?: string;
   }>;
 }
-
-const gradientMap = {
-  blue: 'from-blue-600 via-blue-500 to-indigo-600',
-  purple: 'from-purple-600 via-purple-500 to-pink-600',
-  orange: 'from-orange-600 via-orange-500 to-red-600',
-  green: 'from-green-600 via-green-500 to-teal-600',
-  red: 'from-red-600 via-red-500 to-pink-600',
-};
 
 const PageHeader: React.FC<PageHeaderProps> = ({
   title,
