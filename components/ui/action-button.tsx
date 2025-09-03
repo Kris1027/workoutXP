@@ -104,6 +104,15 @@ const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(
     ...props 
   }, ref) => {
     const [ripples, setRipples] = React.useState<{ x: number; y: number; id: number }[]>([]);
+    const timeoutsRef = React.useRef<Set<NodeJS.Timeout>>(new Set());
+
+    React.useEffect(() => {
+      // Cleanup all timeouts on unmount
+      return () => {
+        timeoutsRef.current.forEach(timeout => clearTimeout(timeout));
+        timeoutsRef.current.clear();
+      };
+    }, []);
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
       if (ripple && !disabled && !loading) {
@@ -113,9 +122,13 @@ const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(
         const id = Date.now();
         
         setRipples(prev => [...prev, { x, y, id }]);
-        setTimeout(() => {
+        
+        const timeout = setTimeout(() => {
           setRipples(prev => prev.filter(r => r.id !== id));
+          timeoutsRef.current.delete(timeout);
         }, 600);
+        
+        timeoutsRef.current.add(timeout);
       }
       
       onClick?.(e);
