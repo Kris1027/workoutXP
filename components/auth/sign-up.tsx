@@ -31,13 +31,32 @@ const SignUp = ({ onSwitchToSignIn }: SignUpComponentProps) => {
     onSubmit: async ({ value }) => {
       try {
         await registerUser(value);
-        toast.success('Successfully registered!');
+        toast.success('Welcome! Your account has been created successfully.', {
+          duration: 4000,
+          position: 'top-center',
+        });
         router.push('/profile');
       } catch (error) {
-        toast.error(
-          error instanceof Error ? error.message : 'Registration failed. Please try again.'
-        );
-        console.error('Error submitting form:', error);
+        // User-friendly error messages
+        let errorMessage = 'Unable to create account. Please try again.';
+        
+        if (error instanceof Error) {
+          if (error.message.includes('already exists')) {
+            errorMessage = error.message;
+          } else if (error.message.includes('network') || error.message.includes('fetch')) {
+            errorMessage = 'Connection error. Please check your internet and try again.';
+          } else if (error.message.includes('password')) {
+            errorMessage = error.message;
+          } else {
+            errorMessage = error.message;
+          }
+        }
+        
+        toast.error(errorMessage, {
+          duration: 5000,
+          position: 'top-center',
+          description: 'Having trouble? Try signing in if you already have an account.',
+        });
       }
     },
   });
