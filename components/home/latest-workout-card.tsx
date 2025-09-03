@@ -40,7 +40,7 @@ const LatestWorkoutCard = async () => {
             src={latestSession.workout.imageUrl}
             alt={latestSession.workout.name}
             fill
-            className="object-cover"
+            className="object-contain"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
           

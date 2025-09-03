@@ -125,7 +125,7 @@ const FitnessCard: React.FC<FitnessCardProps> = ({
             width={0}
             height={0}
             sizes='100vw'
-            className='w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105'
+            className='w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105'
             priority
             onLoadingComplete={() => setIsImageLoading(false)}
             onError={() => setIsImageLoading(false)}

@@ -83,7 +83,7 @@ const ExerciseDetail: React.FC<ExerciseDetailProps> = ({ exercise, session, from
               src={exercise.imageUrl}
               alt={exercise.name}
               fill
-              className="object-cover"
+              className="object-contain"
               priority
             />
             {/* Gradient overlay */}
