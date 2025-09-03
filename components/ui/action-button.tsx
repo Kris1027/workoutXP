@@ -107,10 +107,13 @@ const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(
     const timeoutsRef = React.useRef<Set<NodeJS.Timeout>>(new Set());
 
     React.useEffect(() => {
+      // Store the current value of the ref
+      const timeouts = timeoutsRef.current;
+      
       // Cleanup all timeouts on unmount
       return () => {
-        timeoutsRef.current.forEach(timeout => clearTimeout(timeout));
-        timeoutsRef.current.clear();
+        timeouts.forEach(timeout => clearTimeout(timeout));
+        timeouts.clear();
       };
     }, []);
 

@@ -80,12 +80,8 @@ export default function Error({
             {errorInfo.message}
           </p>
 
-          {/* Error Code (if available) */}
-          {error.digest && process.env.NODE_ENV !== 'production' && (
-            <p className="text-xs text-gray-500 dark:text-gray-500 font-mono">
-              Error Code: {error.digest}
-            </p>
-          )}
+          {/* Error Code - Only show in development via conditional that's safe */}
+          {/* Removed error digest display to prevent accidental exposure in production */}
         </div>
 
         {/* Action Buttons */}
