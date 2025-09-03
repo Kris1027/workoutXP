@@ -7,6 +7,7 @@ import { SignInProps, SignUpProps } from '@/types/data-types';
 import { saltAndHashPassword } from '@/utils/salt-and-hash-password';
 import { AuthError } from 'next-auth';
 import { DEFAULT_ACCOUNT_IMAGE } from '@/constants/app-constants';
+import { logger } from '@/utils/logger';
 
 export const githubLogin = async () => {
   await signIn('github', { redirectTo: '/profile' });
@@ -33,10 +34,7 @@ export const loginWithCredentials = async (credentials: SignInProps) => {
     });
   } catch (error) {
     // Log error for debugging (without sensitive data)
-    console.error('Login attempt failed:', {
-      timestamp: new Date().toISOString(),
-      errorType: error instanceof AuthError ? error.type : 'Unknown',
-    });
+    logger.authError('login', error instanceof AuthError ? error.type : 'Unknown');
 
     // Handle AuthError specifically with user-friendly messages
     if (error instanceof AuthError) {
@@ -96,11 +94,11 @@ export const registerUser = async (credentials: SignUpProps) => {
         redirect: false,
       });
     } catch (signInError) {
-      console.error('Auto sign-in after registration failed:', signInError);
+      logger.authError('auto-login', signInError instanceof Error ? signInError.message : 'Unknown');
       // Don't throw here - registration was successful
     }
   } catch (error) {
-    console.error('Registration error:', error);
+    logger.authError('registration', error instanceof Error ? error.message : 'Unknown');
     
     if (error instanceof Error) {
       if (error.message.includes('already exists')) {
