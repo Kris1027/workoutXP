@@ -91,14 +91,25 @@ class Logger {
 
   // Special method for auth-related logs
   authError(action: string, errorType: string, context?: LogContext) {
+    // Exclude sensitive fields from context entirely
+    const { 
+      password, 
+      token, 
+      secret, 
+      credentials,
+      authorization,
+      cookie,
+      sessionToken,
+      refreshToken,
+      accessToken,
+      apiKey,
+      ...safeContext 
+    } = context || {};
+    
     this.error(`Auth ${action} failed`, {
       action,
       errorType,
-      ...context,
-      // Never log passwords or sensitive tokens
-      password: undefined,
-      token: undefined,
-      secret: undefined,
+      ...safeContext,
     });
   }
 }

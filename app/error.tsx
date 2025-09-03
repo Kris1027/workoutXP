@@ -79,9 +79,6 @@ export default function Error({
           <p className="text-gray-600 dark:text-gray-400">
             {errorInfo.message}
           </p>
-
-          {/* Error Code - Only show in development via conditional that's safe */}
-          {/* Removed error digest display to prevent accidental exposure in production */}
         </div>
 
         {/* Action Buttons */}
