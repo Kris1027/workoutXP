@@ -15,7 +15,6 @@ import { APP_LOGO } from '@/constants/app-constants';
 import FinishedWorkouts from '@/components/home/finished-workouts';
 import { auth } from '@/auth';
 import { fetchLatestWorkoutSession } from '@/actions/workout-session-actions';
-import { Suspense } from 'react';
 
 const HomePage = async () => {
   const session = await auth();
@@ -65,18 +64,7 @@ const HomePage = async () => {
 
   // Show workout history for logged-in users who have completed workouts
   if (session?.user && hasWorkoutHistory) {
-    return (
-      <Suspense fallback={
-        <div className='min-h-screen flex items-center justify-center'>
-          <div className='animate-pulse'>
-            <div className='h-8 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-4' />
-            <div className='h-64 bg-gray-200 dark:bg-gray-700 rounded-xl' />
-          </div>
-        </div>
-      }>
-        <FinishedWorkouts />
-      </Suspense>
-    );
+    return <FinishedWorkouts />;
   }
 
   // Show landing page for new users or users without workout history
