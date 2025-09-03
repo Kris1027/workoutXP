@@ -19,7 +19,8 @@ import { getDifficultyColor } from '@/utils/get-difficulty-color';
 import type { Session } from 'next-auth';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
-import { Button } from '../ui/button';
+import { ActionButton } from '../ui/action-button';
+import { FaTrash } from 'react-icons/fa';
 import FitnessCard from '../ui/fitness-card';
 import ExerciseForm from './exercise-form';
 
@@ -66,18 +67,19 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, session, workoutI
 
   // Admin/Owner controls
   const adminControls = canEditOrDelete ? (
-    <>
+    <div className="flex gap-2">
       <ExerciseForm isEditedExercise={exercise} />
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button 
-            disabled={isPending} 
-            variant='destructive' 
+          <ActionButton 
+            disabled={isPending}
+            variant='danger'
             size='sm'
-            className='cursor-pointer bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 text-white border-0 font-semibold'
+            icon={<FaTrash className="w-3 h-3" />}
+            loading={isPending}
           >
             {isPending ? 'Deleting...' : 'Delete'}
-          </Button>
+          </ActionButton>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -101,7 +103,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, session, workoutI
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   ) : undefined;
 
   return (

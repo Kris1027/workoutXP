@@ -9,6 +9,8 @@ import { useForm } from '@tanstack/react-form';
 import { useState, useRef } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
+import { ActionButton } from '../ui/action-button';
+import { FaEdit, FaPlus } from 'react-icons/fa';
 import { Checkbox } from '../ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { Input } from '../ui/input';
@@ -93,9 +95,14 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ exercises, isEditedWorkout, c
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className='cursor-pointer' disabled={isSubmitting}>
-          {isEditedWorkout ? 'Edit Workout' : 'Create New Workout'}
-        </Button>
+        <ActionButton
+          variant={isEditedWorkout ? 'outline' : 'primary'}
+          size='sm'
+          icon={isEditedWorkout ? <FaEdit className="w-3 h-3" /> : <FaPlus className="w-3 h-3" />}
+          disabled={isSubmitting}
+        >
+          {isEditedWorkout ? 'Edit' : 'Create New Workout'}
+        </ActionButton>
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>{isEditedWorkout ? 'Update Workout' : 'Create New Workout'}</DialogTitle>

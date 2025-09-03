@@ -9,6 +9,8 @@ import { deleteImageFromStorage } from '@/actions/image-actions';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
+import { ActionButton } from '../ui/action-button';
+import { FaEdit, FaPlus } from 'react-icons/fa';
 import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '../ui/dialog';
@@ -80,9 +82,13 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ isEditedExercise }) => {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className='cursor-pointer'>
-          {isEditedExercise ? 'Edit Exercise' : 'Create New Exercise'}
-        </Button>
+        <ActionButton
+          variant={isEditedExercise ? 'outline' : 'primary'}
+          size='sm'
+          icon={isEditedExercise ? <FaEdit className="w-3 h-3" /> : <FaPlus className="w-3 h-3" />}
+        >
+          {isEditedExercise ? 'Edit' : 'Create New Exercise'}
+        </ActionButton>
       </DialogTrigger>
       <DialogContent>
         <form
