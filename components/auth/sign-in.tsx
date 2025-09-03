@@ -31,7 +31,6 @@ const SignIn = ({ onSwitchToSignUp }: SignInComponentProps) => {
         await loginWithCredentials(value);
         toast.success('Welcome back! You have successfully signed in.', {
           duration: 4000,
-          position: 'top-center',
         });
         router.push('/');
       } catch (error) {
@@ -52,7 +51,6 @@ const SignIn = ({ onSwitchToSignUp }: SignInComponentProps) => {
         
         toast.error(errorMessage, {
           duration: 5000,
-          position: 'top-center',
           description: 'Need help? Contact support if the problem persists.',
         });
       }

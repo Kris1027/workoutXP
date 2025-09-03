@@ -33,7 +33,6 @@ const SignUp = ({ onSwitchToSignIn }: SignUpComponentProps) => {
         await registerUser(value);
         toast.success('Welcome! Your account has been created successfully.', {
           duration: 4000,
-          position: 'top-center',
         });
         router.push('/profile');
       } catch (error) {
@@ -54,7 +53,6 @@ const SignUp = ({ onSwitchToSignIn }: SignUpComponentProps) => {
         
         toast.error(errorMessage, {
           duration: 5000,
-          position: 'top-center',
           description: 'Having trouble? Try signing in if you already have an account.',
         });
       }
