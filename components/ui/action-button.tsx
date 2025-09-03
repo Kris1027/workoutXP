@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 const actionButtonVariants = cva(
-  'relative inline-flex items-center justify-center gap-2 font-medium transition-all duration-300 disabled:pointer-events-none disabled:opacity-50 overflow-hidden group/btn',
+  'relative inline-flex items-center justify-center gap-2 font-medium transition-all duration-300 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 overflow-hidden group/btn',
   {
     variants: {
       variant: {
