@@ -80,7 +80,7 @@ const FitnessCard: React.FC<FitnessCardProps> = ({
   return (
     <Card 
       key={id} 
-      className={`group relative h-full flex flex-col overflow-hidden bg-white dark:bg-black/90 border border-gray-200 dark:border-gray-800 ${currentTheme.cardHover} transition-all duration-500 ease-out hover:shadow-2xl p-0 ${className}`}
+      className={`group relative h-full flex flex-col overflow-hidden bg-white dark:bg-black/90 border border-gray-200 dark:border-gray-800 ${currentTheme.cardHover} transition-[transform,box-shadow,border-color] duration-500 ease-out hover:shadow-2xl p-0 ${className}`}
     >
       {/* Image with overlay */}
       <div className={`relative ${imageHeight} overflow-hidden bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900`}>
