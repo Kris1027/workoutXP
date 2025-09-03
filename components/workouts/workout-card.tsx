@@ -1,11 +1,13 @@
 import { fetchWorkoutById } from '@/actions/workout-actions';
 import { auth } from '@/auth';
 import ExerciseItem from '../exercises/exercise-item';
-import { FaFilter } from 'react-icons/fa';
+import { FaFilter, FaArrowLeft } from 'react-icons/fa';
 import WorkoutLikeButton from './workout-like-button';
 import WorkoutSession from './workout-session';
 import { formatDate } from '@/utils/format-date';
 import { getDifficultyColor } from '@/utils/get-difficulty-color';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 interface WorkoutCardProps {
   id: string;
@@ -36,6 +38,14 @@ const WorkoutCard = async ({ id }: WorkoutCardProps) => {
 
   return (
     <div className='px-4 py-6'>
+      {/* Back button */}
+      <Link href="/workouts">
+        <Button variant="ghost" className="mb-6 hover:bg-orange-100 dark:hover:bg-gray-700">
+          <FaArrowLeft className="mr-2" />
+          Back to Workouts
+        </Button>
+      </Link>
+
       {/* Header */}
       <div className='mb-6'>
         <div className='flex items-start justify-between mb-4'>
