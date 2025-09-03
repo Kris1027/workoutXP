@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { APP_CONFIG } from '@/constants/config';
 import { useEffect } from 'react';
 import { FaExclamationTriangle, FaHome, FaRedo } from 'react-icons/fa';
 
@@ -114,7 +115,7 @@ export default function Error({
         <div className="pt-8 border-t border-gray-200 dark:border-gray-700">
           <p className="text-sm text-gray-500 dark:text-gray-400">
             If this problem persists, please{' '}
-            <a href="mailto:support@workoutxp.com" className="text-primary hover:underline">
+            <a href={`mailto:${APP_CONFIG.SUPPORT_EMAIL}`} className="text-primary hover:underline">
               contact our support team
             </a>
           </p>

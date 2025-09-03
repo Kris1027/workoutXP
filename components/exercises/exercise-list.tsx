@@ -5,6 +5,7 @@ import ExerciseForm from './exercise-form';
 import ExerciseItem from './exercise-item';
 import PageHeader from '../ui/page-header';
 import { Badge } from '../ui/badge';
+import { APP_CONFIG } from '@/constants/config';
 
 const ExerciseList: React.FC = async () => {
   const session = await auth();
@@ -15,12 +16,12 @@ const ExerciseList: React.FC = async () => {
   const categories = [...new Set(exercises.map(e => e.category))].length;
   const userExercises = session?.user ? exercises.filter(e => e.userId === session.user.id).length : 0;
   
-  // Check for new exercises (created in last 7 days)
+  // Check for new exercises (created in last N days based on config)
   const hasNewExercises = exercises.some(e => {
     if (!e.createdAt) return false;
     const createdDate = new Date(e.createdAt);
     const daysDiff = (Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24);
-    return daysDiff <= 7;
+    return daysDiff <= APP_CONFIG.SHOW_NEW_BADGE_DAYS;
   });
 
   return (

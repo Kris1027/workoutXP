@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { ActionButton } from '../ui/action-button';
 import PageHeader from '../ui/page-header';
 import { Badge } from '../ui/badge';
+import { APP_CONFIG } from '@/constants/config';
 
 const WorkoutList: React.FC = async () => {
   const session = await auth();
@@ -20,12 +21,12 @@ const WorkoutList: React.FC = async () => {
   const userWorkouts = currentUser ? workouts.filter(w => w.userId === currentUser.id).length : 0;
   const totalLikes = workouts.reduce((sum, w) => sum + (w._count?.likes || 0), 0);
   
-  // Check for new workouts (created in last 7 days)
+  // Check for new workouts (created in last N days based on config)
   const hasNewWorkouts = workouts.some(w => {
     if (!w.createdAt) return false;
     const createdDate = new Date(w.createdAt);
     const daysDiff = (Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24);
-    return daysDiff <= 7;
+    return daysDiff <= APP_CONFIG.SHOW_NEW_BADGE_DAYS;
   });
 
   return (
