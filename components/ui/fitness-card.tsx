@@ -80,7 +80,7 @@ const FitnessCard: React.FC<FitnessCardProps> = ({
   return (
     <Card 
       key={id} 
-      className={`group relative overflow-hidden bg-white dark:bg-black/90 border border-gray-200 dark:border-gray-800 ${currentTheme.cardHover} transition-all duration-500 ease-out hover:shadow-2xl p-0 ${className}`}
+      className={`group relative h-full flex flex-col overflow-hidden bg-white dark:bg-black/90 border border-gray-200 dark:border-gray-800 ${currentTheme.cardHover} transition-all duration-500 ease-out hover:shadow-2xl p-0 ${className}`}
     >
       {/* Image with overlay */}
       <div className={`relative ${imageHeight} overflow-hidden bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900`}>
@@ -156,7 +156,7 @@ const FitnessCard: React.FC<FitnessCardProps> = ({
         {/* Title overlay */}
         <div className='absolute bottom-0 left-0 right-0 p-4'>
           <Link href={href} className="block">
-            <h3 className={`text-white font-bold text-lg leading-tight ${currentTheme.titleHover} transition-colors duration-500 ease-out`}>
+            <h3 className={`text-white font-bold text-lg leading-tight line-clamp-2 ${currentTheme.titleHover} transition-colors duration-500 ease-out`}>
               {title}
             </h3>
           </Link>
@@ -164,8 +164,8 @@ const FitnessCard: React.FC<FitnessCardProps> = ({
       </div>
 
       {/* Content section */}
-      <CardContent className='p-4'>
-        <Link href={href} className="block">
+      <CardContent className='flex-1 flex flex-col p-4'>
+        <Link href={href} className="block flex-1">
           <p className='text-gray-600 dark:text-gray-300 text-sm leading-relaxed line-clamp-3 mb-3 hover:text-gray-800 dark:hover:text-gray-100 transition-colors duration-300'>
             {description}
           </p>
@@ -178,8 +178,8 @@ const FitnessCard: React.FC<FitnessCardProps> = ({
           </div>
         )}
 
-        {/* Bottom row with action component and action indicator */}
-        <div className='flex items-center justify-between'>
+        {/* Bottom row with action component and action indicator - pushed to bottom */}
+        <div className='flex items-center justify-between mt-auto'>
           {actionComponent && (
             <div>
               {actionComponent}
@@ -198,7 +198,7 @@ const FitnessCard: React.FC<FitnessCardProps> = ({
 
       {/* Admin controls at bottom */}
       {adminControls && (
-        <div className='flex justify-between items-center p-3'>
+        <div className='flex justify-between items-center p-3 border-t border-gray-200 dark:border-gray-800'>
           {adminControls}
         </div>
       )}

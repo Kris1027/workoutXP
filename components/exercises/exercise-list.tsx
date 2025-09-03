@@ -58,7 +58,7 @@ const ExerciseList: React.FC = async () => {
       />
 
       {/* Exercise Grid */}
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 auto-rows-fr'>
         {exercises.map((exercise) => (
           <ExerciseItem key={exercise.id} exercise={exercise} session={session} />
         ))}
