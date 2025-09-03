@@ -115,6 +115,9 @@ const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(
         timeouts.forEach(timeout => clearTimeout(timeout));
         timeouts.clear();
       };
+      // Empty dependency array is intentional - this effect only runs once on mount
+      // and cleans up on unmount. The ref doesn't need to be in dependencies
+      // because refs don't trigger re-renders and we only care about cleanup.
     }, []);
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
